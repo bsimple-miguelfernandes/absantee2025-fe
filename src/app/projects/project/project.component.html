@@ -1,0 +1,10 @@
+<div class="project-card">
+    <h1>{{ project().title }}</h1>
+    <h2>{{ project().acronym }}</h2>
+    <p class="dates">
+      {{ project().periodDate.initDate| date: 'longDate' }} – {{ project().periodDate.finalDate| date: 'longDate' }}
+    </p>
+    <a class="collab-link" [routerLink]="[project().id]">
+        Manage Project
+      </a>
+  </div>

@@ -1,0 +1,7 @@
+<ul>
+    @for (project of projectList; track project.acronym) {
+        <li>
+            <app-project [project]="project"></app-project>
+        </li>
+    }
+</ul>
