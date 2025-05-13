@@ -4,6 +4,8 @@ import { ProjectsComponent } from './projects.component';
 import { ProjectService } from './project.service';
 import { Project } from './project/project';
 import { of } from 'rxjs';
+import { RouterModule } from '@angular/router';
+import { routes } from '../app.routes';
 
 describe('ProjectsComponent', () => {
   let component: ProjectsComponent;
@@ -15,7 +17,9 @@ describe('ProjectsComponent', () => {
     mockProjectService = jasmine.createSpyObj('ProjectService', ['getProjects']);
 
     await TestBed.configureTestingModule({
-      imports: [ProjectsComponent],
+      imports: [ProjectsComponent, 
+        RouterModule.forRoot(routes)
+      ],
       providers: [
         { provide: ProjectService, useValue: mockProjectService }
       ]

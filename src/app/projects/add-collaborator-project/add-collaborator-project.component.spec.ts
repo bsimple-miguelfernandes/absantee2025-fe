@@ -5,6 +5,7 @@ import { AddCollaboratorProjectComponent } from './add-collaborator-project.comp
 describe('AddCollaboratorProjectComponent', () => {
   let component: AddCollaboratorProjectComponent;
   let fixture: ComponentFixture<AddCollaboratorProjectComponent>;
+  let allCollaboratorsIds : string[];
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -14,6 +15,9 @@ describe('AddCollaboratorProjectComponent', () => {
 
     fixture = TestBed.createComponent(AddCollaboratorProjectComponent);
     component = fixture.componentInstance;
+
+    allCollaboratorsIds = ['2','3','4'];
+    fixture.componentRef.setInput("allCollaboratorsIds", allCollaboratorsIds);
     fixture.detectChanges();
   });
 

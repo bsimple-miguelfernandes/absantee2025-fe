@@ -1,0 +1,50 @@
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  max-width: 400px;
+  font-family: Arial, sans-serif;
+  background-color: #fafafa;
+}
+
+label {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="date"] {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.period-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 8px;
+  border-top: 1px solid #e0e0e0;
+  margin-top: 12px;
+}
+
+.button {
+  align-self: flex-start;
+  padding: 10px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 12px;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}

@@ -1,1 +1,25 @@
-<p>collaborators works!</p>
+<table>
+    <tr>
+        <th>Names</th>
+        <th>Email</th>
+        <th>Actions</th>
+    </tr>
+    @for (collab of collaborators(); track collab.email) {
+    <tr>
+        <td>{{collab.names}}</td>
+        <td>{{collab.email}}</td>
+        <td><button (click)="onSelectCollaborator(collab)">See more</button></td>
+    </tr>
+    }
+</table>
+
+<p>
+
+</p>
+
+@if (selectedCollaborator()) {
+    <app-collaborator-details 
+        [collaborator]="selectedCollaborator()!"
+        (changedCollaborator)="onChangeCollaborator($event)">
+    </app-collaborator-details>
+}
