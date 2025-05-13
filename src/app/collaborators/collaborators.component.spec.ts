@@ -71,24 +71,15 @@ describe('CollaboratorsComponent', () => {
     expect(collaboratorDetails).toBeNull();
   });
 
-  it('should show collaborator details when selectedCollaborator is not undefined', () => {
-    component.selectedCollaborator.set(collaborators[0]);
+  it('should show collaborator details when CollaboratorListComponent emit selectedCollaborator', () => {
+    const childComponent = fixture.debugElement.query(By.directive(CollaboratorListComponent)).componentInstance;
+
+    childComponent.selectedCollaborator.emit(collaborators[0]);
 
     fixture.detectChanges();
 
     const collaboratorDetails = fixture.nativeElement.querySelector('app-collaborator-details');
     expect(collaboratorDetails).not.toBeNull();
-
-  });
-
-  it('should call onSelectCollaborator with selectedCollaborator when CollaboratorList emit onSelectCollaborator', () => {
-    const spy = spyOn(component, 'onSelectCollaborator');
-
-    const childComponent = fixture.debugElement.query(By.directive(CollaboratorListComponent)).componentInstance;
-
-    childComponent.selectedCollaborator.emit(collaborators[0]);
-
-    expect(spy).toHaveBeenCalledOnceWith(collaborators[0])
   });
 
   it('should call onChangeCollaborator when CollaboratorDetails emit changedCollaborator', () => {

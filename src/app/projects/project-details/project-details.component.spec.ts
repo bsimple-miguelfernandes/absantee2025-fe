@@ -79,7 +79,7 @@ describe('ProjectDetailsComponent', () => {
     const p : HTMLElement = fixture.nativeElement.querySelector('p');
     const lis : NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll('li');
 
-    const datePipe = new DatePipe('en-US'); // or your app's locale
+    const datePipe = new DatePipe('en-US');
     const initDate = datePipe.transform(project.periodDate.initDate, 'longDate');
     const finalDate = datePipe.transform(project.periodDate.finalDate, 'longDate');
 
