@@ -3,11 +3,14 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CollaboratorsComponent } from './collaborators.component';
 import { CollaboratorDetails } from './collaborator-details/collaborator-details';
 import { CollaboratorService } from './collaborator.service';
+import { By } from '@angular/platform-browser';
+import { CollaboratorListComponent } from './collaborator-list/collaborator-list.component';
+import { CollaboratorDetailsComponent } from './collaborator-details/collaborator-details.component';
 
 describe('CollaboratorsComponent', () => {
   let component: CollaboratorsComponent;
   let fixture: ComponentFixture<CollaboratorsComponent>;
-  let mockCollaboratorService = jasmine.createSpyObj('CollaboratorService', ['getCollaborators']);
+  let mockCollaboratorService = jasmine.createSpyObj('CollaboratorService', ['getCollaborators', 'updateCollaborator']);
   let collaborators: CollaboratorDetails[];
 
   beforeEach(async () => {
@@ -63,22 +66,9 @@ describe('CollaboratorsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should show the Collaborators Info in the table', () => {
-    const rows: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll('table tr');
-
-    const cells1 = rows[1].querySelectorAll('td');
-    expect(cells1[0].textContent).toBe(collaborators[0].names);
-    expect(cells1[1].textContent).toBe(collaborators[0].email);
-
-    const cells2 = rows[2].querySelectorAll('td');
-    expect(cells2[0].textContent).toBe(collaborators[1].names);
-    expect(cells2[1].textContent).toBe(collaborators[1].email);
-
-  });
-
   it('should not show collaborator details on init because selectedCollaborator is undefined', () => {
-    const projectDetails = fixture.nativeElement.querySelector('app-collaborator-details');
-    expect(projectDetails).toBeNull();
+    const collaboratorDetails = fixture.nativeElement.querySelector('app-collaborator-details');
+    expect(collaboratorDetails).toBeNull();
   });
 
   it('should show collaborator details when selectedCollaborator is not undefined', () => {
@@ -86,39 +76,31 @@ describe('CollaboratorsComponent', () => {
 
     fixture.detectChanges();
 
-    const projectDetails = fixture.nativeElement.querySelector('app-collaborator-details');
-    expect(projectDetails).not.toBeNull();
+    const collaboratorDetails = fixture.nativeElement.querySelector('app-collaborator-details');
+    expect(collaboratorDetails).not.toBeNull();
 
   });
 
-  it('should call onSelectCollaborator with selectedCollaborator when button is clicked', () => {
+  it('should call onSelectCollaborator with selectedCollaborator when CollaboratorList emit onSelectCollaborator', () => {
     const spy = spyOn(component, 'onSelectCollaborator');
 
-    const selectedCollaborator = collaborators[0];
+    const childComponent = fixture.debugElement.query(By.directive(CollaboratorListComponent)).componentInstance;
 
-    component.selectedCollaborator.set(selectedCollaborator);
+    childComponent.selectedCollaborator.emit(collaborators[0]);
 
-    const button: HTMLElement = fixture.nativeElement.querySelector('button');
-    button.click();
+    expect(spy).toHaveBeenCalledOnceWith(collaborators[0])
+  });
+
+  it('should call onChangeCollaborator when CollaboratorDetails emit changedCollaborator', () => {
+    component.selectedCollaborator.set(collaborators[0]);
     fixture.detectChanges();
+    
+    const spy = spyOn(component, 'onChangeCollaborator');
 
-    expect(spy).toHaveBeenCalledOnceWith(selectedCollaborator)
-  });
+    const childComponent = fixture.debugElement.query(By.directive(CollaboratorDetailsComponent)).componentInstance;
 
-  it('onSelectCollaborator should change the selectedCollaborator', () => {
-    const selectedCollaborator = collaborators[0];
+    childComponent.changedCollaborator.emit(collaborators[0]);
 
-    component.onSelectCollaborator(selectedCollaborator);
-
-    expect(component.selectedCollaborator()).toBe(selectedCollaborator)
-  });
-
-  it('onChangeCollaborator should change the right collaborator', () => {
-    const changedCollaborator = collaborators[0];
-    changedCollaborator.names = "Changed";
-
-    component.onChangeCollaborator(changedCollaborator);
-
-    expect(component.collaborators()[0]).toBe(changedCollaborator)
+    expect(spy).toHaveBeenCalledOnceWith(collaborators[0])
   });
 });

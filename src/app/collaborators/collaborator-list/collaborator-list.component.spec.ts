@@ -1,0 +1,73 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { CollaboratorListComponent } from './collaborator-list.component';
+import { CollaboratorDetails } from '../collaborator-details/collaborator-details';
+
+describe('CollaboratorListComponent', () => {
+  let component: CollaboratorListComponent;
+  let fixture: ComponentFixture<CollaboratorListComponent>;
+  let collaborators: CollaboratorDetails[];
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [CollaboratorListComponent]
+    })
+      .compileComponents();
+
+    fixture = TestBed.createComponent(CollaboratorListComponent);
+    component = fixture.componentInstance;
+
+    collaborators = [
+      {
+        id: "1",
+        names: "Alice",
+        surnames: "Johnson",
+        email: "alice.johnson@example.com",
+        periodDateTime: {
+          _initDate: new Date(2019, 5, 10),
+          _finalDate: new Date(2025, 11, 31)
+        }
+      },
+      {
+        id: "2",
+        names: "Bob",
+        surnames: "Martinez",
+        email: "bob.martinez@example.com",
+        periodDateTime: {
+          _initDate: new Date(2021, 1, 1),
+          _finalDate: new Date(2024, 6, 30)
+        }
+      },
+      {
+        id: "3",
+        names: "Clara",
+        surnames: "Nguyen",
+        email: "clara.nguyen@example.com",
+        periodDateTime: {
+          _initDate: new Date(2020, 3, 15),
+          _finalDate: new Date(2030, 8, 1)
+        }
+      }
+    ];
+
+    fixture.componentRef.setInput('collaborators', collaborators)
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should show the Collaborators Info in the table', () => {
+    const rows: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll('table tr');
+
+    const cells1 = rows[1].querySelectorAll('td');
+    expect(cells1[0].textContent).toBe(collaborators[0].names);
+    expect(cells1[1].textContent).toBe(collaborators[0].email);
+
+    const cells2 = rows[2].querySelectorAll('td');
+    expect(cells2[0].textContent).toBe(collaborators[1].names);
+    expect(cells2[1].textContent).toBe(collaborators[1].email);
+
+  });
+});

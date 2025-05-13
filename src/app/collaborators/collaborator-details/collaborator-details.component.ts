@@ -1,7 +1,6 @@
-import { Component, inject, input, OnChanges, OnInit, output, SimpleChanges } from '@angular/core';
-import { CollaboratorService } from '../collaborator.service';
+import { Component, input, OnChanges, OnInit, output, SimpleChanges } from '@angular/core';
 import { CollaboratorDetails } from './collaborator-details';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-collaborator-details',

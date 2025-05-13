@@ -9,15 +9,7 @@ import { CollaboratorDetails } from './collaborator-details/collaborator-details
 })
 export class CollaboratorService {
   private httpClient = inject(HttpClient);
-
-  constructor() { }
-
-  getCollaboratorsIds() : Observable<string[]> {
-    return this.httpClient.get<string[]>('https://localhost:7271/api/collaborators/');
-  }
-
-  getCollaborators() : CollaboratorDetails[] {
-    return [
+  private collaborators : CollaboratorDetails[] = [
       {
         id: "1",
         names: "Alice",
@@ -48,10 +40,28 @@ export class CollaboratorService {
           _finalDate: new Date(2030, 8, 1)
         }
       }
-    ]
+    ];
+
+  constructor() { }
+
+  getCollaboratorsIds() : Observable<string[]> {
+    return this.httpClient.get<string[]>('https://localhost:7271/api/collaborators/');
+  }
+
+  getCollaborators() : CollaboratorDetails[] {
+    return this.collaborators;
   }
 
   getCollaboratorById(id : string) : Observable<Collaborator> {
     return this.httpClient.get<Collaborator>('https://localhost:7271/api/collaborators/' + id);
+  }
+
+  updateCollaborator(updated: CollaboratorDetails) {
+    const index = this.collaborators.findIndex(c => c.id === updated.id);
+    
+    if (index !== -1){
+      this.collaborators[index] = updated;
+    }
+
   }
 }
