@@ -92,6 +92,9 @@ describe('ProjectDetailsComponent', () => {
   });
 
   it('should display AddCollaboratorProjectComponent when Add Collaborator button is clicked', () => {
+    const collaboratorsIds = ['1','2','3'];
+    mockCollaboratorService.getCollaboratorsIds.and.returnValue(of(collaboratorsIds));
+    
     const button : HTMLElement = fixture.nativeElement.querySelector('button');
     button.click();
     fixture.detectChanges();

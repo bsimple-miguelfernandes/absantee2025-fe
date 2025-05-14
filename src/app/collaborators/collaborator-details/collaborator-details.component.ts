@@ -11,34 +11,26 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 export class CollaboratorDetailsComponent implements OnInit, OnChanges {
   collaborator = input.required<CollaboratorDetails>();
   changedCollaborator = output<CollaboratorDetails>();
-  form: FormGroup;
-
-  constructor() {
-    this.form = new FormGroup({
-      names: new FormControl(''),
-      surnames: new FormControl(''),
-      email: new FormControl(''),
-      periodDateTime: new FormGroup({
-        initDate: new FormControl(''),
-        endDate: new FormControl('')
-      })
-    })
-  }
+  form!: FormGroup;
 
   ngOnInit(): void {
-    this.setFormValues(this.collaborator());
+    this.form = new FormGroup({
+      names: new FormControl(this.collaborator().names),
+      surnames: new FormControl(this.collaborator().surnames),
+      email: new FormControl(this.collaborator().email),
+      periodDateTime: new FormGroup({
+        initDate: new FormControl(this.formatDate(this.collaborator().periodDateTime._initDate)),
+        endDate: new FormControl(this.formatDate(this.collaborator().periodDateTime._finalDate))
+      })
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     const collabChange = changes['collaborator'];
     if (collabChange && collabChange.previousValue &&
-        collabChange.previousValue.id !== collabChange.currentValue?.id) {
-      this.setFormValues(collabChange.currentValue);
-    }
-  }
-
-  private setFormValues(collaborator: CollaboratorDetails): void {
-    this.form.patchValue({
+      collabChange.previousValue.id !== collabChange.currentValue?.id) {
+      const collaborator : CollaboratorDetails = collabChange.currentValue;
+      this.form.patchValue({
       names: collaborator.names,
       surnames: collaborator.surnames,
       email: collaborator.email,
@@ -47,6 +39,7 @@ export class CollaboratorDetailsComponent implements OnInit, OnChanges {
         endDate: this.formatDate(collaborator.periodDateTime._finalDate)
       }
     });
+    }
   }
 
   private formatDate(date: Date): string {

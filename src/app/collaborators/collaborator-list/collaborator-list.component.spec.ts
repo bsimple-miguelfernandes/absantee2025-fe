@@ -74,15 +74,6 @@ describe('CollaboratorListComponent', () => {
     expect(cells3[1].textContent).toBe(collaborators[2].email);
   });
 
-  it('should call onSelectCollaborator with selected collaborator when button is clicked', () => {
-    const button1: HTMLElement = fixture.nativeElement.querySelectorAll("button")[1];
-
-    const spy = spyOn(component, 'onSelectCollaborator');
-    button1.click();
-
-    expect(spy).toHaveBeenCalledOnceWith(collaborators[1]);
-  });
-
   it('should emit selectedCollaborator when a button is clicked', () => {
     let emittedCollaborator: CollaboratorDetails | undefined;
     component.selectedCollaborator.subscribe(collab => emittedCollaborator = collab);
