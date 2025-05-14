@@ -1,1 +1,13 @@
-<p>collaborators works!</p>
+<app-collaborator-list 
+    [collaborators]="collaborators()"
+    (selectedCollaborator)="onSelectCollaborator($event)">
+</app-collaborator-list>
+
+<p></p>
+
+@if (selectedCollaborator()) {
+    <app-collaborator-details 
+        [collaborator]="selectedCollaborator()!"
+        (changedCollaborator)="onChangeCollaborator($event)">
+    </app-collaborator-details>
+}

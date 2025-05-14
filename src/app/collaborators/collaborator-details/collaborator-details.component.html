@@ -1,0 +1,20 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <label for="names">Names</label>
+  <input id="names" formControlName="names" />
+
+  <label for="surnames">Surnames</label>
+  <input id="surnames" formControlName="surnames" />
+
+  <label for="email">Email</label>
+  <input id="email" formControlName="email" />
+
+  <div formGroupName="periodDateTime" class="period-group">
+    <label for="initDate">Start Date</label>
+    <input type="date" id="initDate" formControlName="initDate" />
+
+    <label for="endDate">End Date</label>
+    <input type="date" id="endDate" formControlName="endDate" />
+  </div>
+
+  <button class="button">Save</button>
+</form>
