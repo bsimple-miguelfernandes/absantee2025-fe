@@ -1,13 +1,12 @@
-<app-collaborator-list 
-    [collaborators]="collaborators()"
-    (selectedCollaborator)="onSelectCollaborator($event)">
+<app-collaborator-list >
 </app-collaborator-list>
+
+<app-collaborators-bullets>
+</app-collaborators-bullets>
 
 <p></p>
 
 @if (selectedCollaborator()) {
-    <app-collaborator-details 
-        [collaborator]="selectedCollaborator()!"
-        (changedCollaborator)="onChangeCollaborator($event)">
+    <app-collaborator-details>
     </app-collaborator-details>
 }

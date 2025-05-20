@@ -1,6 +1,7 @@
-import { Component, input, OnChanges, OnInit, output, SimpleChanges } from '@angular/core';
+import { Component, computed, effect, inject, input, OnChanges, OnInit, output, SimpleChanges } from '@angular/core';
 import { CollaboratorDetails } from './collaborator-details';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CollaboratorSignalService } from '../collaborator-signal.service';
 
 @Component({
   selector: 'app-collaborator-details',
@@ -8,38 +9,38 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
   templateUrl: './collaborator-details.component.html',
   styleUrl: './collaborator-details.component.css'
 })
-export class CollaboratorDetailsComponent implements OnInit, OnChanges {
-  collaborator = input.required<CollaboratorDetails>();
-  changedCollaborator = output<CollaboratorDetails>();
+export class CollaboratorDetailsComponent {
+  collaboratorService = inject(CollaboratorSignalService);
+  collaborator = this.collaboratorService.selectedCollaborator;
   form!: FormGroup;
 
-  ngOnInit(): void {
-    this.form = new FormGroup({
-      names: new FormControl(this.collaborator().names),
-      surnames: new FormControl(this.collaborator().surnames),
-      email: new FormControl(this.collaborator().email),
-      periodDateTime: new FormGroup({
-        initDate: new FormControl(this.formatDate(this.collaborator().periodDateTime._initDate)),
-        endDate: new FormControl(this.formatDate(this.collaborator().periodDateTime._finalDate))
-      })
-    });
-  }
+  constructor() {
+    effect(() => {
+      const collaboratorObj = this.collaborator();
+      if (!collaboratorObj) return;
 
-  ngOnChanges(changes: SimpleChanges): void {
-    const collabChange = changes['collaborator'];
-    if (collabChange && collabChange.previousValue &&
-      collabChange.previousValue.id !== collabChange.currentValue?.id) {
-      const collaborator : CollaboratorDetails = collabChange.currentValue;
-      this.form.patchValue({
-      names: collaborator.names,
-      surnames: collaborator.surnames,
-      email: collaborator.email,
-      periodDateTime: {
-        initDate: this.formatDate(collaborator.periodDateTime._initDate),
-        endDate: this.formatDate(collaborator.periodDateTime._finalDate)
+      if (!this.form) {
+        this.form = new FormGroup({
+          names: new FormControl(collaboratorObj.names),
+          surnames: new FormControl(collaboratorObj.surnames),
+          email: new FormControl(collaboratorObj.email),
+          periodDateTime: new FormGroup({
+            initDate: new FormControl(this.formatDate(collaboratorObj.periodDateTime._initDate)),
+            endDate: new FormControl(this.formatDate(collaboratorObj.periodDateTime._finalDate)),
+          })
+        });
+      } else {
+        this.form.patchValue({
+          names: collaboratorObj.names,
+          surnames: collaboratorObj.surnames,
+          email: collaboratorObj.email,
+          periodDateTime: {
+            initDate: this.formatDate(collaboratorObj.periodDateTime._initDate),
+            endDate: this.formatDate(collaboratorObj.periodDateTime._finalDate)
+          }
+        });
       }
     });
-    }
   }
 
   private formatDate(date: Date): string {
@@ -50,7 +51,7 @@ export class CollaboratorDetailsComponent implements OnInit, OnChanges {
     const formValue = this.form.value;
 
     const updatedCollaborator: CollaboratorDetails = {
-      id: this.collaborator().id,
+      id: this.collaborator()!.id,
       names: formValue.names,
       surnames: formValue.surnames,
       email: formValue.email,
@@ -60,6 +61,6 @@ export class CollaboratorDetailsComponent implements OnInit, OnChanges {
       }
     };
 
-    this.changedCollaborator.emit(updatedCollaborator);
+    this.collaboratorService.updateCollaborator(updatedCollaborator);
   }
 }

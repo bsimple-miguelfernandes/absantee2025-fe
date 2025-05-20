@@ -1,15 +1,15 @@
-import { Component, computed, effect, inject, input, output } from '@angular/core';
-import { CollaboratorDetails } from '../collaborator-details/collaborator-details';
+import { Component, effect, inject } from '@angular/core';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
 import { CollaboratorDataService } from '../collaborator-data.service';
+import { CollaboratorDetails } from '../collaborator-details/collaborator-details';
 
 @Component({
-  selector: 'app-collaborator-list',
+  selector: 'app-collaborators-bullets',
   imports: [],
-  templateUrl: './collaborator-list.component.html',
-  styleUrl: './collaborator-list.component.css'
+  templateUrl: './collaborators-bullets.component.html',
+  styleUrl: './collaborators-bullets.component.css'
 })
-export class CollaboratorListComponent {
+export class CollaboratorsBulletsComponent {
   collaboratorSignalService = inject(CollaboratorSignalService);
   collaboratorDataService = inject(CollaboratorDataService);
   collaborators = this.collaboratorDataService.collaborators;

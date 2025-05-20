@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProjectDetailsComponent } from './project-details.component';
 import { ProjectService } from '../project.service';
-import { CollaboratorService } from '../../collaborators/collaborator.service';
+import { CollaboratorSignalService } from '../../collaborators/collaborator-signal.service';
 import { EMPTY, of } from 'rxjs';
 import { AddAssociationProjectCollaborator, Project } from '../project/project';
 import { Collaborator } from '../../collaborators/collaborator';
@@ -14,7 +14,7 @@ describe('ProjectDetailsComponent', () => {
   let component: ProjectDetailsComponent;
   let fixture: ComponentFixture<ProjectDetailsComponent>;
   let mockProjectService: jasmine.SpyObj<ProjectService>;
-  let mockCollaboratorService: jasmine.SpyObj<CollaboratorService>;
+  let mockCollaboratorService: jasmine.SpyObj<CollaboratorSignalService>;
   let project: Project;
   let projectCollaborators: Collaborator[];
 
@@ -26,7 +26,7 @@ describe('ProjectDetailsComponent', () => {
       imports: [ProjectDetailsComponent],
       providers: [
         { provide: ProjectService, useValue: mockProjectService},
-        { provide: CollaboratorService, useValue: mockCollaboratorService}
+        { provide: CollaboratorSignalService, useValue: mockCollaboratorService}
       ]
     })
     .compileComponents();
@@ -93,7 +93,7 @@ describe('ProjectDetailsComponent', () => {
 
   it('should display AddCollaboratorProjectComponent when Add Collaborator button is clicked', () => {
     const collaboratorsIds = ['1','2','3'];
-    mockCollaboratorService.getCollaboratorsIds.and.returnValue(of(collaboratorsIds));
+    //mockCollaboratorService.getCollaboratorsIds.and.returnValue(of(collaboratorsIds));
     
     const button : HTMLElement = fixture.nativeElement.querySelector('button');
     button.click();

@@ -2,15 +2,27 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CollaboratorDetailsComponent } from './collaborator-details.component';
 import { CollaboratorDetails } from './collaborator-details';
+import { CollaboratorSignalService } from '../collaborator-signal.service';
+import { Signal, signal, WritableSignal } from '@angular/core';
 
 describe('CollaboratorDetailsComponent', () => {
   let component: CollaboratorDetailsComponent;
   let fixture: ComponentFixture<CollaboratorDetailsComponent>;
   let collaborator: CollaboratorDetails;
+  let mockCollaboratorSignalService: jasmine.SpyObj<CollaboratorSignalService>;
+  let selectedSignal: WritableSignal<CollaboratorDetails | undefined>;
 
   beforeEach(async () => {
+    selectedSignal = signal<CollaboratorDetails | undefined>(undefined);
+    mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', ['updateCollaborator'], {
+      selectedCollaborator: selectedSignal
+    });
+
     await TestBed.configureTestingModule({
-      imports: [CollaboratorDetailsComponent]
+      imports: [CollaboratorDetailsComponent],
+      providers: [
+        { provide: CollaboratorSignalService, useValue: mockCollaboratorSignalService }
+      ]
     })
       .compileComponents();
 
@@ -29,7 +41,8 @@ describe('CollaboratorDetailsComponent', () => {
       }
     };
 
-    fixture.componentRef.setInput('collaborator', collaborator);
+    //mockCollaboratorSignalService.selectedCollaborator.and.returnValue(collaborator);
+    selectedSignal.set(collaborator);
 
     fixture.detectChanges();
   });
@@ -39,11 +52,11 @@ describe('CollaboratorDetailsComponent', () => {
   });
 
   it('should have in form the values of selected collaborator', () => {
-    const nameInput : HTMLInputElement = fixture.nativeElement.querySelector('#names');
-    const surnamesInput : HTMLInputElement = fixture.nativeElement.querySelector('#surnames');
-    const emailInput : HTMLInputElement = fixture.nativeElement.querySelector('#email');
-    const initDateInput : HTMLInputElement = fixture.nativeElement.querySelector('#initDate');
-    const endDateInput : HTMLInputElement = fixture.nativeElement.querySelector('#endDate');
+    const nameInput: HTMLInputElement = fixture.nativeElement.querySelector('#names');
+    const surnamesInput: HTMLInputElement = fixture.nativeElement.querySelector('#surnames');
+    const emailInput: HTMLInputElement = fixture.nativeElement.querySelector('#email');
+    const initDateInput: HTMLInputElement = fixture.nativeElement.querySelector('#initDate');
+    const endDateInput: HTMLInputElement = fixture.nativeElement.querySelector('#endDate');
 
     expect(nameInput.value).toBe(collaborator.names);
     expect(surnamesInput.value).toBe(collaborator.surnames);
@@ -53,45 +66,41 @@ describe('CollaboratorDetailsComponent', () => {
   });
 
   it('should update form inputs when collaborator input changes', () => {
-    const newCollaborator = {
-        id: "2",
-        names: "Bob",
-        surnames: "Martinez",
-        email: "bob.martinez@example.com",
-        periodDateTime: {
-          _initDate: new Date(2021, 1, 1),
-          _finalDate: new Date(2024, 6, 30)
-        }
-      };
+    const newCollaborator : CollaboratorDetails = {
+      id: "2",
+      names: "Bob",
+      surnames: "Martinez",
+      email: "bob.martinez@example.com",
+      periodDateTime: {
+        _initDate: new Date(2021, 1, 1),
+        _finalDate: new Date(2024, 6, 30)
+      }
+    };
 
-    fixture.componentRef.setInput('collaborator', newCollaborator);
-
+    selectedSignal.set(newCollaborator);
     fixture.detectChanges();
 
-    const nameInput : HTMLInputElement = fixture.nativeElement.querySelector('#names');
-    const surnamesInput : HTMLInputElement = fixture.nativeElement.querySelector('#surnames');
-    const emailInput : HTMLInputElement = fixture.nativeElement.querySelector('#email');
-    const initDateInput : HTMLInputElement = fixture.nativeElement.querySelector('#initDate');
-    const endDateInput : HTMLInputElement = fixture.nativeElement.querySelector('#endDate');
+    const nameInput: HTMLInputElement = fixture.nativeElement.querySelector('#names');
+    const surnamesInput: HTMLInputElement = fixture.nativeElement.querySelector('#surnames');
+    const emailInput: HTMLInputElement = fixture.nativeElement.querySelector('#email');
+    const initDateInput: HTMLInputElement = fixture.nativeElement.querySelector('#initDate');
+    const endDateInput: HTMLInputElement = fixture.nativeElement.querySelector('#endDate');
 
-    expect(nameInput.value).toBe(newCollaborator.names);
-    expect(surnamesInput.value).toBe(newCollaborator.surnames);
-    expect(emailInput.value).toBe(newCollaborator.email);
-    expect(initDateInput.value).toBe(newCollaborator.periodDateTime._initDate.toISOString().split('T')[0]);
-    expect(endDateInput.value).toBe(newCollaborator.periodDateTime._finalDate.toISOString().split('T')[0]);
+    expect(nameInput.value).toEqual(newCollaborator.names);
+    expect(surnamesInput.value).toEqual(newCollaborator.surnames);
+    expect(emailInput.value).toEqual(newCollaborator.email);
+    expect(initDateInput.value).toEqual(newCollaborator.periodDateTime._initDate.toISOString().split('T')[0]);
+    expect(endDateInput.value).toEqual(newCollaborator.periodDateTime._finalDate.toISOString().split('T')[0]);
   });
 
-  it('should emit updated collaborator when form is submitted', () => {
+  it('should call updateCollaborator when form is submitted', () => {
     const updateCollaborator = collaborator;
-    const emailInput : HTMLInputElement = fixture.nativeElement.querySelector('#email');
+    const emailInput: HTMLInputElement = fixture.nativeElement.querySelector('#email');
     emailInput.value = 'email-changed@test.com';
 
-    let changedCollab : CollaboratorDetails | undefined;
-    component.changedCollaborator.subscribe(c => changedCollab = c);
-
-    const button : HTMLElement = fixture.nativeElement.querySelector('button');
+    const button: HTMLElement = fixture.nativeElement.querySelector('button');
     button.click();
 
-    expect(changedCollab).toEqual(updateCollaborator);
+    expect(mockCollaboratorSignalService.updateCollaborator).toHaveBeenCalledOnceWith(updateCollaborator);
   });
 });

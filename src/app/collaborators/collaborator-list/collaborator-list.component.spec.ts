@@ -2,15 +2,37 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CollaboratorListComponent } from './collaborator-list.component';
 import { CollaboratorDetails } from '../collaborator-details/collaborator-details';
+import { CollaboratorSignalService } from '../collaborator-signal.service';
+import { CollaboratorDataService } from '../collaborator-data.service';
+import { signal, WritableSignal } from '@angular/core';
 
 describe('CollaboratorListComponent', () => {
   let component: CollaboratorListComponent;
   let fixture: ComponentFixture<CollaboratorListComponent>;
   let collaborators: CollaboratorDetails[];
+  let mockCollaboratorSignalService: jasmine.SpyObj<CollaboratorSignalService>;
+  let mockCollaboratorDataService: jasmine.SpyObj<CollaboratorDataService>;
+  let collaboratorsSignal: WritableSignal<CollaboratorDetails[]>;
+  let updatedSignal: WritableSignal<CollaboratorDetails | undefined>;
+
+  
 
   beforeEach(async () => {
+    collaboratorsSignal= signal<CollaboratorDetails[]>([]);
+    mockCollaboratorDataService = jasmine.createSpyObj('CollaboratorDataService', ['updateCollaborator'], {
+      collaborators: collaboratorsSignal
+    });
+    updatedSignal = signal<CollaboratorDetails | undefined>(undefined);
+    mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', ['selectCollaborator'], {
+      updatedCollaborator: updatedSignal
+    });
+
     await TestBed.configureTestingModule({
-      imports: [CollaboratorListComponent]
+      imports: [CollaboratorListComponent],
+      providers: [
+        { provide: CollaboratorSignalService, useValue: mockCollaboratorSignalService },
+        { provide: CollaboratorDataService, useValue: mockCollaboratorDataService }
+      ]
     })
       .compileComponents();
 
@@ -50,7 +72,7 @@ describe('CollaboratorListComponent', () => {
       }
     ];
 
-    fixture.componentRef.setInput('collaborators', collaborators)
+    collaboratorsSignal.set(collaborators);
     fixture.detectChanges();
   });
 
@@ -74,13 +96,45 @@ describe('CollaboratorListComponent', () => {
     expect(cells3[1].textContent).toBe(collaborators[2].email);
   });
 
-  it('should emit selectedCollaborator when a button is clicked', () => {
-    let emittedCollaborator: CollaboratorDetails | undefined;
-    component.selectedCollaborator.subscribe(collab => emittedCollaborator = collab);
-
+  it('should call selectCollaborator with the selected collaborator when a button is clicked', () => {
     const button1: HTMLElement = fixture.nativeElement.querySelectorAll("button")[1];
     button1.click();
 
-    expect(emittedCollaborator).toEqual(collaborators[1]);
+    expect(mockCollaboratorSignalService.selectCollaborator).toHaveBeenCalledOnceWith(collaborators[1]);
+  });
+
+  it('should change the table content if new input arrived', () => {
+    const newCollaborators : CollaboratorDetails[] = [
+      {
+        id: "4",
+        names: "John",
+        surnames: "Doe",
+        email: "john.doe@example.com",
+        periodDateTime: {
+          _initDate: new Date(2023, 10, 1),
+          _finalDate: new Date(2028, 5, 14)
+        }
+      }
+    ];
+
+    collaboratorsSignal.set(newCollaborators);
+
+    fixture.detectChanges();
+
+    const rows: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll('table tr');
+
+    const cells1 = rows[1].querySelectorAll('td');
+    expect(cells1[0].textContent).toBe('John');
+    expect(cells1[1].textContent).toBe("john.doe@example.com");
+  });
+
+  it('should call updateCollaborator when a collaborator is updated', () => {
+    const collaboratorUpdated = collaborators[1];
+    collaboratorUpdated.email = "new-email@test.com";
+
+    updatedSignal.set(collaboratorUpdated);
+    fixture.detectChanges();
+
+    expect(mockCollaboratorDataService.updateCollaborator).toHaveBeenCalledOnceWith(collaboratorUpdated);
   });
 });

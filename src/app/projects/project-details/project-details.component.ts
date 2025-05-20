@@ -2,7 +2,7 @@ import { Component, inject, input, OnInit } from '@angular/core';
 import { AddAssociationProjectCollaborator, Project } from '../project/project';
 import { ProjectService } from '../project.service';
 import { DatePipe } from '@angular/common';
-import { CollaboratorService } from '../../collaborators/collaborator.service';
+import { CollaboratorSignalService } from '../../collaborators/collaborator-signal.service';
 import { FormsModule } from '@angular/forms';
 import { AddCollaboratorProjectComponent } from '../add-collaborator-project/add-collaborator-project.component';
 
@@ -17,7 +17,7 @@ export class ProjectDetailsComponent implements OnInit {
   project : Project | undefined;
   projectCollaboratorsIds : string[] = [];
   private projectService = inject(ProjectService);
-  private collaboratorService = inject(CollaboratorService);
+  private collaboratorService = inject(CollaboratorSignalService);
   addCollaborator = false;
   allCollaboratorsIds : string[] = [];
 
@@ -35,9 +35,9 @@ export class ProjectDetailsComponent implements OnInit {
     this.addCollaborator = true;
 
     const projectCollaboratorsIdsSet = new Set(this.projectCollaboratorsIds);
-    this.collaboratorService.getCollaboratorsIds().subscribe(data => {
-      this.allCollaboratorsIds = data.filter(c => !projectCollaboratorsIdsSet.has(c));
-    })
+    // this.collaboratorService.getCollaboratorsIds().subscribe(data => {
+    //   this.allCollaboratorsIds = data.filter(c => !projectCollaboratorsIdsSet.has(c));
+    // })
   }
 
   addCollaboratorToProject(association : AddAssociationProjectCollaborator){
