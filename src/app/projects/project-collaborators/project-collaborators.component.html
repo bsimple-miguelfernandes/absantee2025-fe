@@ -1,0 +1,13 @@
+<h1>{{projectCollaboratorsSelected()!.title}}</h1>
+<table>
+    <tr>
+        <th>Names</th>
+        <th>Email</th>
+    </tr>
+    @for (collab of projectCollaborators; track collab.id) {
+    <tr>
+        <td>{{collab.names}}</td>
+        <td>{{collab.email}}</td>
+    </tr>
+    }
+</table>

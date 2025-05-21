@@ -1,7 +1,12 @@
-<ul>
-    @for (project of projectList; track project.acronym) {
-        <li>
-            <app-project [project]="project"></app-project>
-        </li>
-    }
-</ul>
+<app-projects-table></app-projects-table>
+
+<p>
+
+</p>
+
+@if (projectSelected()) {
+    <app-project></app-project>
+}
+@if (projectCollaboratorsSelected()) {
+    <app-project-collaborators></app-project-collaborators>
+}

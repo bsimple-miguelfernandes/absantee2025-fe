@@ -1,12 +1,13 @@
 import { Injectable, signal } from '@angular/core';
 import { CollaboratorDetails } from './collaborator-details/collaborator-details';
+import { PeriodDate } from '../PeriodDate';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CollaboratorDataService {
 
-  private collaboratorsSignal  = signal<CollaboratorDetails[]>([
+  private collaboratorsSignal = signal<CollaboratorDetails[]>([
     {
       id: "1",
       names: "Alice",
@@ -41,9 +42,50 @@ export class CollaboratorDataService {
 
   readonly collaborators = this.collaboratorsSignal.asReadonly();
 
-  updateCollaborator(updatedCollaborator : CollaboratorDetails){
+  updateCollaborator(updatedCollaborator: CollaboratorDetails) {
     this.collaboratorsSignal.update(list =>
       list.map(c => c.id === updatedCollaborator.id ? updatedCollaborator : c)
     );
+  }
+
+  private CollaboratorHolidays: { collaboratorId: string, holidays: PeriodDate[] }[] = [
+    {
+      collaboratorId: "1",
+      holidays: [
+        {
+          initDate: new Date("2020-01-01"),
+          finalDate: new Date("2020-01-10")
+        },
+        {
+          initDate: new Date("2020-12-01"),
+          finalDate: new Date("2020-12-10")
+        }
+      ]
+    },
+    {
+      collaboratorId: "2",
+      holidays: [
+        {
+          initDate: new Date("2020-06-06"),
+          finalDate: new Date("2020-06-16")
+        }
+      ]
+    },
+    {
+      collaboratorId: "3",
+      holidays: []
+    }
+  ]
+
+  getCollaboratorHolidays(collaboratorId: string): PeriodDate[] {
+    return this.CollaboratorHolidays.find(c => c.collaboratorId === collaboratorId)!.holidays;
+  };
+
+  editHoliday(collaboratorId: string, index: number, updatedPeriod : PeriodDate){
+    const holidays = this.CollaboratorHolidays.find(c => c.collaboratorId === collaboratorId)?.holidays;
+
+    if(holidays !== undefined){
+      holidays[index] = updatedPeriod;
+    }
   }
 }

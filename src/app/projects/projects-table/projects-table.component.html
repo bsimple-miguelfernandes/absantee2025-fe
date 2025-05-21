@@ -1,0 +1,16 @@
+<table>
+    <tr>
+        <th>Title</th>
+        <th>Acronym</th>
+        <th>Actions</th>
+    </tr>
+    @for (proj of projects(); track proj.acronym) {
+    <tr>
+        <td>{{proj.title}}</td>
+        <td>{{proj.acronym}}</td>
+        <td><button (click)="onSelectProject(proj)">Project Details</button>
+            <button (click)="onSelectProjectCollaborators(proj)">Project Collaborators</button>
+        </td>
+    </tr>
+    }
+</table>

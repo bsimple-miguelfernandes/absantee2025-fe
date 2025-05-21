@@ -8,7 +8,9 @@
     <tr>
         <td>{{collab.names}}</td>
         <td>{{collab.email}}</td>
-        <td><button (click)="onSelectCollaborator(collab)">See more</button></td>
+        <td><button (click)="onSelectCollaborator(collab)">Collaborator Details</button>
+            <button (click)="onSelectCollaboratorHolidays(collab)">Collaborator Hollidays</button>
+        </td>
     </tr>
     }
 </table>

@@ -1,7 +1,9 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { Project } from './project';
 import { DatePipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ProjectService } from '../project.service';
+import { ProjectsSignalsService } from '../projects-signals.service';
 
 @Component({
   selector: 'app-project',
@@ -10,5 +12,6 @@ import { RouterModule } from '@angular/router';
   styleUrl: './project.component.css'
 })
 export class ProjectComponent {
-  project = input.required<Project>();
+  projectSignalService = inject(ProjectsSignalsService);
+  projectSelected = this.projectSignalService.projectSelected;
 }

@@ -26,4 +26,8 @@ export class CollaboratorListComponent {
   onSelectCollaborator(collaborator: CollaboratorDetails){
     this.collaboratorSignalService.selectCollaborator(collaborator);
   }
+
+  onSelectCollaboratorHolidays(collaborator: CollaboratorDetails){
+    this.collaboratorSignalService.selectCollaboratorHolidays(collaborator);
+  }
 }

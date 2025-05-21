@@ -1,7 +1,4 @@
-import { HttpClient } from '@angular/common/http';
-import { inject, Injectable, signal } from '@angular/core';
-import { map, Observable } from 'rxjs';
-import { Collaborator } from './collaborator';
+import { Injectable, signal } from '@angular/core';
 import { CollaboratorDetails } from './collaborator-details/collaborator-details';
 
 @Injectable({
@@ -15,6 +12,9 @@ export class CollaboratorSignalService {
 
   private selectedCollaboratorSignal = signal<CollaboratorDetails | undefined>(undefined);
   readonly selectedCollaborator = this.selectedCollaboratorSignal.asReadonly();
+
+  private selectedCollaboratorHolidaysSignal = signal<CollaboratorDetails | undefined>(undefined);
+  readonly selectedCollaboratorHoliday = this.selectedCollaboratorHolidaysSignal.asReadonly();
   
 
   // getCollaboratorsIds(): Observable<string[]> {
@@ -30,6 +30,12 @@ export class CollaboratorSignalService {
   }
 
   selectCollaborator(selected: CollaboratorDetails){
+    this.selectedCollaboratorHolidaysSignal.set(undefined);
     this.selectedCollaboratorSignal.set(selected);
+  }
+
+  selectCollaboratorHolidays(selected: CollaboratorDetails){
+    this.selectedCollaboratorSignal.set(undefined);
+    this.selectedCollaboratorHolidaysSignal.set(selected);
   }
 }

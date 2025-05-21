@@ -4,14 +4,17 @@ import { CollaboratorDetailsComponent } from "./collaborator-details/collaborato
 import { CollaboratorSignalService } from './collaborator-signal.service';
 import { CollaboratorListComponent } from "./collaborator-list/collaborator-list.component";
 import { CollaboratorsBulletsComponent } from "./collaborators-bullets/collaborators-bullets.component";
+import { CollaboratorHolidaysComponent } from "./collaborator-holidays/collaborator-holidays.component";
 
 @Component({
   selector: 'app-collaborators',
-  imports: [CollaboratorDetailsComponent, CollaboratorListComponent, CollaboratorsBulletsComponent],
+  imports: [CollaboratorDetailsComponent, CollaboratorListComponent, CollaboratorsBulletsComponent, CollaboratorHolidaysComponent],
   templateUrl: './collaborators.component.html',
   styleUrl: './collaborators.component.css'
 })
 export class CollaboratorsComponent {
   collaboratorSignalService = inject(CollaboratorSignalService);
   selectedCollaborator = this.collaboratorSignalService.selectedCollaborator;
+
+  selectedCollaboratorHolidays = this.collaboratorSignalService.selectedCollaboratorHoliday;
 }
