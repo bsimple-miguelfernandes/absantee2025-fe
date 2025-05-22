@@ -60,8 +60,8 @@ export class CollaboratorHolidaysComponent {
   createEmptyHoliday() {
     this.holidaysForm.push(
       new FormGroup({
-        initDate: new FormControl(''),
-        finalDate: new FormControl('')
+        initDate: new FormControl(this.formatDate(new Date())),
+        finalDate: new FormControl(this.formatDate(new Date()))
       }) as FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string> }>
     );
   }

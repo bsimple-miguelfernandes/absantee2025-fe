@@ -16,15 +16,7 @@ export const routes: Routes = [
         component: ProjectsComponent
     },
     {
-        path: 'projects/:projectId',
-        component: ProjectDetailsComponent
-    },
-    {
         path: 'collaborators',
         component: CollaboratorsComponent
-    },
-    {
-        path: 'collaborators/:collaboratorId',
-        component: CollaboratorDetailsComponent
     }
 ];

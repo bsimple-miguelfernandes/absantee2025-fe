@@ -97,7 +97,7 @@ describe('CollaboratorListComponent', () => {
   });
 
   it('should call selectCollaborator with the selected collaborator when a button is clicked', () => {
-    const button1: HTMLElement = fixture.nativeElement.querySelectorAll("button")[1];
+    const button1: HTMLElement = fixture.nativeElement.querySelectorAll('[data-testid="details-btn"]')[1];
     button1.click();
 
     expect(mockCollaboratorSignalService.selectCollaborator).toHaveBeenCalledOnceWith(collaborators[1]);

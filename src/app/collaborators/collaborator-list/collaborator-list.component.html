@@ -8,8 +8,15 @@
     <tr>
         <td>{{collab.names}}</td>
         <td>{{collab.email}}</td>
-        <td><button (click)="onSelectCollaborator(collab)">Collaborator Details</button>
-            <button (click)="onSelectCollaboratorHolidays(collab)">Collaborator Hollidays</button>
+        <td><button (click)="onSelectCollaborator(collab)" data-testid="details-btn">
+                Collaborator Details
+            </button>
+            <button (click)="onSelectCollaboratorHolidays(collab)" data-testid="holidays-btn">
+                Collaborator Hollidays
+            </button>
+            <button (click)="onSelectCollaboratorProjects(collab)" data-testid="projects-btn">
+                Collaborator Projects
+            </button>
         </td>
     </tr>
     }

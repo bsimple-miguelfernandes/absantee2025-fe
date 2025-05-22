@@ -42,6 +42,10 @@ export class CollaboratorDataService {
 
   readonly collaborators = this.collaboratorsSignal.asReadonly();
 
+  getCollaboratorByEmail(email: string): CollaboratorDetails {
+    return this.collaboratorsSignal().find(c => c.email === email)!;
+  }
+
   updateCollaborator(updatedCollaborator: CollaboratorDetails) {
     this.collaboratorsSignal.update(list =>
       list.map(c => c.id === updatedCollaborator.id ? updatedCollaborator : c)

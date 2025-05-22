@@ -3,25 +3,24 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CollaboratorsComponent } from './collaborators.component';
 import { CollaboratorDetails } from './collaborator-details/collaborator-details';
 import { CollaboratorSignalService } from './collaborator-signal.service';
-import { By } from '@angular/platform-browser';
-import { CollaboratorListComponent } from './collaborator-list/collaborator-list.component';
-import { CollaboratorDetailsComponent } from './collaborator-details/collaborator-details.component';
 import { signal, WritableSignal } from '@angular/core';
 
 describe('CollaboratorsComponent', () => {
   let component: CollaboratorsComponent;
   let fixture: ComponentFixture<CollaboratorsComponent>;
-  let collaborator : CollaboratorDetails;
   let mockCollaboratorSignalService: jasmine.SpyObj<CollaboratorSignalService>;
   let selectedSignal: WritableSignal<CollaboratorDetails | undefined>;
   let updatedSignal: WritableSignal<CollaboratorDetails | undefined>;
+  let selectedCollaboratorHolidaysSignal: WritableSignal<CollaboratorDetails | undefined>;
 
   beforeEach(async () => {
     selectedSignal = signal<CollaboratorDetails | undefined>(undefined);
     updatedSignal = signal<CollaboratorDetails | undefined>(undefined);
+    selectedCollaboratorHolidaysSignal = signal<CollaboratorDetails | undefined>(undefined);
     mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', [], {
       selectedCollaborator: selectedSignal,
-      updatedCollaborator: updatedSignal
+      updatedCollaborator: updatedSignal,
+      selectedCollaboratorHoliday: selectedCollaboratorHolidaysSignal
     });
 
     await TestBed.configureTestingModule({

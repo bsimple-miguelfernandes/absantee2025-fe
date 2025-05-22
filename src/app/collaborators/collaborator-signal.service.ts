@@ -29,12 +29,12 @@ export class CollaboratorSignalService {
     this.updateCollaboratorSignal.set(updated);
   }
 
-  selectCollaborator(selected: CollaboratorDetails){
+  selectCollaborator(selected: CollaboratorDetails | undefined){
     this.selectedCollaboratorHolidaysSignal.set(undefined);
     this.selectedCollaboratorSignal.set(selected);
   }
 
-  selectCollaboratorHolidays(selected: CollaboratorDetails){
+  selectCollaboratorHolidays(selected: CollaboratorDetails | undefined){
     this.selectedCollaboratorSignal.set(undefined);
     this.selectedCollaboratorHolidaysSignal.set(selected);
   }

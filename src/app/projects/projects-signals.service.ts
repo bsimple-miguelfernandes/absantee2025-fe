@@ -11,12 +11,12 @@ export class ProjectsSignalsService {
   private projectCollaboratorsSelectedSignal = signal<Project | undefined>(undefined);
   projectCollaboratorSelected = this.projectCollaboratorsSelectedSignal.asReadonly();
 
-  selectProject(selected: Project){
+  selectProject(selected: Project | undefined){
     this.projectCollaboratorsSelectedSignal.set(undefined);
     this.projectSelectedSignal.set(selected);
   }
 
-  selectProjectCollaborators(selected: Project){
+  selectProjectCollaborators(selected: Project | undefined){
     this.projectSelectedSignal.set(undefined);
     this.projectCollaboratorsSelectedSignal.set(selected);
   }

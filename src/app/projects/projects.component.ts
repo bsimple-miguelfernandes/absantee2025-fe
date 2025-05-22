@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { Project } from './project/project';
 import { ProjectComponent } from "./project/project.component";
 import { ProjectService } from './project.service';
@@ -12,8 +12,13 @@ import { ProjectCollaboratorsComponent } from "./project-collaborators/project-c
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.css'
 })
-export class ProjectsComponent {
+export class ProjectsComponent implements OnDestroy {
   projectSignalService = inject(ProjectsSignalsService);
   projectSelected = this.projectSignalService.projectSelected;
   projectCollaboratorsSelected = this.projectSignalService.projectCollaboratorSelected;
+
+  ngOnDestroy(): void {
+    this.projectSignalService.selectProject(undefined);
+    this.projectSignalService.selectProjectCollaborators(undefined)
+  }
 }
