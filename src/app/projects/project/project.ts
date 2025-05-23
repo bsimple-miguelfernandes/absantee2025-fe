@@ -7,11 +7,6 @@ export interface Project {
     periodDate : PeriodDate
 }
 
-export interface ProjectCollaborators {
-    projectAcronym: string,
-    collabEmail: string,
-    periodDate: PeriodDate
-}
 export interface AddAssociationProjectCollaborator {
     collaboratorId : string,
     periodDate : PeriodDateString

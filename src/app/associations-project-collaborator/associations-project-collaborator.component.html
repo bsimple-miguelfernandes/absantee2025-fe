@@ -1,0 +1,47 @@
+@if (projectId()){
+    <h1>{{projectCollaboratorsSelected()!.title}}</h1>
+}
+@if(collaboratorId()) {
+    <h1>{{collaboratorProjectsSelected()!.email}}</h1>
+}
+<table>
+    <tr>
+        @if (projectId()) {
+            <th>Email</th>
+        }
+        @if(collaboratorId()) {
+            <th>Acronym</th>
+        }
+        <th>Init Date</th>
+        <th>Final Date</th>
+        <th>Actions</th>
+    </tr>
+    @for (assoc of projectCollaborators; track $index) {
+    <tr>
+        @if (projectId()) {
+            <td>{{assoc.collabEmail}}</td>
+        }
+        @if(collaboratorId()) {
+            <td>{{assoc.projectAcronym}}</td>
+        }
+        <td>{{assoc.periodDate.initDate | date:'yyyy-MM-dd'}}  </td>
+        <td>{{assoc.periodDate.finalDate | date:'yyyy-MM-dd'}}  </td>
+        @if (projectId()) {
+            <td><button (click)="onSelectCollaboratorDetails(assoc)">Collaborator Details</button> </td>
+        }
+        @if(collaboratorId()) {
+            <td><button (click)="onSelectProjectDetails(assoc)">Project Details</button> </td>
+        }
+    </tr>
+    }
+</table>
+
+@if (projectId() && collaboratorSelected()) {
+    <app-collaborator-details>
+
+    </app-collaborator-details>
+}
+
+@if (collaboratorId() && projectSelected()) {
+    <app-project />
+}

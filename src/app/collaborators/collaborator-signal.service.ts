@@ -15,6 +15,9 @@ export class CollaboratorSignalService {
 
   private selectedCollaboratorHolidaysSignal = signal<CollaboratorDetails | undefined>(undefined);
   readonly selectedCollaboratorHoliday = this.selectedCollaboratorHolidaysSignal.asReadonly();
+
+  private selectedCollaboratorProjectsSignal = signal<CollaboratorDetails | undefined>(undefined);
+  readonly selectedCollaboratorProjects = this.selectedCollaboratorProjectsSignal.asReadonly();
   
 
   // getCollaboratorsIds(): Observable<string[]> {
@@ -31,11 +34,19 @@ export class CollaboratorSignalService {
 
   selectCollaborator(selected: CollaboratorDetails | undefined){
     this.selectedCollaboratorHolidaysSignal.set(undefined);
+    this.selectedCollaboratorProjectsSignal.set(undefined);
     this.selectedCollaboratorSignal.set(selected);
   }
 
   selectCollaboratorHolidays(selected: CollaboratorDetails | undefined){
     this.selectedCollaboratorSignal.set(undefined);
+    this.selectedCollaboratorProjectsSignal.set(undefined);
     this.selectedCollaboratorHolidaysSignal.set(selected);
+  }
+
+  selectCollaboratorProjects(selected: CollaboratorDetails | undefined){
+    this.selectedCollaboratorSignal.set(undefined);
+    this.selectedCollaboratorHolidaysSignal.set(undefined);
+    this.selectedCollaboratorProjectsSignal.set(selected);
   }
 }

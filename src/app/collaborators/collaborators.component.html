@@ -15,3 +15,7 @@
     <app-collaborator-holidays>
     </app-collaborator-holidays>
 }
+
+@else if (selectedCollaboratorProject()) {
+    <app-associations-project-collaborator [collaboratorId]="selectedCollaboratorProject()!.id" />
+}

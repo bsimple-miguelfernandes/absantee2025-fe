@@ -32,5 +32,6 @@ export class CollaboratorListComponent {
   }
 
   onSelectCollaboratorProjects(collaborator: CollaboratorDetails){
+    this.collaboratorSignalService.selectCollaboratorProjects(collaborator);
   }
 }
