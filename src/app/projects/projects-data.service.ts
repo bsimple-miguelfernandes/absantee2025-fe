@@ -10,10 +10,12 @@ export class ProjectsDataService {
   private httpClient = inject(HttpClient);
 
   getProjects() : Observable<Project[]> {
-    return this.httpClient.get<Project[]>('https://localhost:7271/api/Project');
+    return this.httpClient.get<Project[]>('http://localhost:5073/api/Project');
   }
 
   getProjectById(id: string): Observable<Project>{
-    return this.httpClient.get<Project>('https://localhost:7271/api/Project/' + id);
+    return this.httpClient.get<Project>('http://localhost:5073/api/Project/' + id);
   }
+
+  //getCollaborators(id: string): Observable
 }
