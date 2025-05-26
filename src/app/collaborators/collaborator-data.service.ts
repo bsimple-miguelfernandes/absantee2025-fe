@@ -1,16 +1,20 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { CollaboratorDetails } from './collaborator-details/collaborator-details';
 import { PeriodDate } from '../PeriodDate';
 import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { AssociationProjectCollaborators } from '../associations-project-collaborator/association-project-collaborator.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CollaboratorDataService {
 
+  private httpClient = inject(HttpClient);
+
   private collaboratorsSignal = signal<CollaboratorDetails[]>([
     {
-      id: "1",
+      id: "019686f6-6850-73f9-b931-99ca52b7ca32",
       names: "Alice",
       surnames: "Johnson",
       email: "alice.johnson@example.com",
@@ -86,11 +90,15 @@ export class CollaboratorDataService {
     return this.CollaboratorHolidays.find(c => c.collaboratorId === collaboratorId)!.holidays;
   };
 
-  editHoliday(collaboratorId: string, index: number, updatedPeriod : PeriodDate){
+  editHoliday(collaboratorId: string, index: number, updatedPeriod: PeriodDate) {
     const holidays = this.CollaboratorHolidays.find(c => c.collaboratorId === collaboratorId)?.holidays;
 
-    if(holidays !== undefined){
+    if (holidays !== undefined) {
       holidays[index] = updatedPeriod;
     }
+  }
+
+  getAssociations(id: string): Observable<AssociationProjectCollaborators[]> {
+    return this.httpClient.get<AssociationProjectCollaborators[]>('http://localhost:5073/api/collaborators/' + id + "/associations");
   }
 }

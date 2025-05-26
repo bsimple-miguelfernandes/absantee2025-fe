@@ -44,7 +44,9 @@ export class AssociationsProjectCollaboratorComponent {
       if (this.collaboratorId()) {
         //reset the selected project
         this.projectSignalService.selectProject(undefined);
-        //this.projectCollaborators = this.associationDataService.getCollaboratorsOfProject(this.collaboratorId()!);
+        this.collaboratorDataService.getAssociations(this.collaboratorId()!).subscribe((associations) => {
+          this.projectCollaborators = associations;
+        });
       }
     });
   }
