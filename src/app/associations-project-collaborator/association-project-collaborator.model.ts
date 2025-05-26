@@ -1,9 +1,10 @@
 import { PeriodDate } from "../PeriodDate";
 
 export interface AssociationProjectCollaborators {
+    id: string,
     projectId: string,
     projectAcronym: string,
-    collabId: string,
-    collabEmail: string,
+    collaboratorId: string,
+    collaboratorEmail: string,
     periodDate: PeriodDate
 }

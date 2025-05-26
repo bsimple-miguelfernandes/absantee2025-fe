@@ -7,7 +7,6 @@ import { CollaboratorDetailsComponent } from "../collaborators/collaborator-deta
 import { ProjectComponent } from "../projects/project/project.component";
 import { DatePipe } from '@angular/common';
 import { AssociationProjectCollaborators } from './association-project-collaborator.model';
-import { AssociationsProjectCollaboratorDataService } from './associations-project-collaborator-data.service';
 import { Project } from '../projects/project/project';
 
 @Component({
@@ -24,8 +23,6 @@ export class AssociationsProjectCollaboratorComponent {
   projectSelected = this.projectSignalService.projectSelected;
   projectCollaboratorsSelected = this.projectSignalService.projectCollaboratorSelected;
 
-  associationDataService = inject(AssociationsProjectCollaboratorDataService);
-
   projectsDataService = inject(ProjectsDataService);
   projectCollaborators!: AssociationProjectCollaborators[];
 
@@ -40,18 +37,20 @@ export class AssociationsProjectCollaboratorComponent {
       if (this.projectId()) {
         //reset the selected collaborator
         this.collaboratorSignalService.selectCollaborator(undefined);
-        this.projectCollaborators = this.associationDataService.getProjectCollaborators(this.projectId()!);
+        this.projectsDataService.getAssociations(this.projectId()!).subscribe((associations => {
+          this.projectCollaborators = associations
+        }))
       }
       if (this.collaboratorId()) {
         //reset the selected project
         this.projectSignalService.selectProject(undefined);
-        this.projectCollaborators = this.associationDataService.getCollaboratorsOfProject(this.collaboratorId()!);
+        //this.projectCollaborators = this.associationDataService.getCollaboratorsOfProject(this.collaboratorId()!);
       }
     });
   }
 
   onSelectCollaboratorDetails(assoc: AssociationProjectCollaborators) {
-    const collab = this.collaboratorDataService.getCollaboratorByEmail(assoc.collabEmail);
+    const collab = this.collaboratorDataService.getCollaboratorByEmail(assoc.collaboratorEmail);
     this.collaboratorSignalService.selectCollaborator(collab);
   }
 

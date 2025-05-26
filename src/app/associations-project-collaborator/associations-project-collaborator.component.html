@@ -19,7 +19,7 @@
     @for (assoc of projectCollaborators; track $index) {
     <tr>
         @if (projectId()) {
-            <td>{{assoc.collabEmail}}</td>
+            <td>{{assoc.collaboratorEmail}}</td>
         }
         @if(collaboratorId()) {
             <td>{{assoc.projectAcronym}}</td>
