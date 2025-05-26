@@ -8,8 +8,8 @@
     <tr>
         <td>{{proj.title}}</td>
         <td>{{proj.acronym}}</td>
-        <td><button (click)="onSelectProject(proj)">Project Details</button>
-            <button (click)="onSelectProjectCollaborators(proj)">Project Collaborators</button>
+        <td><button (click)="onSelectProject(proj)" data-testid="details-btn">Project Details</button>
+            <button (click)="onSelectProjectCollaborators(proj)" data-testid="collabs-btn">Project Collaborators</button>
         </td>
     </tr>
     }

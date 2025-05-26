@@ -1,4 +1,4 @@
-import { Component, effect, inject } from '@angular/core';
+import { Component, effect, inject, input } from '@angular/core';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
 import { CollaboratorDataService } from '../collaborator-data.service';
 import { CollaboratorDetails } from '../collaborator-details/collaborator-details';
@@ -10,18 +10,9 @@ import { CollaboratorDetails } from '../collaborator-details/collaborator-detail
   styleUrl: './collaborators-bullets.component.css'
 })
 export class CollaboratorsBulletsComponent {
-  collaboratorSignalService = inject(CollaboratorSignalService);
-  collaboratorDataService = inject(CollaboratorDataService);
-  collaborators = this.collaboratorDataService.collaborators;
-  collaboratorUpdated = this.collaboratorSignalService.updatedCollaborator;
+  collaborators = input.required<CollaboratorDetails[]>();
 
-  constructor(){
-    effect(() => {
-      if(this.collaboratorUpdated()){
-        this.collaboratorDataService.updateCollaborator(this.collaboratorUpdated()!)
-      }
-    });
-  }
+  collaboratorSignalService = inject(CollaboratorSignalService);
 
   onSelectCollaborator(collaborator: CollaboratorDetails){
     this.collaboratorSignalService.selectCollaborator(collaborator);

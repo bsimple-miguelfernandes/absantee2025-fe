@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, OnChanges, OnInit, output, SimpleChanges } from '@angular/core';
+import { Component, computed, effect, inject, input, OnChanges, OnDestroy, OnInit, output, SimpleChanges } from '@angular/core';
 import { CollaboratorDetails } from './collaborator-details';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
@@ -44,7 +44,7 @@ export class CollaboratorDetailsComponent {
   }
 
   private formatDate(date: Date): string {
-    return new Date(date).toISOString().split('T')[0];
+    return date.toISOString().split('T')[0];
   }
 
   onSubmit() {

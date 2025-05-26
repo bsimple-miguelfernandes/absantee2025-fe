@@ -11,17 +11,7 @@ import { CollaboratorDataService } from '../collaborator-data.service';
 })
 export class CollaboratorListComponent {
   collaboratorSignalService = inject(CollaboratorSignalService);
-  collaboratorDataService = inject(CollaboratorDataService);
-  collaborators = this.collaboratorDataService.collaborators;
-  collaboratorUpdated = this.collaboratorSignalService.updatedCollaborator;
-
-  constructor(){
-    effect(() => {
-      if(this.collaboratorUpdated()){
-        this.collaboratorDataService.updateCollaborator(this.collaboratorUpdated()!)
-      }
-    });
-  }
+  collaborators = input.required<CollaboratorDetails[]>();
 
   onSelectCollaborator(collaborator: CollaboratorDetails){
     this.collaboratorSignalService.selectCollaborator(collaborator);

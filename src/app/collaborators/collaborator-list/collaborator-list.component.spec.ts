@@ -11,27 +11,15 @@ describe('CollaboratorListComponent', () => {
   let fixture: ComponentFixture<CollaboratorListComponent>;
   let collaborators: CollaboratorDetails[];
   let mockCollaboratorSignalService: jasmine.SpyObj<CollaboratorSignalService>;
-  let mockCollaboratorDataService: jasmine.SpyObj<CollaboratorDataService>;
-  let collaboratorsSignal: WritableSignal<CollaboratorDetails[]>;
-  let updatedSignal: WritableSignal<CollaboratorDetails | undefined>;
-
   
 
   beforeEach(async () => {
-    collaboratorsSignal= signal<CollaboratorDetails[]>([]);
-    mockCollaboratorDataService = jasmine.createSpyObj('CollaboratorDataService', ['updateCollaborator'], {
-      collaborators: collaboratorsSignal
-    });
-    updatedSignal = signal<CollaboratorDetails | undefined>(undefined);
-    mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', ['selectCollaborator'], {
-      updatedCollaborator: updatedSignal
-    });
+    mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', ['selectCollaborator']);
 
     await TestBed.configureTestingModule({
       imports: [CollaboratorListComponent],
       providers: [
         { provide: CollaboratorSignalService, useValue: mockCollaboratorSignalService },
-        { provide: CollaboratorDataService, useValue: mockCollaboratorDataService }
       ]
     })
       .compileComponents();
@@ -71,8 +59,7 @@ describe('CollaboratorListComponent', () => {
         }
       }
     ];
-
-    collaboratorsSignal.set(collaborators);
+    fixture.componentRef.setInput('collaborators', collaborators);
     fixture.detectChanges();
   });
 
@@ -117,7 +104,7 @@ describe('CollaboratorListComponent', () => {
       }
     ];
 
-    collaboratorsSignal.set(newCollaborators);
+    fixture.componentRef.setInput('collaborators', newCollaborators);
 
     fixture.detectChanges();
 
@@ -126,15 +113,5 @@ describe('CollaboratorListComponent', () => {
     const cells1 = rows[1].querySelectorAll('td');
     expect(cells1[0].textContent).toBe('John');
     expect(cells1[1].textContent).toBe("john.doe@example.com");
-  });
-
-  it('should call updateCollaborator when a collaborator is updated', () => {
-    const collaboratorUpdated = collaborators[1];
-    collaboratorUpdated.email = "new-email@test.com";
-
-    updatedSignal.set(collaboratorUpdated);
-    fixture.detectChanges();
-
-    expect(mockCollaboratorDataService.updateCollaborator).toHaveBeenCalledOnceWith(collaboratorUpdated);
   });
 });

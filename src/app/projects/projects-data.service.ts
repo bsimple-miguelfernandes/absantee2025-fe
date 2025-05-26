@@ -1,34 +1,19 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Project } from './project/project';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectsDataService {
-  private projectsSignal = signal<Project[]>([
-    {
-      id: '1',
-      title: "Project1",
-      acronym: "P1",
-      periodDate: {
-        initDate: new Date("2021-02-01"),
-        finalDate: new Date("2024-07-30")
-      }
-    },
-    {
-      id: '2',
-      title: "Project2",
-      acronym: "P2",
-      periodDate: {
-        initDate: new Date("2022-03-01"),
-        finalDate: new Date("2027-09-30")
-      }
-    }
-  ]);
+  private httpClient = inject(HttpClient);
 
-  readonly projects = this.projectsSignal.asReadonly();
+  getProjects() : Observable<Project[]> {
+    return this.httpClient.get<Project[]>('https://localhost:7271/api/Project');
+  }
 
-  getProjectByAcronym(acronym: string): Project{
-    return this.projectsSignal().find(p => p.acronym === acronym)!;
+  getProjectById(id: string): Observable<Project>{
+    return this.httpClient.get<Project>('https://localhost:7271/api/Project/' + id);
   }
 }

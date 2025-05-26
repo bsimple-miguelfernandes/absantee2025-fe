@@ -8,6 +8,7 @@ import { ProjectComponent } from "../projects/project/project.component";
 import { DatePipe } from '@angular/common';
 import { AssociationProjectCollaborators } from './association-project-collaborator.model';
 import { AssociationsProjectCollaboratorDataService } from './associations-project-collaborator-data.service';
+import { Project } from '../projects/project/project';
 
 @Component({
   selector: 'app-associations-project-collaborator',
@@ -55,7 +56,8 @@ export class AssociationsProjectCollaboratorComponent {
   }
 
   onSelectProjectDetails(assoc: AssociationProjectCollaborators) {
-    const project = this.projectsDataService.getProjectByAcronym(assoc.projectAcronym);
-    this.projectSignalService.selectProject(project);
+    this.projectsDataService.getProjectById(assoc.projectId).subscribe((project) => {
+      this.projectSignalService.selectProject(project);
+    });
   }
 }

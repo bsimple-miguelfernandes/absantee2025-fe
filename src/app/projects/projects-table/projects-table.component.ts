@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { ProjectsDataService } from '../projects-data.service';
 import { ProjectsSignalsService } from '../projects-signals.service';
 import { Project } from '../project/project';
@@ -10,8 +10,7 @@ import { Project } from '../project/project';
   styleUrl: './projects-table.component.css'
 })
 export class ProjectsTableComponent {
-  projectDataService = inject(ProjectsDataService);
-  projects = this.projectDataService.projects;
+  projects = input.required<Project[]>();
 
   projectSignalService = inject(ProjectsSignalsService);
 

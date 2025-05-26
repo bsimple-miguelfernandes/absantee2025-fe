@@ -3,6 +3,8 @@ import { ProjectComponent } from "./project/project.component";
 import { ProjectsTableComponent } from "./projects-table/projects-table.component";
 import { ProjectsSignalsService } from './projects-signals.service';
 import { AssociationsProjectCollaboratorComponent } from "../associations-project-collaborator/associations-project-collaborator.component";
+import { ProjectsDataService } from './projects-data.service';
+import { Project } from './project/project';
 
 @Component({
   selector: 'app-projects',
@@ -10,13 +12,20 @@ import { AssociationsProjectCollaboratorComponent } from "../associations-projec
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.css'
 })
-export class ProjectsComponent implements OnInit {
+export class ProjectsComponent {
   projectSignalService = inject(ProjectsSignalsService);
   projectSelected = this.projectSignalService.projectSelected;
   projectCollaboratorsSelected = this.projectSignalService.projectCollaboratorSelected;
 
-  ngOnInit(): void {
+  projectDataService = inject(ProjectsDataService);
+  projects : Project[] = [];
+
+  constructor() {
+    this.projectDataService.getProjects().subscribe((projects) => {
+      this.projects = projects
+    });
+
     this.projectSignalService.selectProject(undefined);
-    this.projectSignalService.selectProjectCollaborators(undefined)
+    this.projectSignalService.selectProjectCollaborators(undefined);
   }
 }

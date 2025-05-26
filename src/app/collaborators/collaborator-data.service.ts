@@ -1,6 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { CollaboratorDetails } from './collaborator-details/collaborator-details';
 import { PeriodDate } from '../PeriodDate';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'

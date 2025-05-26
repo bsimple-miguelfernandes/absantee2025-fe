@@ -4,29 +4,40 @@ import { CollaboratorsComponent } from './collaborators.component';
 import { CollaboratorDetails } from './collaborator-details/collaborator-details';
 import { CollaboratorSignalService } from './collaborator-signal.service';
 import { signal, WritableSignal } from '@angular/core';
+import { CollaboratorDataService } from './collaborator-data.service';
 
 describe('CollaboratorsComponent', () => {
   let component: CollaboratorsComponent;
   let fixture: ComponentFixture<CollaboratorsComponent>;
+  let mockCollaboratorDataService: jasmine.SpyObj<CollaboratorDataService>;
+  let collaboratorsSignal: WritableSignal<CollaboratorDetails[]>;
   let mockCollaboratorSignalService: jasmine.SpyObj<CollaboratorSignalService>;
   let selectedSignal: WritableSignal<CollaboratorDetails | undefined>;
   let updatedSignal: WritableSignal<CollaboratorDetails | undefined>;
   let selectedCollaboratorHolidaysSignal: WritableSignal<CollaboratorDetails | undefined>;
+  let selectedCollaboratorProjectsSignal: WritableSignal<CollaboratorDetails | undefined>;
 
   beforeEach(async () => {
+    collaboratorsSignal = signal<CollaboratorDetails[]>([]);
+    mockCollaboratorDataService = jasmine.createSpyObj('CollaboratorDataService', ['updateCollaborator', 'getCollaboratorHolidays'], {
+      collaborators: collaboratorsSignal
+    })
     selectedSignal = signal<CollaboratorDetails | undefined>(undefined);
     updatedSignal = signal<CollaboratorDetails | undefined>(undefined);
     selectedCollaboratorHolidaysSignal = signal<CollaboratorDetails | undefined>(undefined);
-    mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', [], {
+    selectedCollaboratorProjectsSignal = signal<CollaboratorDetails | undefined>(undefined);
+    mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', ['selectCollaborator', 'selectCollaboratorHolidays'], {
       selectedCollaborator: selectedSignal,
       updatedCollaborator: updatedSignal,
-      selectedCollaboratorHoliday: selectedCollaboratorHolidaysSignal
+      selectedCollaboratorHoliday: selectedCollaboratorHolidaysSignal,
+      selectedCollaboratorProjects: selectedCollaboratorProjectsSignal
     });
 
     await TestBed.configureTestingModule({
       imports: [CollaboratorsComponent],
       providers: [
-        { provide: CollaboratorSignalService, useValue: mockCollaboratorSignalService }
+        { provide: CollaboratorSignalService, useValue: mockCollaboratorSignalService },
+        { provide: CollaboratorDataService, useValue: mockCollaboratorDataService }
       ]
     })
       .compileComponents();
@@ -34,8 +45,38 @@ describe('CollaboratorsComponent', () => {
     fixture = TestBed.createComponent(CollaboratorsComponent);
     component = fixture.componentInstance;
 
-    selectedSignal.set(undefined);
-    updatedSignal.set(undefined);
+    collaboratorsSignal.set([
+      {
+        id: "1",
+        names: "Alice",
+        surnames: "Johnson",
+        email: "alice.johnson@example.com",
+        periodDateTime: {
+          _initDate: new Date(2019, 5, 10),
+          _finalDate: new Date(2025, 11, 31)
+        }
+      },
+      {
+        id: "2",
+        names: "Bob",
+        surnames: "Martinez",
+        email: "bob.martinez@example.com",
+        periodDateTime: {
+          _initDate: new Date(2021, 1, 1),
+          _finalDate: new Date(2024, 6, 30)
+        }
+      },
+      {
+        id: "3",
+        names: "Clara",
+        surnames: "Nguyen",
+        email: "clara.nguyen@example.com",
+        periodDateTime: {
+          _initDate: new Date(2020, 3, 15),
+          _finalDate: new Date(2030, 8, 1)
+        }
+      }
+    ]);
 
     fixture.detectChanges();
   });
@@ -46,6 +87,16 @@ describe('CollaboratorsComponent', () => {
 
   it('should not show collaborator details on init because selectedCollaborator is undefined', () => {
     const collaboratorDetails = fixture.nativeElement.querySelector('app-collaborator-details');
+    expect(collaboratorDetails).toBeNull();
+  });
+
+  it('should not show collaborator holidays on init because selectedCollaboratorHolidays is undefined', () => {
+    const collaboratorDetails = fixture.nativeElement.querySelector('app-collaborator-holidays');
+    expect(collaboratorDetails).toBeNull();
+  });
+
+  it('should not show collaborator projects on init because selectedCollaboratorProject is undefined', () => {
+    const collaboratorDetails = fixture.nativeElement.querySelector('app-associations-project-collaborator');
     expect(collaboratorDetails).toBeNull();
   });
 
@@ -75,6 +126,57 @@ describe('CollaboratorsComponent', () => {
 
     const collaboratorDetails = fixture.nativeElement.querySelector('app-collaborator-details');
     expect(collaboratorDetails).not.toBeNull();
+  });
+
+  it('should show collaborator holidays when selectedCollaboratorHolidays signal changes', () => {
+    const collaborator: CollaboratorDetails = {
+      id: "1",
+      names: "Alice",
+      surnames: "Johnson",
+      email: "alice.johnson@example.com",
+      periodDateTime: {
+        _initDate: new Date(2019, 5, 10),
+        _finalDate: new Date(2025, 11, 31)
+      }
+    };
+    
+    mockCollaboratorDataService.getCollaboratorHolidays.and.returnValue([]);
+    selectedCollaboratorHolidaysSignal.set(collaborator);
+
+    fixture.detectChanges();
+
+    const collaboratorHolidays = fixture.nativeElement.querySelector('app-collaborator-holidays');
+    expect(collaboratorHolidays).not.toBeNull();
+  });
+
+  it('should show collaborator Projects when selectedCollaboratorProject signal changes', () => {
+    const collaborator: CollaboratorDetails = {
+      id: "1",
+      names: "Alice",
+      surnames: "Johnson",
+      email: "alice.johnson@example.com",
+      periodDateTime: {
+        _initDate: new Date(2019, 5, 10),
+        _finalDate: new Date(2025, 11, 31)
+      }
+    };
+    
+    selectedCollaboratorProjectsSignal.set(collaborator);
+
+    fixture.detectChanges();
+
+    const collaboratorProjects = fixture.nativeElement.querySelector('app-associations-project-collaborator');
+    expect(collaboratorProjects).not.toBeNull();
+  });
+
+  it('should call updateCollaborator when a collaborator is updated', () => {
+    const collaboratorUpdated = collaboratorsSignal()[1];
+    collaboratorUpdated.email = "new-email@test.com";
+
+    updatedSignal.set(collaboratorUpdated);
+    fixture.detectChanges();
+
+    expect(mockCollaboratorDataService.updateCollaborator).toHaveBeenCalledOnceWith(collaboratorUpdated);
   });
 
   // it('should show collaborator details when button of CollaboratorListComponent is clicked', () => {

@@ -12,7 +12,9 @@ export class AssociationsProjectCollaboratorDataService {
     if (projectId === '1') {
       return [
         {
+          projectId: "1",
           projectAcronym: "P1",
+          collabId: "1",
           collabEmail: "alice.johnson@example.com",
           periodDate: {
             initDate: new Date("2019-06-10"),
@@ -20,7 +22,9 @@ export class AssociationsProjectCollaboratorDataService {
           }
         },
         {
+          projectId: "1",
           projectAcronym: "P1",
+          collabId: "2",
           collabEmail: "bob.martinez@example.com",
           periodDate: {
             initDate: new Date("2021-02-01"),
@@ -32,7 +36,9 @@ export class AssociationsProjectCollaboratorDataService {
     else {
       return [
         {
+          projectId: "2",
           projectAcronym: "P2",
+          collabId: "1",
           collabEmail: "alice.johnson@example.com",
           periodDate: {
             initDate: new Date("2019-06-10"),
@@ -47,7 +53,9 @@ export class AssociationsProjectCollaboratorDataService {
     if (collaboratorId === '1') {
       return [
         {
+          projectId: "1",
           projectAcronym: "P1",
+          collabId: "1",
           collabEmail: "alice.johnson@example.com",
           periodDate: {
             initDate: new Date("2019-06-10"),
@@ -55,7 +63,9 @@ export class AssociationsProjectCollaboratorDataService {
           }
         },
         {
+          projectId: "2",
           projectAcronym: "P2",
+          collabId: "1",
           collabEmail: "alice.johnson@example.com",
           periodDate: {
             initDate: new Date("2021-02-01"),
