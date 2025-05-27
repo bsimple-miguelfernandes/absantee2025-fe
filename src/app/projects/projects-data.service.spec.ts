@@ -11,15 +11,14 @@ describe('ProjectsDataService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
       providers: [
+        ProjectsDataService,
         provideHttpClient(),
         provideHttpClientTesting()
       ]
     });
-    service = TestBed.inject(ProjectsDataService);
 
-    service  = TestBed.inject(ProjectsDataService); 
+    service = TestBed.inject(ProjectsDataService);
     httpMock = TestBed.inject(HttpTestingController);
   });
 
@@ -51,10 +50,15 @@ describe('ProjectsDataService', () => {
   }));
 
   it('should fetch project by id', fakeAsync(() => {
-    const mockProject: Project = {id:'1', title:'Project 1', acronym: 'P1', periodDate: {
-          initDate : new Date('2024-01-01'),
-          finalDate: new Date('2024-12-31')
-        }}
+    const mockProject: Project = {
+      id: '1',
+      title: 'Project 1',
+      acronym: 'P1',
+      periodDate: {
+        initDate : new Date('2024-01-01'),
+        finalDate: new Date('2024-12-31')
+      }
+    };
 
     let result!: Project;
     service.getProjectById('1').subscribe(p => (result = p));
@@ -65,5 +69,5 @@ describe('ProjectsDataService', () => {
 
     tick();
     expect(result).toEqual(mockProject);
-  })) 
+  }));
 });
