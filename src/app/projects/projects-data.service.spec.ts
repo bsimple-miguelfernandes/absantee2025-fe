@@ -1,16 +1,100 @@
-import { TestBed } from '@angular/core/testing';
-
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ProjectsDataService } from './projects-data.service';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { Project } from './project/project';
+import { AssociationProjectCollaborators } from '../associations-project-collaborator/association-project-collaborator.model';
 
 describe('ProjectsDataService', () => {
   let service: ProjectsDataService;
+  let httpMock: HttpTestingController;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [
+        ProjectsDataService,
+        provideHttpClient(),
+        provideHttpClientTesting()
+      ]
+    });
+
     service = TestBed.inject(ProjectsDataService);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
+  afterEach(() => httpMock.verify());
+
+  it('should fetch all projects', fakeAsync(() => {
+    const mockProjects: Project[] = [
+      {
+        id: '1',
+        title: 'Project 1',
+        acronym: 'P1',
+        periodDate: {
+          initDate : new Date('2024-01-01'),
+          finalDate: new Date('2024-12-31')
+        }
+      }
+    ];
+
+    let result: Project[] = [];
+
+    service.getProjects().subscribe(r => (result = r));
+
+    const req = httpMock.expectOne('http://localhost:5073/api/Project');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockProjects);
+
+    tick();
+    expect(result).toEqual(mockProjects);
+  }));
+
+  it('should fetch project by id', fakeAsync(() => {
+    const mockProject: Project = {
+      id: '1',
+      title: 'Project 1',
+      acronym: 'P1',
+      periodDate: {
+        initDate : new Date('2024-01-01'),
+        finalDate: new Date('2024-12-31')
+      }
+    };
+
+    let result!: Project;
+    service.getProjectById('1').subscribe(p => (result = p));
+
+    const req = httpMock.expectOne('http://localhost:5073/api/Project/1');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockProject);
+
+    tick();
+    expect(result).toEqual(mockProject);
+  }));
+
+  it('should fetch associations by id', fakeAsync(() => {
+    const mockAssociations: AssociationProjectCollaborators[] = [
+      {
+        id: "1",
+        projectId: "1",
+        projectAcronym: "T1",
+        collaboratorId: "1",
+        collaboratorEmail: "test1@example.com",
+        periodDate: {
+          initDate : new Date('2024-01-01'),
+          finalDate: new Date('2024-12-31')
+        }
+      }
+    ];
+
+    let result!: AssociationProjectCollaborators[];
+    service.getAssociations('1').subscribe(p => (result = p));
+
+    const req = httpMock.expectOne('http://localhost:5073/api/Project/1/associations');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockAssociations);
+
+    tick();
+    expect(result).toEqual(mockAssociations);
+  }));
 });

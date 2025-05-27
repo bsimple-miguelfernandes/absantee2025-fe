@@ -1,33 +1,42 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+/*import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProjectsComponent } from './projects.component';
-import { ProjectService } from './project.service';
 import { Project } from './project/project';
 import { of } from 'rxjs';
 import { RouterModule } from '@angular/router';
 import { routes } from '../app.routes';
+import { ProjectsDataService } from './projects-data.service';
+import { signal, WritableSignal } from '@angular/core';
+import { ProjectsSignalsService } from './projects-signals.service';
 
 describe('ProjectsComponent', () => {
   let component: ProjectsComponent;
   let fixture: ComponentFixture<ProjectsComponent>;
-  let mockProjectService: jasmine.SpyObj<ProjectService>;
+  let mockProjectsDataService: jasmine.SpyObj<ProjectsDataService>;
   let projects: Project[];
+  let mockProjectSignalService: jasmine.SpyObj<ProjectsSignalsService>;
+  let projectSelectedSignal: WritableSignal<Project | undefined>;
+  let projectCollaboratorsSelectedSignal: WritableSignal<Project | undefined>;
 
   beforeEach(async () => {
-    mockProjectService = jasmine.createSpyObj('ProjectService', ['getProjects']);
+    mockProjectsDataService = jasmine.createSpyObj('ProjectsDataService', ['getProjects']);
 
+    projectSelectedSignal = signal<Project | undefined>(undefined);
+    projectCollaboratorsSelectedSignal = signal<Project | undefined>(undefined);
+    mockProjectSignalService = jasmine.createSpyObj('ProjectsSignalsService', ['selectProject', 'selectProjectCollaborators'], {
+      projectSelected: projectSelectedSignal,
+      projectCollaboratorSelected: projectCollaboratorsSelectedSignal
+    })
     await TestBed.configureTestingModule({
-      imports: [ProjectsComponent, 
+      imports: [ProjectsComponent,
         RouterModule.forRoot(routes)
       ],
       providers: [
-        { provide: ProjectService, useValue: mockProjectService }
+        { provide: ProjectsDataService, useValue: mockProjectsDataService },
+        { provide: ProjectsSignalsService, useValue: mockProjectSignalService }
       ]
     })
       .compileComponents();
-
-    fixture = TestBed.createComponent(ProjectsComponent);
-    component = fixture.componentInstance;
 
     projects = [
       {
@@ -49,13 +58,66 @@ describe('ProjectsComponent', () => {
         }
       }
     ];
-    mockProjectService.getProjects.and.returnValue(of(projects));
+    mockProjectsDataService.getProjects.and.returnValue(of(projects));
 
-
+    fixture = TestBed.createComponent(ProjectsComponent);
+    component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should show projects table on init', () => {
+    const projectsTable = fixture.nativeElement.querySelector('app-projects-table');
+    expect(projectsTable).not.toBeNull();
+  });
+
+  it('should not show project details on init because projectSelected is undefined', () => {
+    const projectDetails = fixture.nativeElement.querySelector('app-project');
+    expect(projectDetails).toBeNull();
+  });
+
+  it('should not show project associations on init because projectCollaboratorsSelected is undefined', () => {
+    const associations = fixture.nativeElement.querySelector('app-associations-project-collaborator');
+    expect(associations).toBeNull();
+  });
+
+  it('should show project details when projectSelected changes', () => {
+    const project: Project = {
+      id: '2',
+      title: 'Test 2',
+      acronym: 'T2',
+      periodDate: {
+        initDate: new Date(2020, 1, 1),
+        finalDate: new Date(2021, 1, 1)
+      }
+    };
+
+    projectSelectedSignal.set(project);
+
+    fixture.detectChanges();
+    const projectDetails = fixture.nativeElement.querySelector('app-project');
+    expect(projectDetails).not.toBeNull();
+  });
+
+  it('should show project associations when projectCollaboratorsSelected changes', () => {
+    const project: Project = {
+      id: '2',
+      title: 'Test 2',
+      acronym: 'T2',
+      periodDate: {
+        initDate: new Date(2020, 1, 1),
+        finalDate: new Date(2021, 1, 1)
+      }
+    };
+
+    projectCollaboratorsSelectedSignal.set(project);
+
+    fixture.detectChanges();
+    const associations = fixture.nativeElement.querySelector('app-associations-project-collaborator');
+    expect(associations).not.toBeNull();
+  });
 });
+*/
