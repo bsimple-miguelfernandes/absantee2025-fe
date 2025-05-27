@@ -16,6 +16,10 @@ export class CollaboratorDataService {
     return this.collaboratorsSignal().find(c => c.email === email)!;
   } */
 
+  getCollabs() : Observable<Collaborator[]>{
+    return this.httpClient.get<Collaborator[]>("http://localhost:5073/api/collaborators/details");
+  }
+
   updateCollaborator(updatedCollaborator: Collaborator) {
     return this.httpClient.put<Collaborator>("http://localhost:5073/api/collaborators", updatedCollaborator);
   } 
