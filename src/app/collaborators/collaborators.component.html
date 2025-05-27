@@ -1,7 +1,7 @@
-<app-collaborator-list [collaborators]="collaborators()">
+<app-collaborator-list [collaborators]="collaborators">
 </app-collaborator-list>
 
-<app-collaborators-bullets [collaborators]="collaborators()">
+<app-collaborators-bullets [collaborators]="collaborators">
 </app-collaborators-bullets>
 
 <p></p>
@@ -16,6 +16,6 @@
     </app-collaborator-holidays>
 }
 
-@else if (selectedCollaboratorProject()) {
+<!-- @else if (selectedCollaboratorProject()) {
     <app-associations-project-collaborator [collaboratorId]="selectedCollaboratorProject()!.id" />
-}
+} -->

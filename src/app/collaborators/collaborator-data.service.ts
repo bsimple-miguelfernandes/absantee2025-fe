@@ -5,89 +5,27 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { AssociationProjectCollaborators } from '../associations-project-collaborator/association-project-collaborator.model';
 import { HolidayPeriod } from './collaborator-holidays/holiday-period';
+import { Collaborator } from './collaborator';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CollaboratorDataService {
-
   private httpClient = inject(HttpClient);
 
-  private collaboratorsSignal = signal<CollaboratorDetails[]>([
-    {
-      id: "019686f6-6850-73f9-b931-99ca52b7ca32",
-      names: "Alice",
-      surnames: "Johnson",
-      email: "alice.johnson@example.com",
-      periodDateTime: {
-        _initDate: new Date("2019-06-10"),
-        _finalDate: new Date("2025-12-31")
-      }
-    },
-    {
-      id: "2",
-      names: "Bob",
-      surnames: "Martinez",
-      email: "bob.martinez@example.com",
-      periodDateTime: {
-        _initDate: new Date("2021-02-01"),
-        _finalDate: new Date("2024-07-30")
-      }
-    },
-    {
-      id: "3",
-      names: "Clara",
-      surnames: "Nguyen",
-      email: "clara.nguyen@example.com",
-      periodDateTime: {
-        _initDate: new Date("2020-04-15"),
-        _finalDate: new Date("2030-09-01")
-      }
-    }
-  ]);
-
-  readonly collaborators = this.collaboratorsSignal.asReadonly();
-
-  getCollaboratorByEmail(email: string): CollaboratorDetails {
+  /* getCollaboratorByEmail(email: string): CollaboratorDetails {
     return this.collaboratorsSignal().find(c => c.email === email)!;
+  } */
+
+  getCollabs() : Observable<Collaborator[]>{
+    return this.httpClient.get<Collaborator[]>("http://localhost:5073/api/collaborators/details");
   }
 
-  updateCollaborator(updatedCollaborator: CollaboratorDetails) {
-    this.collaboratorsSignal.update(list =>
-      list.map(c => c.id === updatedCollaborator.id ? updatedCollaborator : c)
-    );
-  }
+  updateCollaborator(updatedCollaborator: Collaborator) {
+    return this.httpClient.put<Collaborator>("http://localhost:5073/api/collaborators", updatedCollaborator);
+  } 
 
-  private CollaboratorHolidays: { collaboratorId: string, holidays: PeriodDate[] }[] = [
-    {
-      collaboratorId: "1",
-      holidays: [
-        {
-          initDate: new Date("2020-01-01"),
-          finalDate: new Date("2020-01-10")
-        },
-        {
-          initDate: new Date("2020-12-01"),
-          finalDate: new Date("2020-12-10")
-        }
-      ]
-    },
-    {
-      collaboratorId: "2",
-      holidays: [
-        {
-          initDate: new Date("2020-06-06"),
-          finalDate: new Date("2020-06-16")
-        }
-      ]
-    },
-    {
-      collaboratorId: "3",
-      holidays: []
-    }
-  ]
-
-    getCollaboratorHolidays(collaboratorId: string): Observable<HolidayPeriod[]> {
+  getCollaboratorHolidays(collaboratorId: string): Observable<HolidayPeriod[]> {
     return this.httpClient.get<HolidayPeriod[]>("http://localhost:5073/api/collaborators/"+ collaboratorId + "/holidayplan/holidayperiod");
   };
 

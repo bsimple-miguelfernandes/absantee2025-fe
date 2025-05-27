@@ -6,6 +6,7 @@ import { CollaboratorsBulletsComponent } from "./collaborators-bullets/collabora
 import { CollaboratorHolidaysComponent } from "./collaborator-holidays/collaborator-holidays.component";
 import { AssociationsProjectCollaboratorComponent } from "../associations-project-collaborator/associations-project-collaborator.component";
 import { CollaboratorDataService } from './collaborator-data.service';
+import { Collaborator } from './collaborator';
 
 @Component({
   selector: 'app-collaborators',
@@ -21,15 +22,31 @@ export class CollaboratorsComponent {
   selectedCollaboratorProject = this.collaboratorSignalService.selectedCollaboratorProjects;
 
   collaboratorDataService = inject(CollaboratorDataService);
-  collaborators = this.collaboratorDataService.collaborators;
+  collaborators : Collaborator[] = [];
 
   constructor() {
+    this.collaboratorDataService.getCollabs().subscribe((collaborators) => {
+      this.collaborators = collaborators;
+    })
+
     this.collaboratorSignalService.selectCollaborator(undefined);
     this.collaboratorSignalService.selectCollaboratorHolidays(undefined);
+
     effect(() => {
-      if (this.collaboratorUpdated()) {
-        this.collaboratorDataService.updateCollaborator(this.collaboratorUpdated()!)
+      const updated = this.collaboratorUpdated();
+      if (updated) {
+        this.collaboratorDataService.updateCollaborator(updated).subscribe({
+          next: () => {
+            this.collaboratorDataService.getCollabs().subscribe((collabs) => {
+              this.collaborators = collabs;
+            });
+          },
+          error: (err) => {
+            console.error('Erro ao atualizar colaborador:', err);
+          }
+        });
       }
     });
+    
   }
 }

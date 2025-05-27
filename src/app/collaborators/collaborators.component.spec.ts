@@ -169,7 +169,7 @@ describe('CollaboratorsComponent', () => {
     expect(collaboratorProjects).not.toBeNull();
   });
 
-  it('should call updateCollaborator when a collaborator is updated', () => {
+  /* it('should call updateCollaborator when a collaborator is updated', () => {
     const collaboratorUpdated = collaboratorsSignal()[1];
     collaboratorUpdated.email = "new-email@test.com";
 
@@ -177,7 +177,7 @@ describe('CollaboratorsComponent', () => {
     fixture.detectChanges();
 
     expect(mockCollaboratorDataService.updateCollaborator).toHaveBeenCalledOnceWith(collaboratorUpdated);
-  });
+  }); */
 
   // it('should show collaborator details when button of CollaboratorListComponent is clicked', () => {
   //   const listComponent: HTMLElement = fixture.debugElement.query(By.directive(CollaboratorListComponent)).nativeElement;

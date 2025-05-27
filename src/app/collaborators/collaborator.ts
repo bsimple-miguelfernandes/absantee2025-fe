@@ -1,7 +1,11 @@
-import { PeriodDate, PeriodDateTime } from "../PeriodDate";
+import { PeriodDateTime } from "../PeriodDate";
 
 export interface Collaborator {
-    id: string,
+    collabId: string,
     userId: string,
-    periodDateTime : PeriodDateTime
+    names : string,
+    surnames : string,
+    email : string,
+    userPeriod : PeriodDateTime
+    collaboratorPeriod : PeriodDateTime
 }

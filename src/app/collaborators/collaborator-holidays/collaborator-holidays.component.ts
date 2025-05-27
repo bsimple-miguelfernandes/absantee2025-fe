@@ -23,7 +23,7 @@ export class CollaboratorHolidaysComponent {
 
   constructor() {
     this.collaboratorDataService
-      .getCollaboratorHolidays(this.collaboratorHolidaysSelected()!.id)
+      .getCollaboratorHolidays(this.collaboratorHolidaysSelected()!.collabId)
       .subscribe((holidays) => {
         this.collaboratorHolidays = holidays
         const holidayControls = this.collaboratorHolidays.map(holiday =>
@@ -56,7 +56,7 @@ export class CollaboratorHolidaysComponent {
       }
     }
 
-    this.collaboratorDataService.editHoliday(this.collaboratorHolidaysSelected()!.id, updatedHoliday);
+    this.collaboratorDataService.editHoliday(this.collaboratorHolidaysSelected()!.collabId, updatedHoliday);
   }
 
   createEmptyHoliday() {
