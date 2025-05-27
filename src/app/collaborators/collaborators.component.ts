@@ -36,8 +36,10 @@ export class CollaboratorsComponent {
       const updated = this.collaboratorUpdated();
       if (updated) {
         this.collaboratorDataService.updateCollaborator(updated).subscribe({
-          next: (resp) => {
-            console.log('Colaborador atualizado:', resp);
+          next: () => {
+            this.collaboratorDataService.getCollabs().subscribe((collabs) => {
+              this.collaborators = collabs;
+            });
           },
           error: (err) => {
             console.error('Erro ao atualizar colaborador:', err);
