@@ -2,6 +2,7 @@ import { Component, computed, effect, inject, input, OnChanges, OnDestroy, OnIni
 import { CollaboratorDetails } from './collaborator-details';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
+import { Collaborator } from '../collaborator';
 
 @Component({
   selector: 'app-collaborator-details',
@@ -15,6 +16,8 @@ export class CollaboratorDetailsComponent {
   form!: FormGroup;
 
   constructor() {
+    console.log(this.collaborator()?.userPeriod);
+    console.log(this.collaborator()?.userPeriod._initDate);
     effect(() => {
       const collaboratorObj = this.collaborator();
       if (!collaboratorObj) return;
@@ -24,9 +27,13 @@ export class CollaboratorDetailsComponent {
           names: new FormControl(collaboratorObj.names),
           surnames: new FormControl(collaboratorObj.surnames),
           email: new FormControl(collaboratorObj.email),
-          periodDateTime: new FormGroup({
-            initDate: new FormControl(this.formatDate(collaboratorObj.periodDateTime._initDate)),
-            endDate: new FormControl(this.formatDate(collaboratorObj.periodDateTime._finalDate)),
+          userPeriodDateTime: new FormGroup({
+            userInitDate: new FormControl(this.formatDate(collaboratorObj.userPeriod._initDate)),
+            userEndDate: new FormControl(this.formatDate(collaboratorObj.userPeriod._finalDate)),
+          }), 
+          collaboratorPeriodDateTime: new FormGroup({
+            collabInitDate: new FormControl(this.formatDate(collaboratorObj.collaboratorPeriod._initDate)),
+            collabEndDate: new FormControl(this.formatDate(collaboratorObj.collaboratorPeriod._finalDate)),
           })
         });
       } else {
@@ -34,9 +41,13 @@ export class CollaboratorDetailsComponent {
           names: collaboratorObj.names,
           surnames: collaboratorObj.surnames,
           email: collaboratorObj.email,
-          periodDateTime: {
-            initDate: this.formatDate(collaboratorObj.periodDateTime._initDate),
-            endDate: this.formatDate(collaboratorObj.periodDateTime._finalDate)
+          userPeriodDateTime: {
+            userInitDate: this.formatDate(collaboratorObj.collaboratorPeriod._initDate),
+            userEndDate: this.formatDate(collaboratorObj.collaboratorPeriod._finalDate)
+          },
+          collaboratorPeriodDateTime : {
+            collabInitDate: this.formatDate(collaboratorObj.collaboratorPeriod._initDate),
+            collabEndDate: this.formatDate(collaboratorObj.collaboratorPeriod._finalDate)
           }
         });
       }
@@ -44,20 +55,25 @@ export class CollaboratorDetailsComponent {
   }
 
   private formatDate(date: Date): string {
-    return date.toISOString().split('T')[0];
+    return new Date(date).toISOString().split('T')[0];
   }
 
   onSubmit() {
     const formValue = this.form.value;
 
-    const updatedCollaborator: CollaboratorDetails = {
-      id: this.collaborator()!.id,
+    const updatedCollaborator: Collaborator = {
+      collabId: this.collaborator()!.collabId,
+      userId : this.collaborator()!.userId,
       names: formValue.names,
       surnames: formValue.surnames,
       email: formValue.email,
-      periodDateTime: {
-        _initDate: new Date(formValue.periodDateTime.initDate),
-        _finalDate: new Date(formValue.periodDateTime.endDate)
+      userPeriod : {
+          _initDate: new Date(formValue.userPeriodDateTime.userInitDate),
+          _finalDate: new Date(formValue.userPeriodDateTime.userEndDate)
+      },
+      collaboratorPeriod: {
+        _initDate: new Date(formValue.collaboratorPeriodDateTime.collabInitDate),
+        _finalDate: new Date(formValue.collaboratorPeriodDateTime.collabEndDate)
       }
     };
 

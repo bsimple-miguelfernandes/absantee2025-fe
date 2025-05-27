@@ -8,12 +8,20 @@
   <label for="email">Email</label>
   <input id="email" formControlName="email" />
 
-  <div formGroupName="periodDateTime" class="period-group">
-    <label for="initDate">Start Date</label>
-    <input type="date" id="initDate" formControlName="initDate" />
+  <div formGroupName="userPeriodDateTime" class="period-group">
+    <label for="userInitDate">User Start Date</label>
+    <input type="date" id="userInitDate" formControlName="userInitDate"/>
 
-    <label for="endDate">End Date</label>
-    <input type="date" id="endDate" formControlName="endDate" />
+    <label for="userEndDate">User End Date</label>
+    <input type="date" id="userEndDate" formControlName="userEndDate" />
+  </div>
+
+  <div formGroupName="collaboratorPeriodDateTime" class="period-group">
+    <label for="collabInitDate">Collaborator Start Date</label>
+    <input type="date" id="collabInitDate" formControlName="collabInitDate"/>
+
+    <label for="collabEndDate">Collaborator End Date</label>
+    <input type="date" id="collabEndDate" formControlName="collabEndDate" />
   </div>
 
   <button class="button">Save</button>

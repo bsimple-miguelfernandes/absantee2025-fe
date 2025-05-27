@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { CollaboratorDetails } from './collaborator-details/collaborator-details';
+import { Collaborator } from './collaborator';
 
 @Injectable({
   providedIn: 'root'
@@ -7,16 +8,16 @@ import { CollaboratorDetails } from './collaborator-details/collaborator-details
 export class CollaboratorSignalService {
   //private httpClient = inject(HttpClient);
 
-  private updateCollaboratorSignal = signal<CollaboratorDetails | undefined>(undefined);
+  private updateCollaboratorSignal = signal<Collaborator | undefined>(undefined);
   readonly updatedCollaborator = this.updateCollaboratorSignal.asReadonly();
 
-  private selectedCollaboratorSignal = signal<CollaboratorDetails | undefined>(undefined);
+  private selectedCollaboratorSignal = signal<Collaborator | undefined>(undefined);
   readonly selectedCollaborator = this.selectedCollaboratorSignal.asReadonly();
 
-  private selectedCollaboratorHolidaysSignal = signal<CollaboratorDetails | undefined>(undefined);
+  private selectedCollaboratorHolidaysSignal = signal<Collaborator | undefined>(undefined);
   readonly selectedCollaboratorHoliday = this.selectedCollaboratorHolidaysSignal.asReadonly();
 
-  private selectedCollaboratorProjectsSignal = signal<CollaboratorDetails | undefined>(undefined);
+  private selectedCollaboratorProjectsSignal = signal<Collaborator | undefined>(undefined);
   readonly selectedCollaboratorProjects = this.selectedCollaboratorProjectsSignal.asReadonly();
   
 
@@ -28,23 +29,23 @@ export class CollaboratorSignalService {
   //   return this.httpClient.get<Collaborator>('https://localhost:7271/api/collaborators/' + id);
   // }
 
-  updateCollaborator(updated: CollaboratorDetails) {
+  updateCollaborator(updated: Collaborator) {
     this.updateCollaboratorSignal.set(updated);
   }
 
-  selectCollaborator(selected: CollaboratorDetails | undefined){
+  selectCollaborator(selected: Collaborator | undefined){
     this.selectedCollaboratorHolidaysSignal.set(undefined);
     this.selectedCollaboratorProjectsSignal.set(undefined);
     this.selectedCollaboratorSignal.set(selected);
   }
 
-  selectCollaboratorHolidays(selected: CollaboratorDetails | undefined){
+  selectCollaboratorHolidays(selected: Collaborator | undefined){
     this.selectedCollaboratorSignal.set(undefined);
     this.selectedCollaboratorProjectsSignal.set(undefined);
     this.selectedCollaboratorHolidaysSignal.set(selected);
   }
 
-  selectCollaboratorProjects(selected: CollaboratorDetails | undefined){
+  selectCollaboratorProjects(selected: Collaborator | undefined){
     this.selectedCollaboratorSignal.set(undefined);
     this.selectedCollaboratorHolidaysSignal.set(undefined);
     this.selectedCollaboratorProjectsSignal.set(selected);

@@ -24,7 +24,7 @@ export class CollaboratorHolidaysComponent {
   constructor() {
     effect(() => {
       this.collaboratorHolidays = this.collaboratorDataService.getCollaboratorHolidays(
-        this.collaboratorHolidaysSelected()!.id
+        this.collaboratorHolidaysSelected()!.collabId
       );
 
       const holidayControls = this.collaboratorHolidays.map(holiday =>
@@ -54,7 +54,7 @@ export class CollaboratorHolidaysComponent {
       finalDate: new Date(holidayGroup.get('finalDate')!.value)
     }
 
-    this.collaboratorDataService.editHoliday(this.collaboratorHolidaysSelected()!.id, index, updatedHoliday);
+    this.collaboratorDataService.editHoliday(this.collaboratorHolidaysSelected()!.collabId, index, updatedHoliday);
   }
 
   createEmptyHoliday() {

@@ -1,57 +1,28 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { CollaboratorDetails } from './collaborator-details/collaborator-details';
 import { PeriodDate } from '../PeriodDate';
 import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Collaborator } from './collaborator';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CollaboratorDataService {
+  private httpClient = inject(HttpClient);
 
-  private collaboratorsSignal = signal<CollaboratorDetails[]>([
-    {
-      id: "1",
-      names: "Alice",
-      surnames: "Johnson",
-      email: "alice.johnson@example.com",
-      periodDateTime: {
-        _initDate: new Date("2019-06-10"),
-        _finalDate: new Date("2025-12-31")
-      }
-    },
-    {
-      id: "2",
-      names: "Bob",
-      surnames: "Martinez",
-      email: "bob.martinez@example.com",
-      periodDateTime: {
-        _initDate: new Date("2021-02-01"),
-        _finalDate: new Date("2024-07-30")
-      }
-    },
-    {
-      id: "3",
-      names: "Clara",
-      surnames: "Nguyen",
-      email: "clara.nguyen@example.com",
-      periodDateTime: {
-        _initDate: new Date("2020-04-15"),
-        _finalDate: new Date("2030-09-01")
-      }
-    }
-  ]);
+  getCollabs() : Observable<Collaborator[]>{
+    return this.httpClient.get<Collaborator[]>("http://localhost:5073/api/collaborators/details");
+  }
 
-  readonly collaborators = this.collaboratorsSignal.asReadonly();
 
-  getCollaboratorByEmail(email: string): CollaboratorDetails {
+  /* getCollaboratorByEmail(email: string): CollaboratorDetails {
     return this.collaboratorsSignal().find(c => c.email === email)!;
-  }
+  } */
 
-  updateCollaborator(updatedCollaborator: CollaboratorDetails) {
-    this.collaboratorsSignal.update(list =>
-      list.map(c => c.id === updatedCollaborator.id ? updatedCollaborator : c)
-    );
-  }
+  updateCollaborator(updatedCollaborator: Collaborator) {
+    return this.httpClient.put<Collaborator>("http://localhost:5073/api/collaborators", updatedCollaborator);
+  } 
 
   private CollaboratorHolidays: { collaboratorId: string, holidays: PeriodDate[] }[] = [
     {
