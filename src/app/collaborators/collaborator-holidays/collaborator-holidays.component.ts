@@ -2,8 +2,8 @@ import { Component, effect, inject } from '@angular/core';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
 import { CollaboratorDataService } from '../collaborator-data.service';
 import { PeriodDate } from '../../PeriodDate';
-import { DatePipe } from '@angular/common';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { HolidayPeriod } from './holiday-period';
 
 @Component({
   selector: 'app-collaborator-holidays',
@@ -16,26 +16,25 @@ export class CollaboratorHolidaysComponent {
   collaboratorHolidaysSelected = this.collaboratorSignalService.selectedCollaboratorHoliday;
 
   collaboratorDataService = inject(CollaboratorDataService);
-  collaboratorHolidays!: PeriodDate[];
+  collaboratorHolidays!: HolidayPeriod[];
   form = new FormGroup({
     holidays: new FormArray<FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string> }>>([])
   });
 
   constructor() {
-    effect(() => {
-      this.collaboratorHolidays = this.collaboratorDataService.getCollaboratorHolidays(
-        this.collaboratorHolidaysSelected()!.id
-      );
+    this.collaboratorDataService
+      .getCollaboratorHolidays(this.collaboratorHolidaysSelected()!.id)
+      .subscribe((holidays) => {
+        this.collaboratorHolidays = holidays
+        const holidayControls = this.collaboratorHolidays.map(holiday =>
+          new FormGroup({
+            initDate: new FormControl(this.formatDate(holiday.period.initDate)),
+            finalDate: new FormControl(this.formatDate(holiday.period.finalDate))
+          }) as FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string> }>
+        );
 
-      const holidayControls = this.collaboratorHolidays.map(holiday =>
-        new FormGroup({
-          initDate: new FormControl(this.formatDate(holiday.initDate)),
-          finalDate: new FormControl(this.formatDate(holiday.finalDate))
-        }) as FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string> }>
-      );
-
-      this.form.setControl('holidays', new FormArray(holidayControls));
-    });
+        this.form.setControl('holidays', new FormArray(holidayControls));
+      });
   }
 
   get holidaysForm(): FormArray<FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string> }>> {
@@ -49,12 +48,15 @@ export class CollaboratorHolidaysComponent {
   editHoliday(index: number) {
     const holidayGroup = this.holidaysForm.at(index);
 
-    const updatedHoliday: PeriodDate = {
-      initDate: new Date(holidayGroup.get('initDate')!.value),
-      finalDate: new Date(holidayGroup.get('finalDate')!.value)
+    const updatedHoliday: HolidayPeriod = {
+      id: this.collaboratorHolidays[index].id,
+      period: {
+        initDate: new Date(holidayGroup.get('initDate')!.value),
+        finalDate: new Date(holidayGroup.get('finalDate')!.value)
+      }
     }
 
-    this.collaboratorDataService.editHoliday(this.collaboratorHolidaysSelected()!.id, index, updatedHoliday);
+    this.collaboratorDataService.editHoliday(this.collaboratorHolidaysSelected()!.id, updatedHoliday);
   }
 
   createEmptyHoliday() {

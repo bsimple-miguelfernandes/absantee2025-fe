@@ -4,6 +4,7 @@ import { PeriodDate } from '../PeriodDate';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { AssociationProjectCollaborators } from '../associations-project-collaborator/association-project-collaborator.model';
+import { HolidayPeriod } from './collaborator-holidays/holiday-period';
 
 @Injectable({
   providedIn: 'root'
@@ -86,16 +87,12 @@ export class CollaboratorDataService {
     }
   ]
 
-  getCollaboratorHolidays(collaboratorId: string): PeriodDate[] {
-    return this.CollaboratorHolidays.find(c => c.collaboratorId === collaboratorId)!.holidays;
+    getCollaboratorHolidays(collaboratorId: string): Observable<HolidayPeriod[]> {
+    return this.httpClient.get<HolidayPeriod[]>("http://localhost:5073/api/collaborators/"+ collaboratorId + "/holidayplan/holidayperiod");
   };
 
-  editHoliday(collaboratorId: string, index: number, updatedPeriod: PeriodDate) {
-    const holidays = this.CollaboratorHolidays.find(c => c.collaboratorId === collaboratorId)?.holidays;
-
-    if (holidays !== undefined) {
-      holidays[index] = updatedPeriod;
-    }
+  editHoliday(collaboratorId: string, updatedPeriod: HolidayPeriod){
+    return this.httpClient.put("http://localhost:5073/api/collaborators/"+ collaboratorId + "/holidayplan/holidayperiod", updatedPeriod);
   }
 
   getAssociations(id: string): Observable<AssociationProjectCollaborators[]> {
