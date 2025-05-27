@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { AssociationProjectCollaborators } from '../associations-project-collaborator/association-project-collaborator.model';
 import { Collaborator } from './collaborator';
+import { CollaboratorCreateRequest } from './collaborators-create/create-collaborator';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,10 @@ export class CollaboratorDataService {
 
   getCollabs() : Observable<Collaborator[]>{
     return this.httpClient.get<Collaborator[]>("http://localhost:5073/api/collaborators/details");
+  }
+
+  createCollaborator(newCollaborator: CollaboratorCreateRequest): Observable<CollaboratorCreateRequest> {
+    return this.httpClient.post<CollaboratorCreateRequest>('http://localhost:5073/api/collaborators', newCollaborator);
   }
 
   updateCollaborator(updatedCollaborator: Collaborator) {
