@@ -32,7 +32,11 @@ export class CollaboratorDataService {
 
   getCollaboratorHolidays(collaboratorId: string): Observable<HolidayPeriod[]> {
     return this.httpClient.get<HolidayPeriod[]>("http://localhost:5073/api/collaborators/"+ collaboratorId + "/holidayplan/holidayperiod");
-  };
+  }
+
+  addHoliday(collabId: string, initDate: string, finalDate: string) {
+    return this.httpClient.post("http://localhost:5073/api/collaborators/"+ collabId + "/holidayplan/holidayperiod", {initDate: initDate, finalDate: finalDate});
+  }
 
   editHoliday(collaboratorId: string, updatedPeriod: HolidayPeriod){
     return this.httpClient.put("http://localhost:5073/api/collaborators/"+ collaboratorId + "/holidayplan/holidayperiod", updatedPeriod);

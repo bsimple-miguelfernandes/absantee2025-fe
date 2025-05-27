@@ -28,8 +28,8 @@ export class CollaboratorHolidaysComponent {
         this.collaboratorHolidays = holidays
         const holidayControls = this.collaboratorHolidays.map(holiday =>
           new FormGroup({
-            initDate: new FormControl(this.formatDate(holiday.period.initDate)),
-            finalDate: new FormControl(this.formatDate(holiday.period.finalDate))
+            initDate: new FormControl(this.formatDate(holiday.periodDate.initDate)),
+            finalDate: new FormControl(this.formatDate(holiday.periodDate.finalDate))
           }) as FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string> }>
         );
 
@@ -42,21 +42,27 @@ export class CollaboratorHolidaysComponent {
   }
 
   private formatDate(date: Date): string {
-    return date.toISOString().split('T')[0];
+    return new Date(date).toISOString().split('T')[0];
   }
 
   editHoliday(index: number) {
-    const holidayGroup = this.holidaysForm.at(index);
+    if(this.holidaysForm.length > this.collaboratorHolidays.length) {
+      this.collaboratorDataService.addHoliday(this.collaboratorHolidaysSelected()!.collabId,
+      this.holidaysForm.at(index).value.initDate!,
+      this.holidaysForm.at(index).value.finalDate!);
+    } else {
+      const holidayGroup = this.holidaysForm.at(index);
 
-    const updatedHoliday: HolidayPeriod = {
-      id: this.collaboratorHolidays[index].id,
-      period: {
-        initDate: new Date(holidayGroup.get('initDate')!.value),
-        finalDate: new Date(holidayGroup.get('finalDate')!.value)
+      const updatedHoliday: HolidayPeriod = {
+        id: this.collaboratorHolidays[index].id,
+        periodDate: {
+          initDate: new Date(holidayGroup.get('initDate')!.value),
+          finalDate: new Date(holidayGroup.get('finalDate')!.value)
+        }
       }
-    }
 
-    this.collaboratorDataService.editHoliday(this.collaboratorHolidaysSelected()!.collabId, updatedHoliday);
+      this.collaboratorDataService.editHoliday(this.collaboratorHolidaysSelected()!.collabId, updatedHoliday);
+    }
   }
 
   createEmptyHoliday() {
