@@ -7,15 +7,15 @@
 <p></p>
 
 @if (selectedCollaborator()) {
-    <app-collaborator-details>
-    </app-collaborator-details>
+<app-collaborator-details>
+</app-collaborator-details>
 }
 
 @else if (selectedCollaboratorHolidays()) {
-    <app-collaborator-holidays>
-    </app-collaborator-holidays>
+<app-collaborator-holidays>
+</app-collaborator-holidays>
 }
 
-<!-- @else if (selectedCollaboratorProject()) {
-    <app-associations-project-collaborator [collaboratorId]="selectedCollaboratorProject()!.id" />
-} -->
+@else if (selectedCollaboratorProject()) {
+<app-associations-project-collaborator [collaboratorId]="selectedCollaboratorProject()!.collabId" />
+}

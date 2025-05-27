@@ -13,6 +13,7 @@ import { Collaborator } from './collaborator';
   imports: [CollaboratorDetailsComponent, CollaboratorListComponent, CollaboratorsBulletsComponent, CollaboratorHolidaysComponent, AssociationsProjectCollaboratorComponent],
   templateUrl: './collaborators.component.html',
   styleUrl: './collaborators.component.css'
+
 })
 export class CollaboratorsComponent {
   collaboratorSignalService = inject(CollaboratorSignalService);
@@ -22,7 +23,7 @@ export class CollaboratorsComponent {
   selectedCollaboratorProject = this.collaboratorSignalService.selectedCollaboratorProjects;
 
   collaboratorDataService = inject(CollaboratorDataService);
-  collaborators : Collaborator[] = [];
+  collaborators: Collaborator[] = [];
 
   constructor() {
     this.collaboratorDataService.getCollabs().subscribe((collaborators) => {
@@ -47,6 +48,6 @@ export class CollaboratorsComponent {
         });
       }
     });
-    
+
   }
 }
