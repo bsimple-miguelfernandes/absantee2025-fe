@@ -19,6 +19,9 @@ export class CollaboratorSignalService {
 
   private selectedCollaboratorProjectsSignal = signal<Collaborator | undefined>(undefined);
   readonly selectedCollaboratorProjects = this.selectedCollaboratorProjectsSignal.asReadonly();
+
+  private isCreatingCollaboratorSignal = signal(false);
+  readonly isCreatingCollaborator = this.isCreatingCollaboratorSignal.asReadonly();
   
 
   // getCollaboratorsIds(): Observable<string[]> {
@@ -31,6 +34,14 @@ export class CollaboratorSignalService {
 
   updateCollaborator(updated: Collaborator) {
     this.updateCollaboratorSignal.set(updated);
+  }
+
+  startCreateCollaborator() {
+    this.isCreatingCollaboratorSignal.set(true);
+  }
+
+  cancelCreateCollaborator() {
+    this.isCreatingCollaboratorSignal.set(false);
   }
 
   selectCollaborator(selected: Collaborator | undefined){

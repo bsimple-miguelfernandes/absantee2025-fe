@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { CollaboratorDetailsComponent } from "./collaborator-details/collaborator-details.component";
 import { CollaboratorSignalService } from './collaborator-signal.service';
 import { CollaboratorListComponent } from "./collaborator-list/collaborator-list.component";
@@ -7,27 +7,37 @@ import { CollaboratorHolidaysComponent } from "./collaborator-holidays/collabora
 import { AssociationsProjectCollaboratorComponent } from "../associations-project-collaborator/associations-project-collaborator.component";
 import { CollaboratorDataService } from './collaborator-data.service';
 import { Collaborator } from './collaborator';
+import { CollaboratorCreateComponent } from './collaborators-create/collaborator-create.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-collaborators',
-  imports: [CollaboratorDetailsComponent, CollaboratorListComponent, CollaboratorsBulletsComponent, CollaboratorHolidaysComponent, AssociationsProjectCollaboratorComponent],
+  standalone: true, 
+  imports: [
+    CommonModule,
+    CollaboratorDetailsComponent,
+    CollaboratorListComponent,
+    CollaboratorsBulletsComponent,
+    CollaboratorHolidaysComponent,
+    AssociationsProjectCollaboratorComponent,
+    CollaboratorCreateComponent
+  ],
   templateUrl: './collaborators.component.html',
-  styleUrl: './collaborators.component.css'
+  styleUrls: ['./collaborators.component.css']  
 })
 export class CollaboratorsComponent {
   collaboratorSignalService = inject(CollaboratorSignalService);
+  collaboratorDataService = inject(CollaboratorDataService);
+
   selectedCollaborator = this.collaboratorSignalService.selectedCollaborator;
   collaboratorUpdated = this.collaboratorSignalService.updatedCollaborator;
   selectedCollaboratorHolidays = this.collaboratorSignalService.selectedCollaboratorHoliday;
   selectedCollaboratorProject = this.collaboratorSignalService.selectedCollaboratorProjects;
 
-  collaboratorDataService = inject(CollaboratorDataService);
-  collaborators : Collaborator[] = [];
+  collaborators: Collaborator[] = [];
 
   constructor() {
-    this.collaboratorDataService.getCollabs().subscribe((collaborators) => {
-      this.collaborators = collaborators;
-    })
+    this.loadCollaborators();
 
     this.collaboratorSignalService.selectCollaborator(undefined);
     this.collaboratorSignalService.selectCollaboratorHolidays(undefined);
@@ -36,17 +46,20 @@ export class CollaboratorsComponent {
       const updated = this.collaboratorUpdated();
       if (updated) {
         this.collaboratorDataService.updateCollaborator(updated).subscribe({
-          next: () => {
-            this.collaboratorDataService.getCollabs().subscribe((collabs) => {
-              this.collaborators = collabs;
-            });
-          },
-          error: (err) => {
-            console.error('Erro ao atualizar colaborador:', err);
-          }
+          next: () => this.loadCollaborators(),
+          error: (err) => console.error('Erro ao atualizar colaborador:', err)
         });
       }
     });
-    
+  }
+
+  loadCollaborators() {
+    this.collaboratorDataService.getCollabs().subscribe((collaborators) => {
+      this.collaborators = collaborators;
+    });
+  }
+
+  startCreate() {
+    this.collaboratorSignalService.startCreateCollaborator();
   }
 }

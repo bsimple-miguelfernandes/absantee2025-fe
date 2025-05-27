@@ -1,0 +1,40 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+  <label>
+    Names:
+    <input formControlName="names" />
+  </label>
+
+  <label>
+    Surnames:
+    <input formControlName="surnames" />
+  </label>
+
+  <label>
+    Email:
+    <input formControlName="email" type="email" />
+  </label>
+
+  <label>
+    Deactivation Date:
+    <input type="date" formControlName="deactivationDate" />
+  </label>
+
+  <fieldset formGroupName="collaboratorPeriod">
+    <legend>Collaborator Period</legend>
+
+    <label>
+      Init Date:
+      <input type="date" formControlName="initDate" />
+    </label>
+
+    <label>
+      Final Date:
+      <input type="date" formControlName="finalDate" />
+    </label>
+  </fieldset>
+
+  <button type="submit">Create Collaborator</button>
+  <button type="button" (click)="onCancel()">Cancel</button>
+
+</form>
