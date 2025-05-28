@@ -1,5 +1,4 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-
 import { CollaboratorDataService } from './collaborator-data.service';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
@@ -12,6 +11,7 @@ import { HolidayPeriod } from './collaborator-holidays/holiday-period';
 describe('CollaboratorDataService', () => {
   let service: CollaboratorDataService;
   let httpMock: HttpTestingController;
+  const baseUrl = environment.apiBaseUrl;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -24,7 +24,7 @@ describe('CollaboratorDataService', () => {
     service = TestBed.inject(CollaboratorDataService);
     httpMock = TestBed.inject(HttpTestingController);
 
-    const baseUrl = environment.apiBaseUrl;
+    httpMock.expectOne(`${baseUrl}/collaborators/details`).flush([]);
   });
 
   afterEach(() => httpMock.verify());
@@ -53,7 +53,7 @@ describe('CollaboratorDataService', () => {
 
     service.getCollabs().subscribe(r => (result = r));
 
-    const req = httpMock.expectOne('http://localhost:5073/api/collaborators');
+    const req = httpMock.expectOne(`${baseUrl}/collaborators`);
     expect(req.request.method).toBe('GET');
     req.flush(mockCollaborators);
 
@@ -63,8 +63,7 @@ describe('CollaboratorDataService', () => {
 
   it('should fetch collaborator by the id', fakeAsync(() => {
     const collabId = '1';
-    const mockCollaborator: Collaborator =
-    {
+    const mockCollaborator: Collaborator = {
       collabId: collabId,
       userId: '1',
       names: "John",
@@ -74,8 +73,7 @@ describe('CollaboratorDataService', () => {
         _initDate: new Date('2024-01-01'),
         _finalDate: new Date('2024-12-31')
       },
-      collaboratorPeriod:
-      {
+      collaboratorPeriod: {
         _initDate: new Date('2024-02-01'),
         _finalDate: new Date('2024-11-31')
       }
@@ -85,7 +83,7 @@ describe('CollaboratorDataService', () => {
 
     service.getCollabById(collabId).subscribe(r => (result = r));
 
-    const req = httpMock.expectOne("http://localhost:5073/api/collaborators/" + collabId + "/details");
+    const req = httpMock.expectOne(`${baseUrl}/collaborators/${collabId}/details`);
     expect(req.request.method).toBe('GET');
     req.flush(mockCollaborator);
 
@@ -108,7 +106,7 @@ describe('CollaboratorDataService', () => {
     let result: CollaboratorCreateRequest | undefined;
     service.createCollaborator(mockCollaboratorCreateRequest).subscribe(p => (result = p));
 
-    const req = httpMock.expectOne('http://localhost:5073/api/collaborators');
+    const req = httpMock.expectOne(`${baseUrl}/collaborators`);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(mockCollaboratorCreateRequest);
 
@@ -119,8 +117,7 @@ describe('CollaboratorDataService', () => {
   }));
 
   it('should update a collaborator when passing a collaborator with existing id', fakeAsync(() => {
-    const mockCollaborator: Collaborator =
-    {
+    const mockCollaborator: Collaborator = {
       collabId: '1',
       userId: '1',
       names: "John",
@@ -130,8 +127,7 @@ describe('CollaboratorDataService', () => {
         _initDate: new Date('2024-01-01'),
         _finalDate: new Date('2024-12-31')
       },
-      collaboratorPeriod:
-      {
+      collaboratorPeriod: {
         _initDate: new Date('2024-02-01'),
         _finalDate: new Date('2024-11-31')
       }
@@ -140,7 +136,7 @@ describe('CollaboratorDataService', () => {
     let result!: Collaborator;
     service.updateCollaborator(mockCollaborator).subscribe(p => (result = p));
 
-    const req = httpMock.expectOne('http://localhost:5073/api/collaborators');
+    const req = httpMock.expectOne(`${baseUrl}/collaborators`);
     expect(req.request.method).toBe('PUT');
     expect(req.request.body).toEqual(mockCollaborator);
 
@@ -156,15 +152,15 @@ describe('CollaboratorDataService', () => {
       {
         id: '1',
         periodDate: {
-          initDate: new Date("2025-09-09"),
-          finalDate: new Date("2025-10-09")
+          initDate: "2025-09-09",
+          finalDate: "2025-10-09"
         }
       },
       {
         id: '2',
         periodDate: {
-          initDate: new Date("2025-11-09"),
-          finalDate: new Date("2025-12-09")
+          initDate: "2025-11-09",
+          finalDate: "2025-12-09"
         }
       }
     ];
@@ -172,7 +168,7 @@ describe('CollaboratorDataService', () => {
     let result!: HolidayPeriod[];
     service.getCollaboratorHolidays(collab).subscribe(p => (result = p));
 
-    const req = httpMock.expectOne('http://localhost:5073/api/collaborators/' + collab + '/holidayplan/holidayperiod');
+    const req = httpMock.expectOne(`${baseUrl}/collaborators/${collab}/holidayplan/holidayperiod`);
     expect(req.request.method).toBe('GET');
 
     req.flush(mockHolidayPeriods);
@@ -188,14 +184,14 @@ describe('CollaboratorDataService', () => {
     const mockHolidayPeriod: HolidayPeriod = {
       id: '1',
       periodDate: {
-        initDate: new Date(initDate),
-        finalDate: new Date(finalDate)
+        initDate: initDate,
+        finalDate: finalDate
       }
     };
 
     let result;
     service.addHoliday(collabId, initDate, finalDate).subscribe(p => (result = p));
-    const req = httpMock.expectOne('http://localhost:5073/api/collaborators/' + collabId + '/holidayplan/holidayperiod');
+    const req = httpMock.expectOne(`${baseUrl}/collaborators/${collabId}/holidayplan/holidayperiod`);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual({ initDate, finalDate });
 
@@ -212,14 +208,14 @@ describe('CollaboratorDataService', () => {
     const mockHolidayPeriod: HolidayPeriod = {
       id: '1',
       periodDate: {
-        initDate: new Date(initDate),
-        finalDate: new Date(finalDate)
+        initDate: initDate,
+        finalDate: finalDate
       }
     };
 
     let result: any;
     service.editHoliday(collabId, mockHolidayPeriod).subscribe(p => (result = p));
-    const req = httpMock.expectOne('http://localhost:5073/api/collaborators/' + collabId + '/holidayplan/holidayperiod');
+    const req = httpMock.expectOne(`${baseUrl}/collaborators/${collabId}/holidayplan/holidayperiod`);
     expect(req.request.method).toBe('PUT');
     expect(req.request.body).toEqual(mockHolidayPeriod);
 
@@ -246,9 +242,9 @@ describe('CollaboratorDataService', () => {
     ];
 
     let result!: AssociationProjectCollaborators[];
-    service.getAssociations('1').subscribe(p => (result = p));
+    service.getAssociations(collabId).subscribe(p => (result = p));
 
-    const req = httpMock.expectOne('http://localhost:5073/api/collaborators/' + collabId + "/associations");
+    const req = httpMock.expectOne(`${baseUrl}/collaborators/${collabId}/associations`);
     expect(req.request.method).toBe('GET');
     req.flush(mockAssociations);
 

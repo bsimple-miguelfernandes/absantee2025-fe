@@ -42,8 +42,8 @@ export class CollaboratorDetailsComponent {
           surnames: collaboratorObj.surnames,
           email: collaboratorObj.email,
           userPeriodDateTime: {
-            userInitDate: this.formatDate(collaboratorObj.collaboratorPeriod._initDate),
-            userEndDate: this.formatDate(collaboratorObj.collaboratorPeriod._finalDate)
+            userInitDate: this.formatDate(collaboratorObj.userPeriod._initDate),
+            userEndDate: this.formatDate(collaboratorObj.userPeriod._finalDate)
           },
           collaboratorPeriodDateTime : {
             collabInitDate: this.formatDate(collaboratorObj.collaboratorPeriod._initDate),

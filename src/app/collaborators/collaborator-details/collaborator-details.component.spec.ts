@@ -1,19 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { CollaboratorDetailsComponent } from './collaborator-details.component';
-import { CollaboratorDetails } from './collaborator-details';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
-import { Signal, signal, WritableSignal } from '@angular/core';
+import { signal, WritableSignal } from '@angular/core';
+import { Collaborator } from '../collaborator';
 
 describe('CollaboratorDetailsComponent', () => {
   let component: CollaboratorDetailsComponent;
   let fixture: ComponentFixture<CollaboratorDetailsComponent>;
-  let collaborator: CollaboratorDetails;
+  let collaborator: Collaborator;
   let mockCollaboratorSignalService: jasmine.SpyObj<CollaboratorSignalService>;
-  let selectedSignal: WritableSignal<CollaboratorDetails | undefined>;
+  let selectedSignal: WritableSignal<Collaborator | undefined>;
 
   beforeEach(async () => {
-    selectedSignal = signal<CollaboratorDetails | undefined>(undefined);
+    selectedSignal = signal<Collaborator | undefined>(undefined);
     mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', ['updateCollaborator'], {
       selectedCollaborator: selectedSignal
     });
@@ -23,25 +22,28 @@ describe('CollaboratorDetailsComponent', () => {
       providers: [
         { provide: CollaboratorSignalService, useValue: mockCollaboratorSignalService }
       ]
-    })
-      .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CollaboratorDetailsComponent);
     component = fixture.componentInstance;
 
-    collaborator =
-    {
-      id: "1",
+    collaborator = {
+      collabId: "1",
+      userId: "1",
       names: "Alice",
       surnames: "Johnson",
       email: "alice.johnson@example.com",
-      periodDateTime: {
-        _initDate: new Date('2019-06-10'),
-        _finalDate: new Date('2025-11-31')
+      //mockCollaboratorSignalService.selectedCollaborator.and.returnValue(collaborator);
+      userPeriod: {
+        _initDate: new Date('2020-01-01'),
+        _finalDate: new Date('2025-12-31')
+      },
+      collaboratorPeriod: {
+        _initDate: new Date('2020-02-01'),
+        _finalDate: new Date('2024-11-30')
       }
     };
 
-    //mockCollaboratorSignalService.selectedCollaborator.and.returnValue(collaborator);
     selectedSignal.set(collaborator);
 
     fixture.detectChanges();
@@ -55,25 +57,34 @@ describe('CollaboratorDetailsComponent', () => {
     const nameInput: HTMLInputElement = fixture.nativeElement.querySelector('#names');
     const surnamesInput: HTMLInputElement = fixture.nativeElement.querySelector('#surnames');
     const emailInput: HTMLInputElement = fixture.nativeElement.querySelector('#email');
-    const initDateInput: HTMLInputElement = fixture.nativeElement.querySelector('#initDate');
-    const endDateInput: HTMLInputElement = fixture.nativeElement.querySelector('#endDate');
+    const userInitDateInput: HTMLInputElement = fixture.nativeElement.querySelector('#userInitDate');
+    const userEndDateInput: HTMLInputElement = fixture.nativeElement.querySelector('#userEndDate');
+    const collabInitDateInput: HTMLInputElement = fixture.nativeElement.querySelector('#collabInitDate');
+    const collabEndDateInput: HTMLInputElement = fixture.nativeElement.querySelector('#collabEndDate');
 
     expect(nameInput.value).toBe(collaborator.names);
     expect(surnamesInput.value).toBe(collaborator.surnames);
     expect(emailInput.value).toBe(collaborator.email);
-    expect(initDateInput.value).toBe(collaborator.periodDateTime._initDate.toISOString().split('T')[0]);
-    expect(endDateInput.value).toBe(collaborator.periodDateTime._finalDate.toISOString().split('T')[0]);
+    expect(userInitDateInput.value).toBe(collaborator.userPeriod._initDate.toISOString().split('T')[0]);
+    expect(userEndDateInput.value).toBe(collaborator.userPeriod._finalDate.toISOString().split('T')[0]);
+    expect(collabInitDateInput.value).toBe(collaborator.collaboratorPeriod._initDate.toISOString().split('T')[0]);
+    expect(collabEndDateInput.value).toBe(collaborator.collaboratorPeriod._finalDate.toISOString().split('T')[0]);
   });
 
   it('should update form inputs when collaborator input changes', () => {
-    const newCollaborator : CollaboratorDetails = {
-      id: "2",
+    const newCollaborator: Collaborator = {
+      collabId: "2",
+      userId: "2",
       names: "Bob",
       surnames: "Martinez",
       email: "bob.martinez@example.com",
-      periodDateTime: {
-        _initDate: new Date(2021, 1, 1),
-        _finalDate: new Date(2024, 6, 30)
+      userPeriod: {
+        _initDate: new Date('2022-01-01'),
+        _finalDate: new Date('2025-01-01')
+      },
+      collaboratorPeriod: {
+        _initDate: new Date('2022-02-01'),
+        _finalDate: new Date('2024-12-01')
       }
     };
 
@@ -83,14 +94,18 @@ describe('CollaboratorDetailsComponent', () => {
     const nameInput: HTMLInputElement = fixture.nativeElement.querySelector('#names');
     const surnamesInput: HTMLInputElement = fixture.nativeElement.querySelector('#surnames');
     const emailInput: HTMLInputElement = fixture.nativeElement.querySelector('#email');
-    const initDateInput: HTMLInputElement = fixture.nativeElement.querySelector('#initDate');
-    const endDateInput: HTMLInputElement = fixture.nativeElement.querySelector('#endDate');
+    const userInitDateInput: HTMLInputElement = fixture.nativeElement.querySelector('#userInitDate');
+    const userEndDateInput: HTMLInputElement = fixture.nativeElement.querySelector('#userEndDate');
+    const collabInitDateInput: HTMLInputElement = fixture.nativeElement.querySelector('#collabInitDate');
+    const collabEndDateInput: HTMLInputElement = fixture.nativeElement.querySelector('#collabEndDate');
 
-    expect(nameInput.value).toEqual(newCollaborator.names);
-    expect(surnamesInput.value).toEqual(newCollaborator.surnames);
-    expect(emailInput.value).toEqual(newCollaborator.email);
-    expect(initDateInput.value).toEqual(newCollaborator.periodDateTime._initDate.toISOString().split('T')[0]);
-    expect(endDateInput.value).toEqual(newCollaborator.periodDateTime._finalDate.toISOString().split('T')[0]);
+    expect(nameInput.value).toBe(newCollaborator.names);
+    expect(surnamesInput.value).toBe(newCollaborator.surnames);
+    expect(emailInput.value).toBe(newCollaborator.email);
+    expect(userInitDateInput.value).toBe(newCollaborator.userPeriod._initDate.toISOString().split('T')[0]);
+    expect(userEndDateInput.value).toBe(newCollaborator.userPeriod._finalDate.toISOString().split('T')[0]);
+    expect(collabInitDateInput.value).toBe(newCollaborator.collaboratorPeriod._initDate.toISOString().split('T')[0]);
+    expect(collabEndDateInput.value).toBe(newCollaborator.collaboratorPeriod._finalDate.toISOString().split('T')[0]);
   });
 
   /* it('should call updateCollaborator when form is submitted', () => {
