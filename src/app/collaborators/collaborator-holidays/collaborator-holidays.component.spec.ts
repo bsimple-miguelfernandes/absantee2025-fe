@@ -6,6 +6,8 @@ import { CollaboratorDetails } from '../collaborator-details/collaborator-detail
 import { CollaboratorSignalService } from '../collaborator-signal.service';
 import { CollaboratorDataService } from '../collaborator-data.service';
 import { PeriodDate } from '../../PeriodDate';
+import { HolidayPeriod } from './holiday-period';
+import { of } from 'rxjs';
 
 describe('CollaboratorHolidaysComponent', () => {
   let component: CollaboratorHolidaysComponent;
@@ -14,7 +16,7 @@ describe('CollaboratorHolidaysComponent', () => {
   let selectedCollaboratorHolidaysSignal: WritableSignal<CollaboratorDetails | undefined>;
   let mockCollabotadorDataService: jasmine.SpyObj<CollaboratorDataService>;
   let collaborator: CollaboratorDetails;
-  let collaboratorHolidays: PeriodDate[];
+  let collaboratorHolidays: HolidayPeriod[];
 
   beforeEach(async () => {
     selectedCollaboratorHolidaysSignal = signal<CollaboratorDetails | undefined>(undefined);
@@ -25,7 +27,8 @@ describe('CollaboratorHolidaysComponent', () => {
     await TestBed.configureTestingModule({
       imports: [CollaboratorHolidaysComponent],
       providers: [
-        { provide: CollaboratorSignalService, useValue: mockCollaboratorSignalService }
+        { provide: CollaboratorSignalService, useValue: mockCollaboratorSignalService },
+        { provide: CollaboratorDataService, useValue: mockCollabotadorDataService }
       ]
     })
       .compileComponents();
@@ -35,16 +38,22 @@ describe('CollaboratorHolidaysComponent', () => {
 
     collaboratorHolidays = [
         {
-          initDate: new Date("2020-01-01"),
-          finalDate: new Date("2020-01-10")
+          id: "1",
+          periodDate: {
+            initDate: new Date("2020-01-01"),
+            finalDate: new Date("2020-01-10")
+          }
         },
         {
-          initDate: new Date("2020-12-01"),
-          finalDate: new Date("2020-12-10")
+          id: "2",
+          periodDate: {
+            initDate: new Date("2020-12-01"),
+            finalDate: new Date("2020-12-10")
+          }
         }
       ];
 
-    mockCollabotadorDataService.getCollaboratorHolidays.and.returnValue(collaboratorHolidays);
+    mockCollabotadorDataService.getCollaboratorHolidays.and.returnValue(of(collaboratorHolidays));
 
     collaborator = {
       id: "1",
@@ -62,5 +71,31 @@ describe('CollaboratorHolidaysComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should display the name and surname of selected collaborator', () => {
+    const title = fixture.nativeElement.querySelector("h1").textContent;
+
+    expect(title).toEqual(collaborator.names + " " + collaborator.surnames);
+  });
+
+  //  it('should show the Holidays Info in the table', () => {
+  //   const rows: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll('table tr');
+
+  //   const cells1 = rows[1].querySelectorAll('td');
+  //   expect(cells1[0].textContent).toBe(collaboratorHolidays[0].periodDate.initDate);
+  //   expect(cells1[1].textContent).toBe(collaboratorHolidays[0].periodDate.finalDate);
+
+  //   const cells2 = rows[2].querySelectorAll('td');
+  //   expect(cells2[0].textContent).toBe(collaboratorHolidays[0].periodDate.initDate);
+  //   expect(cells2[1].textContent).toBe(collaboratorHolidays[0].periodDate.finalDate);
+
+  // });
+
+  it('when add button is clicked a new element is added to the dorm', () => {
+    const button1: HTMLElement = fixture.nativeElement.querySelectorAll('[data-testid="add-btn"]')[1];
+    button1.click();
+
+    
   });
 });
