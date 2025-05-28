@@ -1,25 +1,24 @@
-<h1>{{collaboratorHolidaysSelected()!.names}} {{collaboratorHolidaysSelected()!.surnames}}</h1>
+<h1>Holidays of {{collaboratorHolidaysSelected()!.names}} {{collaboratorHolidaysSelected()!.surnames}}</h1>
 
 <form [formGroup]="form">
     <table>
+        <thead>
         <tr>
             <th>Init Date</th>
             <th>Final Date</th>
             <th>Actions</th>
         </tr>
-        <div formArrayName="holidays">
+        </thead>
+        <tbody formArrayName="holidays">
             @for (holiday of holidaysForm.controls; track $index; let i= $index) {
-            <div [formGroupName]="i">
-                <tr>
-                    <td><input type="date" formControlName="initDate" />
-                    <td>
-                    <td><input type="date" formControlName="finalDate" />
-                    <td>
+                <tr [formGroupName]="i">
+                    <td><input type="date" formControlName="initDate" /></td>
+                    <td><input type="date" formControlName="finalDate" /></td>
                     <td><button (click)="editHoliday(i)">Edit</button></td>
                 </tr>
-            </div>
             }
-        </div>
+        </tbody>
     </table>
 </form>
+<br>
 <button type="button" (click)="createEmptyHoliday()" data-testid="add-btn">Add Holiday</button>
