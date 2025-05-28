@@ -30,32 +30,34 @@ export class CollaboratorCreateComponent {
   }
 
   onSubmit() {
-    const formValue = this.form.value;
+  const formValue = this.form.value;
 
-    if (!formValue.collaboratorPeriod) return;
+  if (!formValue.collaboratorPeriod) return;
 
-    const newCollaborator: CollaboratorCreateRequest = {
-      names: formValue.names ?? '',
-      surnames: formValue.surnames ?? '',
-      email: formValue.email ?? '',
-      deactivationDate: new Date(formValue.deactivationDate!),
-      periodDateTime: {
-        _initDate: new Date(formValue.collaboratorPeriod.initDate!),
-        _finalDate: new Date(formValue.collaboratorPeriod.finalDate!)
-      }
-    };
+  const newCollaborator: CollaboratorCreateRequest = {
+    names: formValue.names ?? '',
+    surnames: formValue.surnames ?? '',
+    email: formValue.email ?? '',
+    deactivationDate: new Date(formValue.deactivationDate!),
+    periodDateTime: {
+      _initDate: new Date(formValue.collaboratorPeriod.initDate!),
+      _finalDate: new Date(formValue.collaboratorPeriod.finalDate!)
+    }
+  };
 
-    this.collaboratorDataService.createCollaborator(newCollaborator).subscribe({
-      next: (createdCollaborator) => {
-        console.log('Created collaborator:', createdCollaborator);
-        this.collaboratorSignalService.cancelCreateCollaborator?.();
-        this.form.reset();
-      },
-      error: (error) => {
-        console.error('Error creating collaborator:', error);
-      }
-    });
-  }
+  this.collaboratorDataService.createCollaborator(newCollaborator).subscribe({
+    next: (createdCollaborator) => {
+      console.log('Created collaborator:', createdCollaborator);
+      this.collaboratorSignalService.cancelCreateCollaborator?.();
+      this.form.reset();
+      
+    },
+    error: (error) => {
+      console.error('Error creating collaborator:', error);
+    }
+  });
+}
+
 
   onCancel() {
     this.collaboratorSignalService.cancelCreateCollaborator?.();

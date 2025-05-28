@@ -36,7 +36,8 @@ export class CollaboratorsComponent {
 
   collaborators: Collaborator[] = [];
 
-  constructor() {
+   constructor() {
+    
     this.collaboratorDataService.getCollabs().subscribe((collaborators) => {
       this.collaborators = collaborators;
     });
@@ -48,11 +49,7 @@ export class CollaboratorsComponent {
       const updated = this.collaboratorUpdated();
       if (updated) {
         this.collaboratorDataService.updateCollaborator(updated).subscribe({
-          next: (updatedCollab) => {
-            this.collaborators = this.collaborators.map(collab =>
-              collab.collabId === updatedCollab.collabId ? updatedCollab : collab
-            );
-          },
+          next: () => {}, 
           error: (err) => console.error('Erro ao atualizar colaborador:', err)
         });
       }
