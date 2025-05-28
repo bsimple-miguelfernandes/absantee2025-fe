@@ -5,6 +5,7 @@ import { CollaboratorDetails } from './collaborator-details/collaborator-details
 import { CollaboratorSignalService } from './collaborator-signal.service';
 import { signal, WritableSignal } from '@angular/core';
 import { CollaboratorDataService } from './collaborator-data.service';
+import { of } from 'rxjs';
 
 describe('CollaboratorsComponent', () => {
   let component: CollaboratorsComponent;
@@ -140,7 +141,7 @@ describe('CollaboratorsComponent', () => {
       }
     };
     
-    mockCollaboratorDataService.getCollaboratorHolidays.and.returnValue([]);
+    mockCollaboratorDataService.getCollaboratorHolidays.and.returnValue(of([]));
     selectedCollaboratorHolidaysSignal.set(collaborator);
 
     fixture.detectChanges();

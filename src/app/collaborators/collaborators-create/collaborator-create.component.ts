@@ -30,9 +30,10 @@ export class CollaboratorCreateComponent {
   }
 
   onSubmit() {
-  const formValue = this.form.value;
+  
+    const formValue = this.form.getRawValue();
 
-  if (!formValue.collaboratorPeriod) return;
+  if (!formValue.collaboratorPeriod) return; 
 
   const newCollaborator: CollaboratorCreateRequest = {
     names: formValue.names ?? '',
@@ -40,10 +41,10 @@ export class CollaboratorCreateComponent {
     email: formValue.email ?? '',
     deactivationDate: new Date(formValue.deactivationDate!),
     periodDateTime: {
-      _initDate: new Date(formValue.collaboratorPeriod.initDate!),
-      _finalDate: new Date(formValue.collaboratorPeriod.finalDate!)
+      _initDate: new Date(formValue.collaboratorPeriod!.initDate!),
+      _finalDate: new Date(formValue.collaboratorPeriod!.finalDate!)
     }
-  };
+};
 
   this.collaboratorDataService.createCollaborator(newCollaborator).subscribe({
     next: (createdCollaborator) => {
