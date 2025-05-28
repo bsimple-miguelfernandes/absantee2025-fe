@@ -54,11 +54,11 @@ export class CollaboratorDataService {
   }
 
   addHoliday(collabId: string, initDate: string, finalDate: string) {
-    return this.httpClient.post(`${this.baseUrl}/collaborators/${collabId}/holidayplan/holidayperiod`, { initDate: initDate, finalDate: finalDate });
+    return this.httpClient.post<HolidayPeriod>(`${this.baseUrl}/collaborators/${collabId}/holidayplan/holidayperiod`, {initDate: initDate, finalDate: finalDate});
   }
 
-  editHoliday(collaboratorId: string, updatedPeriod: HolidayPeriod) {
-    return this.httpClient.put(`${this.baseUrl}/collaborators/${collaboratorId}/holidayplan/holidayperiod`, updatedPeriod);
+  editHoliday(collaboratorId: string, updatedPeriod: HolidayPeriod){
+    return this.httpClient.put<HolidayPeriod>(`${this.baseUrl}/collaborators/${collaboratorId}/holidayplan/holidayperiod`, updatedPeriod);
   }
 
   getAssociations(id: string): Observable<AssociationProjectCollaborators[]> {
