@@ -15,7 +15,7 @@ export class CollaboratorDataService {
   private readonly baseUrl = environment.apiBaseUrl;
 
   getCollabs(): Observable<Collaborator[]> {
-    return this.httpClient.get<Collaborator[]>(`${this.baseUrl}/collaborators`);
+    return this.httpClient.get<Collaborator[]>(`${this.baseUrl}/collaborators/details`);
   }
 
   getCollabById(id: string): Observable<Collaborator> {
