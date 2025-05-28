@@ -4,6 +4,7 @@ import { CollaboratorSignalService } from './collaborator-signal.service';
 import { HttpClient } from '@angular/common/http';
 import { CollaboratorDetails } from './collaborator-details/collaborator-details';
 import { Signal } from '@angular/core';
+import { Collaborator } from './collaborator';
 
 describe('CollaboratorService', () => {
   let service: CollaboratorSignalService;
@@ -26,13 +27,18 @@ describe('CollaboratorService', () => {
   });
 
   it('should set selectedCollaborator when selectCollaborator is called', () => {
-    const collaborator : CollaboratorDetails =
+    const collaborator : Collaborator =
     {
-      id: "1",
+      collabId: "1",
+      userId: "1",
       names: "Alice",
       surnames: "Johnson",
       email: "alice.johnson@example.com",
-      periodDateTime: {
+      userPeriod: {
+        _initDate: new Date('2019-06-10'),
+        _finalDate: new Date('2025-11-31')
+      },
+      collaboratorPeriod: {
         _initDate: new Date('2019-06-10'),
         _finalDate: new Date('2025-11-31')
       }
@@ -44,13 +50,18 @@ describe('CollaboratorService', () => {
 
   
   it('should set updatedCollaborator when updateCollaborator is called', () => {
-    const collaboratorUpdated : CollaboratorDetails =
+    const collaboratorUpdated : Collaborator =
     {
-      id: "1",
+      collabId: "1",
+      userId: "1",
       names: "Alice",
       surnames: "Johnson",
-      email: "new-email@example.com",
-      periodDateTime: {
+      email: "alice.johnson@example.com",
+      userPeriod: {
+        _initDate: new Date('2019-06-10'),
+        _finalDate: new Date('2025-11-31')
+      },
+      collaboratorPeriod: {
         _initDate: new Date('2019-06-10'),
         _finalDate: new Date('2025-11-31')
       }

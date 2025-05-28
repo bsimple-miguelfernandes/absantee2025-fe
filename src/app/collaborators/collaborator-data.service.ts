@@ -14,12 +14,12 @@ import { CollaboratorCreateRequest } from './collaborators-create/create-collabo
 export class CollaboratorDataService {
   private httpClient = inject(HttpClient);
 
-  /* getCollaboratorByEmail(email: string): CollaboratorDetails {
-    return this.collaboratorsSignal().find(c => c.email === email)!;
-  } */
-
   getCollabs() : Observable<Collaborator[]>{
     return this.httpClient.get<Collaborator[]>("http://localhost:5073/api/collaborators/details");
+  }
+
+  getCollabById(id : string) : Observable<Collaborator>{
+    return this.httpClient.get<Collaborator>("http://localhost:5073/api/collaborators/" + id + "/details");
   }
 
   createCollaborator(newCollaborator: CollaboratorCreateRequest): Observable<CollaboratorCreateRequest> {

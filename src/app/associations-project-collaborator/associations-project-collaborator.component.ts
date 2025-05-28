@@ -52,8 +52,14 @@ export class AssociationsProjectCollaboratorComponent {
   }
 
   onSelectCollaboratorDetails(assoc: AssociationProjectCollaborators) {
-    /* const collab = this.collaboratorDataService.getCollaboratorByEmail(assoc.collaboratorEmail); */
-    /* this.collaboratorSignalService.selectCollaborator(collab); */
+    this.collaboratorDataService.getCollabById(assoc.collaboratorId).subscribe({
+      next: (collab) => {
+        this.collaboratorSignalService.selectCollaborator(collab);
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    })
   }
 
   onSelectProjectDetails(assoc: AssociationProjectCollaborators) {
