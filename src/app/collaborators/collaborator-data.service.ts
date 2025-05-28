@@ -14,11 +14,11 @@ export class CollaboratorDataService {
   private httpClient = inject(HttpClient);
   private readonly baseUrl = environment.apiBaseUrl;
 
-  getCollabs() : Observable<Collaborator[]>{
-    return this.httpClient.get<Collaborator[]>(`${this.baseUrl}/collaborators/details`);
+  getCollabs(): Observable<Collaborator[]> {
+    return this.httpClient.get<Collaborator[]>(`${this.baseUrl}/collaborators`);
   }
 
-  getCollabById(id : string) : Observable<Collaborator>{
+  getCollabById(id: string): Observable<Collaborator> {
     return this.httpClient.get<Collaborator>(`${this.baseUrl}/collaborators/${id}/details`);
   }
 
@@ -28,17 +28,17 @@ export class CollaboratorDataService {
 
   updateCollaborator(updatedCollaborator: Collaborator) {
     return this.httpClient.put<Collaborator>(`${this.baseUrl}/collaborators`, updatedCollaborator);
-  } 
+  }
 
   getCollaboratorHolidays(collaboratorId: string): Observable<HolidayPeriod[]> {
     return this.httpClient.get<HolidayPeriod[]>(`${this.baseUrl}/collaborators/${collaboratorId}/holidayplan/holidayperiod`);
   }
 
   addHoliday(collabId: string, initDate: string, finalDate: string) {
-    return this.httpClient.post(`${this.baseUrl}/collaborators/${collabId}/holidayplan/holidayperiod`, {initDate: initDate, finalDate: finalDate});
+    return this.httpClient.post(`${this.baseUrl}/collaborators/${collabId}/holidayplan/holidayperiod`, { initDate: initDate, finalDate: finalDate });
   }
 
-  editHoliday(collaboratorId: string, updatedPeriod: HolidayPeriod){
+  editHoliday(collaboratorId: string, updatedPeriod: HolidayPeriod) {
     return this.httpClient.put(`${this.baseUrl}/collaborators/${collaboratorId}/holidayplan/holidayperiod`, updatedPeriod);
   }
 
