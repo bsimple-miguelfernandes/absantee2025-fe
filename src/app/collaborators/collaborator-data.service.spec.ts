@@ -2,11 +2,11 @@ import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { CollaboratorDataService } from './collaborator-data.service';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { Collaborator } from './collaborator';
-import { AssociationProjectCollaborators } from '../associations-project-collaborator/association-project-collaborator.model';
 import { environment } from '../../environments/environment';
+import { Collaborator } from './collaborator';
 import { CollaboratorCreateRequest } from './collaborators-create/create-collaborator';
 import { HolidayPeriod } from './collaborator-holidays/holiday-period';
+import { AssociationProjectCollaborators } from '../associations-project-collaborator/association-project-collaborator.model';
 
 describe('CollaboratorDataService', () => {
   let service: CollaboratorDataService;
@@ -50,12 +50,10 @@ describe('CollaboratorDataService', () => {
     ];
 
     let result: Collaborator[] = [];
-
+    
     service.getCollabs().subscribe(r => (result = r));
+    service['collaboratorSubject'].next(mockCollaborators);
 
-    const req = httpMock.expectOne(`${baseUrl}/collaborators`);
-    expect(req.request.method).toBe('GET');
-    req.flush(mockCollaborators);
 
     tick();
     expect(result).toEqual(mockCollaborators);
@@ -112,6 +110,8 @@ describe('CollaboratorDataService', () => {
 
     req.flush(mockCollaboratorCreateRequest);
 
+    httpMock.expectOne(`${baseUrl}/collaborators/details`).flush([]);
+
     tick();
     expect(result).toEqual(mockCollaboratorCreateRequest);
   }));
@@ -141,6 +141,8 @@ describe('CollaboratorDataService', () => {
     expect(req.request.body).toEqual(mockCollaborator);
 
     req.flush(mockCollaborator);
+
+    httpMock.expectOne(`${baseUrl}/collaborators/details`).flush([]);
 
     tick();
     expect(result).toEqual(mockCollaborator);
