@@ -71,25 +71,26 @@ describe('CollaboratorDetailsComponent', () => {
     expect(collabEndDateInput.value).toBe(collaborator.collaboratorPeriod._finalDate.toISOString().split('T')[0]);
   });
 
-  it('should update form inputs when collaborator input changes', () => {
-    const newCollaborator: Collaborator = {
+  it('should update form inputs when collaborator input changes', async () => {
+    const newCollaborator : Collaborator = {
       collabId: "2",
-      userId: "2",
+      userId: '2',
       names: "Bob",
       surnames: "Martinez",
       email: "bob.martinez@example.com",
-      userPeriod: {
-        _initDate: new Date('2022-01-01'),
-        _finalDate: new Date('2025-01-01')
+      userPeriod:{
+        _initDate: new Date(2021, 1, 1),
+        _finalDate: new Date(2024, 6, 30)
       },
       collaboratorPeriod: {
-        _initDate: new Date('2022-02-01'),
-        _finalDate: new Date('2024-12-01')
+        _initDate: new Date(2021, 1, 1),
+        _finalDate: new Date(2024, 6, 30)
       }
     };
 
     selectedSignal.set(newCollaborator);
     fixture.detectChanges();
+    await fixture.whenStable();
 
     const nameInput: HTMLInputElement = fixture.nativeElement.querySelector('#names');
     const surnamesInput: HTMLInputElement = fixture.nativeElement.querySelector('#surnames');
