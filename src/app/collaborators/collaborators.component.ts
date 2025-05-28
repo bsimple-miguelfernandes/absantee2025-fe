@@ -37,7 +37,14 @@ export class CollaboratorsComponent {
   collaborators: Collaborator[] = [];
 
   constructor() {
-    this.loadCollaborators();
+    this.collaboratorDataService.getCollabs().subscribe({
+      next: (collaborators) => {
+        this.collaborators = collaborators;
+      },
+      error: (err) => {
+        console.error('Error loading collaborators:', err);
+      }
+    });
 
     this.collaboratorSignalService.selectCollaborator(undefined);
     this.collaboratorSignalService.selectCollaboratorHolidays(undefined);
@@ -46,16 +53,14 @@ export class CollaboratorsComponent {
       const updated = this.collaboratorUpdated();
       if (updated) {
         this.collaboratorDataService.updateCollaborator(updated).subscribe({
-          next: () => this.loadCollaborators(),
-          error: (err) => console.error('Erro ao atualizar colaborador:', err)
+          next: (updatedCollab) => {
+            this.collaborators = this.collaborators.map(collab =>
+              collab.collabId === updatedCollab.collabId ? updatedCollab : collab
+            );
+          },
+          error: (err) => console.error('Erros updating collaborators:', err)
         });
       }
-    });
-  }
-
-  loadCollaborators() {
-    this.collaboratorDataService.getCollabs().subscribe((collaborators) => {
-      this.collaborators = collaborators;
     });
   }
 
