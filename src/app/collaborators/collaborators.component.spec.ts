@@ -7,6 +7,7 @@ import { CollaboratorDataService } from './collaborator-data.service';
 import { of, throwError } from 'rxjs';
 import { Collaborator } from './collaborator';
 import { ProjectsDataService } from '../projects/projects-data.service';
+import { HolidayPeriod } from './collaborator-holidays/holiday-period';
 
 describe('CollaboratorsComponent', () => {
   let component: CollaboratorsComponent;
@@ -53,6 +54,14 @@ describe('CollaboratorsComponent', () => {
     }
   ];
 
+  const mockHolidayPeriod: HolidayPeriod = {
+  id: 'holiday-001',
+  periodDate: {
+    initDate: '2024-06-01',
+    finalDate: '2024-06-10'
+  }
+};
+
   beforeEach(async () => {
     selectedCollabSignal = signal<Collaborator | undefined>(undefined);
     selectedCollabHolidaySignal = signal<Collaborator | undefined>(undefined);
@@ -80,6 +89,8 @@ describe('CollaboratorsComponent', () => {
     });
 
     dataServiceSpy.getCollabs.and.returnValue(of(collabsListDouble));
+    dataServiceSpy.getCollaboratorHolidays.and.returnValue(of([mockHolidayPeriod]));
+
     mockProjectsDataService = jasmine.createSpyObj('ProjectsDataService', ['getAssociations']);
 
     await TestBed.configureTestingModule({
