@@ -37,8 +37,13 @@ export class CollaboratorsComponent {
   collaborators: Collaborator[] = [];
 
   constructor() {
-    this.collaboratorDataService.getCollabs().subscribe((collaborators) => {
-      this.collaborators = collaborators;
+    this.collaboratorDataService.getCollabs().subscribe({
+      next: (collaborators) => {
+        this.collaborators = collaborators;
+      },
+      error: (err) => {
+        console.error('Error loading collaborators:', err);
+      }
     });
 
     this.collaboratorSignalService.selectCollaborator(undefined);
@@ -53,7 +58,7 @@ export class CollaboratorsComponent {
               collab.collabId === updatedCollab.collabId ? updatedCollab : collab
             );
           },
-          error: (err) => console.error('Erro ao atualizar colaborador:', err)
+          error: (err) => console.error('Erros updating collaborators:', err)
         });
       }
     });

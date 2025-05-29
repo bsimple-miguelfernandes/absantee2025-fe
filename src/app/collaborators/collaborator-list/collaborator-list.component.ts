@@ -1,12 +1,11 @@
-import { Component, computed, effect, inject, input, output } from '@angular/core';
-import { CollaboratorDetails } from '../collaborator-details/collaborator-details';
+import { Component, inject, input } from '@angular/core';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
-import { CollaboratorDataService } from '../collaborator-data.service';
 import { Collaborator } from '../collaborator';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-collaborator-list',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './collaborator-list.component.html',
   styleUrl: './collaborator-list.component.css'
 })

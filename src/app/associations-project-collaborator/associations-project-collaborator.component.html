@@ -1,16 +1,16 @@
 @if (projectId()){
-    <h1>{{projectCollaboratorsSelected()!.title}}</h1>
+<h1>{{projectCollaboratorsSelected()?.title}}</h1>
 }
 @if(collaboratorId()) {
-    <h1>{{collaboratorProjectsSelected()!.names}} {{collaboratorProjectsSelected()!.surnames}}</h1>
+<h1>{{collaboratorProjectsSelected()?.names}} {{collaboratorProjectsSelected()?.surnames}}</h1>
 }
 <table>
     <tr>
         @if (projectId()) {
-            <th>Email</th>
+        <th>Email</th>
         }
         @if(collaboratorId()) {
-            <th>Acronym</th>
+        <th>Acronym</th>
         }
         <th>Init Date</th>
         <th>Final Date</th>
@@ -19,29 +19,29 @@
     @for (assoc of projectCollaborators; track $index) {
     <tr>
         @if (projectId()) {
-            <td>{{assoc.collaboratorEmail}}</td>
+        <td>{{assoc.collaboratorEmail}}</td>
         }
         @if(collaboratorId()) {
-            <td>{{assoc.projectAcronym}}</td>
+        <td>{{assoc.projectAcronym}}</td>
         }
-        <td>{{assoc.periodDate.initDate | date:'yyyy-MM-dd'}}  </td>
-        <td>{{assoc.periodDate.finalDate | date:'yyyy-MM-dd'}}  </td>
+        <td>{{assoc.periodDate.initDate | date:'yyyy-MM-dd'}} </td>
+        <td>{{assoc.periodDate.finalDate | date:'yyyy-MM-dd'}} </td>
         @if (projectId()) {
-            <td><button (click)="onSelectCollaboratorDetails(assoc)">Collaborator Details</button> </td>
+        <td><button (click)="onSelectCollaboratorDetails(assoc)">Collaborator Details</button> </td>
         }
         @if(collaboratorId()) {
-            <td><button (click)="onSelectProjectDetails(assoc)">Project Details</button> </td>
+        <td><button (click)="onSelectProjectDetails(assoc)">Project Details</button> </td>
         }
     </tr>
     }
 </table>
 
 @if (projectId() && collaboratorSelected()) {
-    <app-collaborator-details>
+<app-collaborator-details>
 
-    </app-collaborator-details>
+</app-collaborator-details>
 }
 
 @if (collaboratorId() && projectSelected()) {
-    <app-project />
+<app-project />
 }

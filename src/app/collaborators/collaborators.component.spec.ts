@@ -6,6 +6,7 @@ import { CollaboratorSignalService } from './collaborator-signal.service';
 import { signal, WritableSignal } from '@angular/core';
 import { CollaboratorDataService } from './collaborator-data.service';
 import { of } from 'rxjs';
+import { Collaborator } from './collaborator';
 
 describe('CollaboratorsComponent', () => {
   let component: CollaboratorsComponent;
@@ -13,26 +14,28 @@ describe('CollaboratorsComponent', () => {
   let mockCollaboratorDataService: jasmine.SpyObj<CollaboratorDataService>;
   let collaboratorsSignal: WritableSignal<CollaboratorDetails[]>;
   let mockCollaboratorSignalService: jasmine.SpyObj<CollaboratorSignalService>;
-  let selectedSignal: WritableSignal<CollaboratorDetails | undefined>;
+  let selectedSignal: WritableSignal<Collaborator | undefined>;
   let updatedSignal: WritableSignal<CollaboratorDetails | undefined>;
   let selectedCollaboratorHolidaysSignal: WritableSignal<CollaboratorDetails | undefined>;
   let selectedCollaboratorProjectsSignal: WritableSignal<CollaboratorDetails | undefined>;
 
   beforeEach(async () => {
     collaboratorsSignal = signal<CollaboratorDetails[]>([]);
-    mockCollaboratorDataService = jasmine.createSpyObj('CollaboratorDataService', ['updateCollaborator', 'getCollaboratorHolidays'], {
+    mockCollaboratorDataService = jasmine.createSpyObj('CollaboratorDataService', ['getCollabs', 'updateCollaborator', 'getCollaboratorHolidays'], {
       collaborators: collaboratorsSignal
     })
-    selectedSignal = signal<CollaboratorDetails | undefined>(undefined);
+    mockCollaboratorDataService.getCollabs.and.returnValue(of([]));
+    selectedSignal = signal<Collaborator | undefined>(undefined);
     updatedSignal = signal<CollaboratorDetails | undefined>(undefined);
     selectedCollaboratorHolidaysSignal = signal<CollaboratorDetails | undefined>(undefined);
     selectedCollaboratorProjectsSignal = signal<CollaboratorDetails | undefined>(undefined);
-    mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', ['selectCollaborator', 'selectCollaboratorHolidays'], {
+    mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', ['isCreatingCollaborator', 'selectCollaborator', 'selectCollaboratorHolidays'], {
       selectedCollaborator: selectedSignal,
       updatedCollaborator: updatedSignal,
       selectedCollaboratorHoliday: selectedCollaboratorHolidaysSignal,
       selectedCollaboratorProjects: selectedCollaboratorProjectsSignal
     });
+    mockCollaboratorSignalService.isCreatingCollaborator.and.returnValue(false);
 
     await TestBed.configureTestingModule({
       imports: [CollaboratorsComponent],
@@ -111,14 +114,19 @@ describe('CollaboratorsComponent', () => {
 
 
   it('should show collaborator details when selectedCollaborator signal changes', () => {
-    const collaborator: CollaboratorDetails = {
-      id: "1",
-      names: "Alice",
-      surnames: "Johnson",
-      email: "alice.johnson@example.com",
-      periodDateTime: {
-        _initDate: new Date(2019, 5, 10),
-        _finalDate: new Date(2025, 11, 31)
+    const collaborator: Collaborator = {
+      collabId: "1",
+      userId: '1',
+      names: "John",
+      surnames: 'Doe',
+      email: "JohnDoe@email.com",
+      userPeriod: {
+        _initDate: new Date('2024-01-01'),
+        _finalDate: new Date('2024-12-31')
+      },
+      collaboratorPeriod: {
+        _initDate: new Date('2024-02-01'),
+        _finalDate: new Date('2024-11-31')
       }
     };
     selectedSignal.set(collaborator);

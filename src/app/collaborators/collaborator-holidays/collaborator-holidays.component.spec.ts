@@ -38,15 +38,15 @@ describe('CollaboratorHolidaysComponent', () => {
         {
           id: "1",
           periodDate: {
-            initDate: new Date("2020-01-01"),
-            finalDate: new Date("2020-01-10")
+            initDate: "2020-01-01",
+            finalDate: "2020-01-10"
           }
         },
         {
           id: "2",
           periodDate: {
-            initDate: new Date("2020-12-01"),
-            finalDate: new Date("2020-12-10")
+            initDate:"2020-12-01",
+            finalDate: "2020-12-10"
           }
         }
       ];
@@ -69,11 +69,11 @@ describe('CollaboratorHolidaysComponent', () => {
       }
     };
     selectedCollaboratorHolidaysSignal.set(collaborator);
+    mockCollabotadorDataService.getCollaboratorHolidays.and.returnValue(of(collaboratorHolidays));
 
     fixture = TestBed.createComponent(CollaboratorHolidaysComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    fixture.detectChanges();  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
