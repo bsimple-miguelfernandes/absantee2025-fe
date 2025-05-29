@@ -46,6 +46,8 @@ export class CollaboratorCreateComponent {
     }
 };
 
+
+  // O subscribe é necessario porque ao fazeres um pedido http ele retorna um Observable que tem de ser subscrito
   this.collaboratorDataService.createCollaborator(newCollaborator).subscribe({
     next: (createdCollaborator) => {
       console.log('Created collaborator:', createdCollaborator);

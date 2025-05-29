@@ -14,6 +14,8 @@ export class CollaboratorDataService {
   private httpClient = inject(HttpClient);
   private readonly baseUrl = environment.apiBaseUrl;
 
+
+  //BehaviorSubject é um Observable que sempre tem um valor atual, e emite esse valor imediatamente para novos assinantes.
   private collaboratorSubject = new BehaviorSubject<Collaborator[]>([]);
   collaborator$ = this.collaboratorSubject.asObservable();
 
@@ -24,6 +26,7 @@ export class CollaboratorDataService {
 
   loadCollaborators(){
     this.httpClient.get<Collaborator[]>(`${this.baseUrl}/collaborators/details`).subscribe({
+      //O .next() dispara um novo valor para todos que estão inscritos naquele Observable.
       next: (collaborators) => this.collaboratorSubject.next(collaborators),
       error: (err) => console.error('Erro ao carregar colaboradores:', err)
     })
@@ -37,8 +40,12 @@ export class CollaboratorDataService {
     return this.httpClient.get<Collaborator>(`${this.baseUrl}/collaborators/${id}/details`);
   }
 
+  //O Observable que ele retorna
   createCollaborator(newCollaborator: CollaboratorCreateRequest): Observable<CollaboratorCreateRequest> {
+
+    //O método .pipe() é usado para encadear operadores RxJS que transformam, filtram ou reagem aos valores emitidos.
     return this.httpClient.post<CollaboratorCreateRequest>(`${this.baseUrl}/collaborators`, newCollaborator).pipe(
+      //O operador tap() é usado dentro do .pipe() para executar efeitos colaterais, como console.log(), chamadas de função, debug, etc.
       tap(() => this.loadCollaborators()) 
     )
   }
