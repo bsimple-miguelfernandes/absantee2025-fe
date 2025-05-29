@@ -23,7 +23,7 @@ export class AssociationsProjectCollaboratorComponent {
   projectCollaboratorsSelected = this.projectSignalService.projectCollaboratorSelected;
 
   projectsDataService = inject(ProjectsDataService);
-  projectCollaborators!: AssociationProjectCollaborators[];
+  associations!: AssociationProjectCollaborators[];
 
   collaboratorDataService = inject(CollaboratorDataService);
 
@@ -37,14 +37,14 @@ export class AssociationsProjectCollaboratorComponent {
         //reset the selected collaborator
         this.collaboratorSignalService.selectCollaborator(undefined);
         this.projectsDataService.getAssociations(this.projectId()!).subscribe((associations => {
-          this.projectCollaborators = associations
+          this.associations = associations
         }))
       }
       if (this.collaboratorId()) {
         //reset the selected project
         this.projectSignalService.selectProject(undefined);
         this.collaboratorDataService.getAssociations(this.collaboratorId()!).subscribe((associations) => {
-          this.projectCollaborators = associations;
+          this.associations = associations;
         });
       }
     });
