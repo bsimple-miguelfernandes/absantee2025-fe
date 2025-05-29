@@ -109,14 +109,16 @@ describe('CollaboratorDetailsComponent', () => {
     expect(collabEndDateInput.value).toBe(newCollaborator.collaboratorPeriod._finalDate.toISOString().split('T')[0]);
   });
 
-  /* it('should call updateCollaborator when form is submitted', () => {
-    const updateCollaborator = collaborator;
-    const emailInput: HTMLInputElement = fixture.nativeElement.querySelector('#email');
-    emailInput.value = 'email-changed@test.com';
+  it('should call updateCollaborator when form is submitted', () => {
+  const emailControl = component.form.get('email')!;
+  emailControl.setValue('email-changed@test.com');
+  emailControl.markAsDirty();
 
-    const button: HTMLElement = fixture.nativeElement.querySelector('button');
-    button.click();
+  component.onSubmit();
 
-    expect(mockCollaboratorSignalService.updateCollaborator).toHaveBeenCalledOnceWith(updateCollaborator);
-  }); */
+  expect(mockCollaboratorSignalService.updateCollaborator).toHaveBeenCalledOnceWith(jasmine.objectContaining({
+      email: 'email-changed@test.com'
+    }));
+  });
+ 
 });
