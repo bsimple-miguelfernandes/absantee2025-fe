@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CollaboratorsComponent } from './collaborators.component';
 import { CollaboratorSignalService } from './collaborator-signal.service';
-import { getNgModuleById, signal, WritableSignal } from '@angular/core';
+import { signal, WritableSignal } from '@angular/core';
 import { CollaboratorDataService } from './collaborator-data.service';
 import { of, throwError } from 'rxjs';
 import { Collaborator } from './collaborator';
@@ -79,7 +79,6 @@ describe('CollaboratorsComponent', () => {
       selectedCollaboratorProjects: selectedCollabProject
     });
 
-    signalServiceDouble.isCreatingCollaborator.and.returnValue(false);
     dataServiceSpy.getCollabs.and.returnValue(of(collabsListDouble));
     mockProjectsDataService = jasmine.createSpyObj('ProjectsDataService', ['getAssociations']);
 
@@ -96,6 +95,8 @@ describe('CollaboratorsComponent', () => {
     component = fixture.componentInstance;
     dataServiceDouble = TestBed.inject(CollaboratorDataService) as jasmine.SpyObj<CollaboratorDataService>;
     signalServiceDouble = TestBed.inject(CollaboratorSignalService) as jasmine.SpyObj<CollaboratorSignalService>;
+    signalServiceDouble.isCreatingCollaborator.and.returnValue(false);
+
   });
 
 
@@ -219,6 +220,25 @@ describe('CollaboratorsComponent', () => {
     // assert
     expect(createComponent).toBeFalsy();
   });
+
+   it('should show "Criar Colaborador" button if the create collaborator is not rendered (signal is false) ', () => {
+    signalServiceDouble.isCreatingCollaborator.and.returnValue(false);
+
+    fixture.detectChanges();
+    const button = fixture.nativeElement.querySelector('[data-test-id="create-collab-button"]');
+    expect(button).toBeTruthy();
+    expect(button.textContent).toContain('Criar Colaborador');  
+  })
+
+  it('should not render "Criar Colaborador" button when isCreatingCollaborator is true', () => {
+    signalServiceDouble.isCreatingCollaborator.and.returnValue(true);
+
+    fixture.detectChanges();
+
+    const createButton = fixture.nativeElement.querySelector('[data-test-id="create-collab-button"]');
+    expect(createButton).toBeNull();
+});
+
 
   it("should show collaborator details if selected collaborator", () => {
     // arrange

@@ -5,7 +5,7 @@
 </app-collaborators-bullets>
 
 @if (!collaboratorSignalService.isCreatingCollaborator()) {
-<button (click)="collaboratorSignalService.startCreateCollaborator()">
+<button data-test-id="create-collab-button" (click)="collaboratorSignalService.startCreateCollaborator()">
     Criar Colaborador
 </button>
 }

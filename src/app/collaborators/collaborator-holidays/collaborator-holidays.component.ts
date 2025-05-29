@@ -51,6 +51,7 @@ export class CollaboratorHolidaysComponent {
   }
 
   editHoliday(index: number) {
+    if(!this.form.dirty) return; 
     if(index >= this.collaboratorHolidays.length) {
       const holidayGroup = this.holidaysForm.at(index);
       this.collaboratorDataService.addHoliday(this.collaboratorHolidaysSelected()!.collabId,
