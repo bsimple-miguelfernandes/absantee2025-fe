@@ -1,4 +1,4 @@
-/*import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProjectsComponent } from './projects.component';
 import { Project } from './project/project';
@@ -8,6 +8,8 @@ import { routes } from '../app.routes';
 import { ProjectsDataService } from './projects-data.service';
 import { signal, WritableSignal } from '@angular/core';
 import { ProjectsSignalsService } from './projects-signals.service';
+import { Collaborator } from '../collaborators/collaborator';
+import { CollaboratorDataService } from '../collaborators/collaborator-data.service';
 
 describe('ProjectsComponent', () => {
   let component: ProjectsComponent;
@@ -17,9 +19,10 @@ describe('ProjectsComponent', () => {
   let mockProjectSignalService: jasmine.SpyObj<ProjectsSignalsService>;
   let projectSelectedSignal: WritableSignal<Project | undefined>;
   let projectCollaboratorsSelectedSignal: WritableSignal<Project | undefined>;
+  let mockCollaboratorDataService: jasmine.SpyObj<CollaboratorDataService>;
 
   beforeEach(async () => {
-    mockProjectsDataService = jasmine.createSpyObj('ProjectsDataService', ['getProjects']);
+    mockProjectsDataService = jasmine.createSpyObj('ProjectsDataService', ['getProjects', 'getAssociations']);
 
     projectSelectedSignal = signal<Project | undefined>(undefined);
     projectCollaboratorsSelectedSignal = signal<Project | undefined>(undefined);
@@ -27,13 +30,16 @@ describe('ProjectsComponent', () => {
       projectSelected: projectSelectedSignal,
       projectCollaboratorSelected: projectCollaboratorsSelectedSignal
     })
+
+    mockCollaboratorDataService = jasmine.createSpyObj('CollaboratorDataService', ['getAssociations']);
     await TestBed.configureTestingModule({
       imports: [ProjectsComponent,
         RouterModule.forRoot(routes)
       ],
       providers: [
         { provide: ProjectsDataService, useValue: mockProjectsDataService },
-        { provide: ProjectsSignalsService, useValue: mockProjectSignalService }
+        { provide: ProjectsSignalsService, useValue: mockProjectSignalService },
+        { provide: CollaboratorDataService, useValue: mockCollaboratorDataService }
       ]
     })
       .compileComponents();
@@ -114,10 +120,10 @@ describe('ProjectsComponent', () => {
     };
 
     projectCollaboratorsSelectedSignal.set(project);
+    mockProjectsDataService.getAssociations.and.returnValue(of([]));
 
     fixture.detectChanges();
     const associations = fixture.nativeElement.querySelector('app-associations-project-collaborator');
     expect(associations).not.toBeNull();
   });
 });
-*/
