@@ -7,7 +7,6 @@ import { CollaboratorDetailsComponent } from "../collaborators/collaborator-deta
 import { ProjectComponent } from "../projects/project/project.component";
 import { DatePipe } from '@angular/common';
 import { AssociationProjectCollaborators } from './association-project-collaborator.model';
-import { Project } from '../projects/project/project';
 
 @Component({
   selector: 'app-associations-project-collaborator',
