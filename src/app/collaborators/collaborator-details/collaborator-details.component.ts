@@ -58,6 +58,8 @@ export class CollaboratorDetailsComponent {
   }
 
   onSubmit() {
+    if(!this.form.dirty) return; 
+
     const formValue = this.form.value;
 
     const updatedCollaborator: Collaborator = {
@@ -77,5 +79,6 @@ export class CollaboratorDetailsComponent {
     };
 
     this.collaboratorService.updateCollaborator(updatedCollaborator);
+    this.form.markAsPristine();
   }
 }

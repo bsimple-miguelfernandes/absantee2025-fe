@@ -73,6 +73,7 @@ export class CollaboratorHolidaysComponent {
       }
 
       this.collaboratorDataService.editHoliday(this.collaboratorHolidaysSelected()!.collabId, updatedHoliday).subscribe(h => console.log(h));
+      this.form.markAsPristine();
     }
   }
 
