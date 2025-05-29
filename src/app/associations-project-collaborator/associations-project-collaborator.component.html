@@ -16,7 +16,7 @@
         <th>Final Date</th>
         <th>Actions</th>
     </tr>
-    @for (assoc of projectCollaborators; track $index) {
+    @for (assoc of associations; track $index) {
     <tr>
         @if (projectId()) {
         <td>{{assoc.collaboratorEmail}}</td>
@@ -37,9 +37,7 @@
 </table>
 
 @if (projectId() && collaboratorSelected()) {
-<app-collaborator-details>
-
-</app-collaborator-details>
+<app-collaborator-details />
 }
 
 @if (collaboratorId() && projectSelected()) {

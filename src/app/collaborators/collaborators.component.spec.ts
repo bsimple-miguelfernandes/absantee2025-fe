@@ -2,10 +2,12 @@ import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testin
 
 import { CollaboratorsComponent } from './collaborators.component';
 import { CollaboratorSignalService } from './collaborator-signal.service';
-import { getNgModuleById, signal, WritableSignal } from '@angular/core';
+import { signal, WritableSignal } from '@angular/core';
 import { CollaboratorDataService } from './collaborator-data.service';
 import { of, throwError } from 'rxjs';
 import { Collaborator } from './collaborator';
+import { ProjectsDataService } from '../projects/projects-data.service';
+import { HolidayPeriod } from './collaborator-holidays/holiday-period';
 
 describe('CollaboratorsComponent', () => {
   let component: CollaboratorsComponent;
@@ -52,6 +54,14 @@ describe('CollaboratorsComponent', () => {
     }
   ];
 
+  const mockHolidayPeriod: HolidayPeriod = {
+  id: 'holiday-001',
+  periodDate: {
+    initDate: '2024-06-01',
+    finalDate: '2024-06-10'
+  }
+};
+
   beforeEach(async () => {
     selectedCollabSignal = signal<Collaborator | undefined>(undefined);
     selectedCollabHolidaySignal = signal<Collaborator | undefined>(undefined);
@@ -83,6 +93,8 @@ describe('CollaboratorsComponent', () => {
     dataServiceSpy.getCollabs.and.returnValue(of(collabsListDouble));
     signalServiceSpy.isCreatingCollaborator.and.returnValue(false);
     
+
+    dataServiceSpy.getCollaboratorHolidays.and.returnValue(of([mockHolidayPeriod]));
 
 
     await TestBed.configureTestingModule({
@@ -220,6 +232,25 @@ describe('CollaboratorsComponent', () => {
     // assert
     expect(createComponent).toBeFalsy();
   });
+
+   it('should show "Criar Colaborador" button if the create collaborator is not rendered (signal is false) ', () => {
+    signalServiceSpy.isCreatingCollaborator.and.returnValue(false);
+
+    fixture.detectChanges();
+    const button = fixture.nativeElement.querySelector('[data-test-id="create-collab-button"]');
+    expect(button).toBeTruthy();
+    expect(button.textContent).toContain('Criar Colaborador');  
+  })
+
+  it('should not render "Criar Colaborador" button when isCreatingCollaborator is true', () => {
+    signalServiceSpy.isCreatingCollaborator.and.returnValue(true);
+
+    fixture.detectChanges();
+
+    const createButton = fixture.nativeElement.querySelector('[data-test-id="create-collab-button"]');
+    expect(createButton).toBeNull();
+});
+
 
   it("should show collaborator details if selected collaborator", () => {
     // arrange
