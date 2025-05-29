@@ -2,24 +2,23 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CollaboratorHolidaysComponent } from './collaborator-holidays.component';
 import { signal, WritableSignal } from '@angular/core';
-import { CollaboratorDetails } from '../collaborator-details/collaborator-details';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
 import { CollaboratorDataService } from '../collaborator-data.service';
-import { PeriodDate } from '../../PeriodDate';
 import { HolidayPeriod } from './holiday-period';
 import { of } from 'rxjs';
+import { Collaborator } from '../collaborator';
 
 describe('CollaboratorHolidaysComponent', () => {
   let component: CollaboratorHolidaysComponent;
   let fixture: ComponentFixture<CollaboratorHolidaysComponent>;
   let mockCollaboratorSignalService: jasmine.SpyObj<CollaboratorSignalService>;
-  let selectedCollaboratorHolidaysSignal: WritableSignal<CollaboratorDetails | undefined>;
+  let selectedCollaboratorHolidaysSignal: WritableSignal<Collaborator | undefined>;
   let mockCollabotadorDataService: jasmine.SpyObj<CollaboratorDataService>;
-  let collaborator: CollaboratorDetails;
+  let collaborator: Collaborator;
   let collaboratorHolidays: HolidayPeriod[];
 
   beforeEach(async () => {
-    selectedCollaboratorHolidaysSignal = signal<CollaboratorDetails | undefined>(undefined);
+    selectedCollaboratorHolidaysSignal = signal<Collaborator | undefined>(undefined);
     mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', [], {
       selectedCollaboratorHoliday: selectedCollaboratorHolidaysSignal
     });
@@ -53,11 +52,16 @@ describe('CollaboratorHolidaysComponent', () => {
     mockCollabotadorDataService.getCollaboratorHolidays.and.returnValue(of(collaboratorHolidays));
 
     collaborator = {
-      id: "1",
+      collabId: "1",
+      userId: "1",
       names: "Alice",
       surnames: "Johnson",
       email: "alice.johnson@example.com",
-      periodDateTime: {
+      collaboratorPeriod: {
+        _initDate: new Date("2019-06-10"),
+        _finalDate: new Date("2025-12-31")
+      },
+      userPeriod: {
         _initDate: new Date("2019-06-10"),
         _finalDate: new Date("2025-12-31")
       }
@@ -92,7 +96,7 @@ describe('CollaboratorHolidaysComponent', () => {
 
   // });
 
-  it('when add button is clicked a new element is added to the dorm', () => {
+  it('when add button is clicked a new element is added to the form', () => {
     const button1: HTMLElement = fixture.nativeElement.querySelector('[data-testid="add-btn"]');
     button1.click();
 

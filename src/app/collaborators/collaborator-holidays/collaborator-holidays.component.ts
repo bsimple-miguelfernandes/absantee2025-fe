@@ -19,7 +19,7 @@ export class CollaboratorHolidaysComponent {
   collaboratorHolidays!: HolidayPeriod[];
 
   form = new FormGroup({
-    holidays: new FormArray<FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string> }>>([])
+    holidays: new FormArray<FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string>, buttonText: FormControl<string>}>>([])
   });
 
   constructor() {
@@ -30,9 +30,10 @@ export class CollaboratorHolidaysComponent {
 
         const holidayControls = this.collaboratorHolidays.map(holiday =>
           new FormGroup({
-            initDate: new FormControl(this.formatDate(holiday.periodDate.initDate)),
-            finalDate: new FormControl(this.formatDate(holiday.periodDate.finalDate))
-          }) as FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string> }>
+            initDate: new FormControl(holiday.periodDate.initDate),
+            finalDate: new FormControl(holiday.periodDate.finalDate),
+            buttonText: new FormControl("Edit")
+          }) as FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string>, buttonText: FormControl<string>}>
         );
 
         this.form.setControl('holidays', new FormArray(holidayControls));
@@ -41,7 +42,7 @@ export class CollaboratorHolidaysComponent {
     
   }
 
-  get holidaysForm(): FormArray<FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string> }>> {
+  get holidaysForm(): FormArray<FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string>, buttonText: FormControl<string> }>> {
     return this.form.get('holidays') as FormArray;
   }
 
@@ -50,10 +51,16 @@ export class CollaboratorHolidaysComponent {
   }
 
   editHoliday(index: number) {
+    if(!this.form.dirty) return; 
     if(index >= this.collaboratorHolidays.length) {
+      const holidayGroup = this.holidaysForm.at(index);
       this.collaboratorDataService.addHoliday(this.collaboratorHolidaysSelected()!.collabId,
-      this.holidaysForm.at(index).value.initDate!,
-      this.holidaysForm.at(index).value.finalDate!).subscribe(h => console.log(h));
+                                              holidayGroup.value.initDate!,
+                                              holidayGroup.value.finalDate!)
+                                  .subscribe(h => {
+        holidayGroup.get('buttonText')?.setValue("Edit"),
+        console.log(h)
+      });
     } else {
       const holidayGroup = this.holidaysForm.at(index);
 
@@ -66,6 +73,7 @@ export class CollaboratorHolidaysComponent {
       }
 
       this.collaboratorDataService.editHoliday(this.collaboratorHolidaysSelected()!.collabId, updatedHoliday).subscribe(h => console.log(h));
+      this.form.markAsPristine();
     }
   }
 
@@ -73,8 +81,9 @@ export class CollaboratorHolidaysComponent {
     this.holidaysForm.push(
       new FormGroup({
         initDate: new FormControl(this.formatDate(new Date().toDateString())),
-        finalDate: new FormControl(this.formatDate(new Date().toDateString()))
-      }) as FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string> }>
+        finalDate: new FormControl(this.formatDate(new Date().toDateString())),
+        buttonText: new FormControl("Save")
+      }) as FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string>, buttonText: FormControl<string> }>
     );
   }
 }

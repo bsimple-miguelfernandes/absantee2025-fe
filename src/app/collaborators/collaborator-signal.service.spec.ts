@@ -2,8 +2,6 @@ import { TestBed } from '@angular/core/testing';
 
 import { CollaboratorSignalService } from './collaborator-signal.service';
 import { HttpClient } from '@angular/common/http';
-import { CollaboratorDetails } from './collaborator-details/collaborator-details';
-import { Signal } from '@angular/core';
 import { Collaborator } from './collaborator';
 
 describe('CollaboratorService', () => {

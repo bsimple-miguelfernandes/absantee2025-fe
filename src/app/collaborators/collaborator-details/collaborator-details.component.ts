@@ -1,5 +1,4 @@
-import { Component, computed, effect, inject, input, OnChanges, OnDestroy, OnInit, output, SimpleChanges } from '@angular/core';
-import { CollaboratorDetails } from './collaborator-details';
+import { Component, effect, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
 import { Collaborator } from '../collaborator';
@@ -59,6 +58,8 @@ export class CollaboratorDetailsComponent {
   }
 
   onSubmit() {
+    if(!this.form.dirty) return; 
+
     const formValue = this.form.value;
 
     const updatedCollaborator: Collaborator = {
@@ -78,5 +79,6 @@ export class CollaboratorDetailsComponent {
     };
 
     this.collaboratorService.updateCollaborator(updatedCollaborator);
+    this.form.markAsPristine();
   }
 }
