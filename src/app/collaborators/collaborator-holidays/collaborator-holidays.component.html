@@ -14,7 +14,9 @@
                 <tr [formGroupName]="i">
                     <td><input type="date" formControlName="initDate" /></td>
                     <td><input type="date" formControlName="finalDate" /></td>
-                    <td><button (click)="editHoliday(i)">Edit</button></td>
+                    <td><button (click)="editHoliday(i)">
+                      {{holiday.get('buttonText')?.value}}
+                    </button></td>
                 </tr>
             }
         </tbody>

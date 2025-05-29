@@ -2,8 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CollaboratorListComponent } from './collaborator-list.component';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
-import { CollaboratorDataService } from '../collaborator-data.service';
-import { signal, WritableSignal } from '@angular/core';
 import { Collaborator } from '../collaborator';
 
 describe('CollaboratorListComponent', () => {
@@ -64,8 +62,6 @@ describe('CollaboratorListComponent', () => {
     fixture = TestBed.createComponent(CollaboratorListComponent);
     component = fixture.componentInstance;
 
-    
-
     fixture.componentRef.setInput('collaborators', collaborators);
     fixture.detectChanges();
   });
@@ -74,8 +70,9 @@ describe('CollaboratorListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  /* it('should show the Collaborators Info in the table', () => {
+  it('should show the Collaborators Info in the table', () => {
     const rows: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll('table tr');
+    console.log(rows);
 
     const cells1 = rows[1].querySelectorAll('td');
     expect(cells1[0].textContent).toBe(collaborators[0].names);
@@ -85,20 +82,17 @@ describe('CollaboratorListComponent', () => {
     expect(cells2[0].textContent).toBe(collaborators[1].names);
     expect(cells2[1].textContent).toBe(collaborators[1].email);
 
-    const cells3 = rows[3].querySelectorAll('td');
-    expect(cells3[0].textContent).toBe(collaborators[2].names);
-    expect(cells3[1].textContent).toBe(collaborators[2].email);
   });
- */
-  /* it('should call selectCollaborator with the selected collaborator when a button is clicked', () => {
+ 
+  it('should call selectCollaborator with the selected collaborator when a button is clicked', () => {
     const button1: HTMLElement = fixture.nativeElement.querySelectorAll('[data-testid="details-btn"]')[1];
     button1.click();
 
     expect(mockCollaboratorSignalService.selectCollaborator).toHaveBeenCalledOnceWith(collaborators[1]);
-  }); */
+  }); 
 
-  /* it('should change the table content if new input arrived', () => {
-    const newCollaborators : CollaboratorDetails[] = [
+  it('should change the table content if new input arrived', () => {
+    const newCollaborators : Collaborator[] = [
       {
         collabId: "4",
         userId: "4",
@@ -125,5 +119,5 @@ describe('CollaboratorListComponent', () => {
     const cells1 = rows[1].querySelectorAll('td');
     expect(cells1[0].textContent).toBe('John');
     expect(cells1[1].textContent).toBe("john.doe@example.com");
-  }); */
+  }); 
 });
