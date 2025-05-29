@@ -33,22 +33,19 @@ describe('CollaboratorHolidaysComponent', () => {
     })
       .compileComponents();
 
-    fixture = TestBed.createComponent(CollaboratorHolidaysComponent);
-    component = fixture.componentInstance;
-
     collaboratorHolidays = [
         {
           id: "1",
           periodDate: {
-            initDate: new Date("2020-01-01"),
-            finalDate: new Date("2020-01-10")
+            initDate: "2020-01-01",
+            finalDate: "2020-01-10"
           }
         },
         {
           id: "2",
           periodDate: {
-            initDate: new Date("2020-12-01"),
-            finalDate: new Date("2020-12-10")
+            initDate:"2020-12-01",
+            finalDate: "2020-12-10"
           }
         }
       ];
@@ -66,8 +63,11 @@ describe('CollaboratorHolidaysComponent', () => {
       }
     };
     selectedCollaboratorHolidaysSignal.set(collaborator);
-    fixture.detectChanges();
-  });
+    mockCollabotadorDataService.getCollaboratorHolidays.and.returnValue(of(collaboratorHolidays));
+
+    fixture = TestBed.createComponent(CollaboratorHolidaysComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -93,7 +93,7 @@ describe('CollaboratorHolidaysComponent', () => {
   // });
 
   it('when add button is clicked a new element is added to the dorm', () => {
-    const button1: HTMLElement = fixture.nativeElement.querySelectorAll('[data-testid="add-btn"]')[1];
+    const button1: HTMLElement = fixture.nativeElement.querySelector('[data-testid="add-btn"]');
     button1.click();
 
     

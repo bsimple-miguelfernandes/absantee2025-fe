@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { AssociationProjectCollaborators } from '../associations-project-collaborator/association-project-collaborator.model';
 import { HolidayPeriod } from './collaborator-holidays/holiday-period';
@@ -14,8 +14,23 @@ export class CollaboratorDataService {
   private httpClient = inject(HttpClient);
   private readonly baseUrl = environment.apiBaseUrl;
 
+  private collaboratorSubject = new BehaviorSubject<Collaborator[]>([]);
+  collaborator$ = this.collaboratorSubject.asObservable();
+
+
+  constructor(private http:HttpClient){
+    this.loadCollaborators();
+  }
+
+  loadCollaborators(){
+    this.httpClient.get<Collaborator[]>(`${this.baseUrl}/collaborators/details`).subscribe({
+      next: (collaborators) => this.collaboratorSubject.next(collaborators),
+      error: (err) => console.error('Erro ao carregar colaboradores:', err)
+    })
+  }
+
   getCollabs(): Observable<Collaborator[]> {
-    return this.httpClient.get<Collaborator[]>(`${this.baseUrl}/collaborators/details`);
+    return this.collaborator$;
   }
 
   getCollabById(id: string): Observable<Collaborator> {
@@ -23,11 +38,15 @@ export class CollaboratorDataService {
   }
 
   createCollaborator(newCollaborator: CollaboratorCreateRequest): Observable<CollaboratorCreateRequest> {
-    return this.httpClient.post<CollaboratorCreateRequest>(`${this.baseUrl}/collaborators`, newCollaborator);
+    return this.httpClient.post<CollaboratorCreateRequest>(`${this.baseUrl}/collaborators`, newCollaborator).pipe(
+      tap(() => this.loadCollaborators()) 
+    )
   }
 
   updateCollaborator(updatedCollaborator: Collaborator) {
-    return this.httpClient.put<Collaborator>(`${this.baseUrl}/collaborators`, updatedCollaborator);
+    return this.httpClient.put<Collaborator>(`${this.baseUrl}/collaborators`, updatedCollaborator).pipe(
+      tap(() => this.loadCollaborators())
+    )
   }
 
   getCollaboratorHolidays(collaboratorId: string): Observable<HolidayPeriod[]> {
@@ -35,11 +54,11 @@ export class CollaboratorDataService {
   }
 
   addHoliday(collabId: string, initDate: string, finalDate: string) {
-    return this.httpClient.post(`${this.baseUrl}/collaborators/${collabId}/holidayplan/holidayperiod`, { initDate: initDate, finalDate: finalDate });
+    return this.httpClient.post<HolidayPeriod>(`${this.baseUrl}/collaborators/${collabId}/holidayplan/holidayperiod`, {initDate: initDate, finalDate: finalDate});
   }
 
-  editHoliday(collaboratorId: string, updatedPeriod: HolidayPeriod) {
-    return this.httpClient.put(`${this.baseUrl}/collaborators/${collaboratorId}/holidayplan/holidayperiod`, updatedPeriod);
+  editHoliday(collaboratorId: string, updatedPeriod: HolidayPeriod){
+    return this.httpClient.put<HolidayPeriod>(`${this.baseUrl}/collaborators/${collaboratorId}/holidayplan/holidayperiod`, updatedPeriod);
   }
 
   getAssociations(id: string): Observable<AssociationProjectCollaborators[]> {
