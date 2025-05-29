@@ -1,34 +1,35 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CollaboratorsComponent } from './collaborators.component';
-import { CollaboratorDetails } from './collaborator-details/collaborator-details';
 import { CollaboratorSignalService } from './collaborator-signal.service';
 import { signal, WritableSignal } from '@angular/core';
 import { CollaboratorDataService } from './collaborator-data.service';
 import { of } from 'rxjs';
 import { Collaborator } from './collaborator';
+import { ProjectsDataService } from '../projects/projects-data.service';
 
 describe('CollaboratorsComponent', () => {
   let component: CollaboratorsComponent;
   let fixture: ComponentFixture<CollaboratorsComponent>;
   let mockCollaboratorDataService: jasmine.SpyObj<CollaboratorDataService>;
-  let collaboratorsSignal: WritableSignal<CollaboratorDetails[]>;
+  let collaboratorsSignal: WritableSignal<Collaborator[]>;
   let mockCollaboratorSignalService: jasmine.SpyObj<CollaboratorSignalService>;
   let selectedSignal: WritableSignal<Collaborator | undefined>;
-  let updatedSignal: WritableSignal<CollaboratorDetails | undefined>;
-  let selectedCollaboratorHolidaysSignal: WritableSignal<CollaboratorDetails | undefined>;
-  let selectedCollaboratorProjectsSignal: WritableSignal<CollaboratorDetails | undefined>;
+  let updatedSignal: WritableSignal<Collaborator | undefined>;
+  let selectedCollaboratorHolidaysSignal: WritableSignal<Collaborator | undefined>;
+  let selectedCollaboratorProjectsSignal: WritableSignal<Collaborator | undefined>;
+  let mockProjectsDataService: jasmine.SpyObj<ProjectsDataService>;
 
   beforeEach(async () => {
-    collaboratorsSignal = signal<CollaboratorDetails[]>([]);
-    mockCollaboratorDataService = jasmine.createSpyObj('CollaboratorDataService', ['getCollabs', 'updateCollaborator', 'getCollaboratorHolidays'], {
+    collaboratorsSignal = signal<Collaborator[]>([]);
+    mockCollaboratorDataService = jasmine.createSpyObj('CollaboratorDataService', ['getCollabs', 'updateCollaborator', 'getCollaboratorHolidays', 'getAssociations'], {
       collaborators: collaboratorsSignal
     })
     mockCollaboratorDataService.getCollabs.and.returnValue(of([]));
     selectedSignal = signal<Collaborator | undefined>(undefined);
-    updatedSignal = signal<CollaboratorDetails | undefined>(undefined);
-    selectedCollaboratorHolidaysSignal = signal<CollaboratorDetails | undefined>(undefined);
-    selectedCollaboratorProjectsSignal = signal<CollaboratorDetails | undefined>(undefined);
+    updatedSignal = signal<Collaborator | undefined>(undefined);
+    selectedCollaboratorHolidaysSignal = signal<Collaborator | undefined>(undefined);
+    selectedCollaboratorProjectsSignal = signal<Collaborator | undefined>(undefined);
     mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', ['isCreatingCollaborator', 'selectCollaborator', 'selectCollaboratorHolidays'], {
       selectedCollaborator: selectedSignal,
       updatedCollaborator: updatedSignal,
@@ -37,11 +38,13 @@ describe('CollaboratorsComponent', () => {
     });
     mockCollaboratorSignalService.isCreatingCollaborator.and.returnValue(false);
 
+    mockProjectsDataService = jasmine.createSpyObj('ProjectsDataService', ['getAssociations']);
     await TestBed.configureTestingModule({
       imports: [CollaboratorsComponent],
       providers: [
         { provide: CollaboratorSignalService, useValue: mockCollaboratorSignalService },
-        { provide: CollaboratorDataService, useValue: mockCollaboratorDataService }
+        { provide: CollaboratorDataService, useValue: mockCollaboratorDataService },
+        { provide: ProjectsDataService, useValue: mockProjectsDataService }
       ]
     })
       .compileComponents();
@@ -51,31 +54,46 @@ describe('CollaboratorsComponent', () => {
 
     collaboratorsSignal.set([
       {
-        id: "1",
+        collabId: "1",
+        userId: "1",
         names: "Alice",
         surnames: "Johnson",
         email: "alice.johnson@example.com",
-        periodDateTime: {
+        collaboratorPeriod: {
+          _initDate: new Date(2019, 5, 10),
+          _finalDate: new Date(2025, 11, 31)
+        },
+        userPeriod: {
           _initDate: new Date(2019, 5, 10),
           _finalDate: new Date(2025, 11, 31)
         }
       },
       {
-        id: "2",
+        collabId: "2",
+        userId: "2",
         names: "Bob",
         surnames: "Martinez",
         email: "bob.martinez@example.com",
-        periodDateTime: {
+        collaboratorPeriod: {
+          _initDate: new Date(2021, 1, 1),
+          _finalDate: new Date(2024, 6, 30)
+        },
+        userPeriod: {
           _initDate: new Date(2021, 1, 1),
           _finalDate: new Date(2024, 6, 30)
         }
       },
       {
-        id: "3",
+        collabId: "3",
+        userId: "3",
         names: "Clara",
         surnames: "Nguyen",
         email: "clara.nguyen@example.com",
-        periodDateTime: {
+        collaboratorPeriod: {
+          _initDate: new Date(2020, 3, 15),
+          _finalDate: new Date(2030, 8, 1)
+        },
+        userPeriod:  {
           _initDate: new Date(2020, 3, 15),
           _finalDate: new Date(2030, 8, 1)
         }
@@ -138,12 +156,17 @@ describe('CollaboratorsComponent', () => {
   });
 
   it('should show collaborator holidays when selectedCollaboratorHolidays signal changes', () => {
-    const collaborator: CollaboratorDetails = {
-      id: "1",
+    const collaborator: Collaborator = {
+      collabId: "1",
+      userId: "1",
       names: "Alice",
       surnames: "Johnson",
       email: "alice.johnson@example.com",
-      periodDateTime: {
+      collaboratorPeriod: {
+        _initDate: new Date(2019, 5, 10),
+        _finalDate: new Date(2025, 11, 31)
+      },
+      userPeriod: {
         _initDate: new Date(2019, 5, 10),
         _finalDate: new Date(2025, 11, 31)
       }
@@ -159,17 +182,23 @@ describe('CollaboratorsComponent', () => {
   });
 
   it('should show collaborator Projects when selectedCollaboratorProject signal changes', () => {
-    const collaborator: CollaboratorDetails = {
-      id: "1",
+    const collaborator: Collaborator = {
+      collabId: "1",
+      userId: "1",
       names: "Alice",
       surnames: "Johnson",
       email: "alice.johnson@example.com",
-      periodDateTime: {
+      collaboratorPeriod: {
+        _initDate: new Date(2019, 5, 10),
+        _finalDate: new Date(2025, 11, 31)
+      },
+      userPeriod: {
         _initDate: new Date(2019, 5, 10),
         _finalDate: new Date(2025, 11, 31)
       }
     };
     
+    mockCollaboratorDataService.getAssociations.and.returnValue(of([]));
     selectedCollaboratorProjectsSignal.set(collaborator);
 
     fixture.detectChanges();

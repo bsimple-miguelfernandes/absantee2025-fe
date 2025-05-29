@@ -2,13 +2,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CollaboratorsBulletsComponent } from './collaborators-bullets.component';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
-import { CollaboratorDetails } from '../collaborator-details/collaborator-details';
+import { Collaborator } from '../collaborator';
 
 describe('CollaboratorsBulletsComponent', () => {
   let component: CollaboratorsBulletsComponent;
   let fixture: ComponentFixture<CollaboratorsBulletsComponent>;
-  let collaborators: CollaboratorDetails[];
-    let mockCollaboratorSignalService: jasmine.SpyObj<CollaboratorSignalService>;
+  let mockCollaboratorSignalService: jasmine.SpyObj<CollaboratorSignalService>;
 
   beforeEach(async () => {
     mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', ['selectCollaborator']);

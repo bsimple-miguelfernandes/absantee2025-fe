@@ -1,17 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CollaboratorListComponent } from './collaborator-list.component';
-import { CollaboratorDetails } from '../collaborator-details/collaborator-details';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
-import { CollaboratorDataService } from '../collaborator-data.service';
-import { signal, WritableSignal } from '@angular/core';
+import { Collaborator } from '../collaborator';
 
 describe('CollaboratorListComponent', () => {
   let component: CollaboratorListComponent;
   let fixture: ComponentFixture<CollaboratorListComponent>;
-  let collaborators: CollaboratorDetails[];
+  let collaborators: Collaborator[];
   let mockCollaboratorSignalService: jasmine.SpyObj<CollaboratorSignalService>;
-  
+
 
   beforeEach(async () => {
     mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', ['selectCollaborator']);
@@ -29,31 +27,46 @@ describe('CollaboratorListComponent', () => {
 
     collaborators = [
       {
-        id: "1",
+        collabId: "1",
+        userId: "1",
         names: "Alice",
         surnames: "Johnson",
         email: "alice.johnson@example.com",
-        periodDateTime: {
+        collaboratorPeriod: {
+          _initDate: new Date(2019, 5, 10),
+          _finalDate: new Date(2025, 11, 31)
+        },
+        userPeriod: {
           _initDate: new Date(2019, 5, 10),
           _finalDate: new Date(2025, 11, 31)
         }
       },
       {
-        id: "2",
+        collabId: "2",
+        userId: "2",
         names: "Bob",
         surnames: "Martinez",
         email: "bob.martinez@example.com",
-        periodDateTime: {
+        collaboratorPeriod: {
+          _initDate: new Date(2021, 1, 1),
+          _finalDate: new Date(2024, 6, 30)
+        },
+        userPeriod: {
           _initDate: new Date(2021, 1, 1),
           _finalDate: new Date(2024, 6, 30)
         }
       },
       {
-        id: "3",
+        collabId: "3",
+        userId: "3",
         names: "Clara",
         surnames: "Nguyen",
         email: "clara.nguyen@example.com",
-        periodDateTime: {
+        collaboratorPeriod: {
+          _initDate: new Date(2020, 3, 15),
+          _finalDate: new Date(2030, 8, 1)
+        },
+        userPeriod: {
           _initDate: new Date(2020, 3, 15),
           _finalDate: new Date(2030, 8, 1)
         }
@@ -91,13 +104,18 @@ describe('CollaboratorListComponent', () => {
   }); */
 
   it('should change the table content if new input arrived', () => {
-    const newCollaborators : CollaboratorDetails[] = [
+    const newCollaborators: Collaborator[] = [
       {
-        id: "4",
+        collabId: "4",
+        userId: "4",
         names: "John",
         surnames: "Doe",
         email: "john.doe@example.com",
-        periodDateTime: {
+        collaboratorPeriod: {
+          _initDate: new Date(2023, 10, 1),
+          _finalDate: new Date(2028, 5, 14)
+        },
+        userPeriod: {
           _initDate: new Date(2023, 10, 1),
           _finalDate: new Date(2028, 5, 14)
         }

@@ -2,10 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CollaboratorHolidaysComponent } from './collaborator-holidays.component';
 import { signal, WritableSignal } from '@angular/core';
-import { CollaboratorDetails } from '../collaborator-details/collaborator-details';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
 import { CollaboratorDataService } from '../collaborator-data.service';
-import { PeriodDate } from '../../PeriodDate';
 import { HolidayPeriod } from './holiday-period';
 import { of } from 'rxjs';
 import { Collaborator } from '../collaborator';
