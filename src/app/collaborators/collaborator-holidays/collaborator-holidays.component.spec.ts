@@ -7,6 +7,7 @@ import { CollaboratorDataService } from '../collaborator-data.service';
 import { HolidayPeriod } from './holiday-period';
 import { of } from 'rxjs';
 import { Collaborator } from '../collaborator';
+import { By } from '@angular/platform-browser';
 
 describe('CollaboratorHolidaysComponent', () => {
   let component: CollaboratorHolidaysComponent;
@@ -83,23 +84,32 @@ describe('CollaboratorHolidaysComponent', () => {
     expect(title).toEqual(collaborator.names + " " + collaborator.surnames);
   });
 
-  //  it('should show the Holidays Info in the table', () => {
-  //   const rows: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll('table tr');
+  it('should show the Holidays Info in the table', () => {
+    fixture.detectChanges();
+    const inputs = fixture.debugElement.queryAll(By.css('input'));
 
-  //   const cells1 = rows[1].querySelectorAll('td');
-  //   expect(cells1[0].textContent).toBe(collaboratorHolidays[0].periodDate.initDate);
-  //   expect(cells1[1].textContent).toBe(collaboratorHolidays[0].periodDate.finalDate);
+    expect(inputs[0].nativeElement.value).toBe(collaboratorHolidays[0].periodDate.initDate);
+    expect(inputs[1].nativeElement.value).toBe(collaboratorHolidays[0].periodDate.finalDate);
 
-  //   const cells2 = rows[2].querySelectorAll('td');
-  //   expect(cells2[0].textContent).toBe(collaboratorHolidays[0].periodDate.initDate);
-  //   expect(cells2[1].textContent).toBe(collaboratorHolidays[0].periodDate.finalDate);
+    expect(inputs[2].nativeElement.value).toBe(collaboratorHolidays[1].periodDate.initDate);
+    expect(inputs[3].nativeElement.value).toBe(collaboratorHolidays[1].periodDate.finalDate);
+  });
 
-  // });
+  it('when createEmptyHoliday is called a new element is added to the form', () => {
+    const prevCount = component.form.controls.holidays.length;
+
+    component.createEmptyHoliday();
+
+    expect(component.form.controls.holidays.length).toBe(prevCount + 1);
+  });
 
   it('when add button is clicked a new element is added to the form', () => {
+    const prevCount = fixture.debugElement.queryAll(By.css('tr')).length;
+
     const button1: HTMLElement = fixture.nativeElement.querySelector('[data-testid="add-btn"]');
     button1.click();
+    fixture.detectChanges();
 
-    
+    expect(fixture.debugElement.queryAll(By.css('tr')).length).toBe(prevCount + 1);
   });
 });
