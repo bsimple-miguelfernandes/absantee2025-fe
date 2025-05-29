@@ -42,7 +42,8 @@ export class CollaboratorsComponent {
         this.collaborators = collaborators;
       },
       error: (err) => {
-        console.error('Error loading collaborators:', err);
+        alert('Error loading collaborators');
+        console.error('Error loading collaborators', err);
       }
     });
 
