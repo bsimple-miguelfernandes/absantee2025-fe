@@ -44,9 +44,7 @@ export class CollaboratorDataService {
   }
 
   updateCollaborator(updatedCollaborator: Collaborator) {
-    return this.httpClient.put<Collaborator>(`${this.baseUrl}/collaborators`, updatedCollaborator).pipe(
-      tap(() => this.loadCollaborators())
-    )
+    return this.httpClient.put<Collaborator>(`${this.baseUrl}/collaborators`, updatedCollaborator);
   }
 
   getCollaboratorHolidays(collaboratorId: string): Observable<HolidayPeriod[]> {

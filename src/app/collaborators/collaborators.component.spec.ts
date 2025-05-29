@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 
 import { CollaboratorsComponent } from './collaborators.component';
 import { CollaboratorSignalService } from './collaborator-signal.service';
@@ -6,19 +6,18 @@ import { getNgModuleById, signal, WritableSignal } from '@angular/core';
 import { CollaboratorDataService } from './collaborator-data.service';
 import { of, throwError } from 'rxjs';
 import { Collaborator } from './collaborator';
-import { ProjectsDataService } from '../projects/projects-data.service';
 
 describe('CollaboratorsComponent', () => {
   let component: CollaboratorsComponent;
   let fixture: ComponentFixture<CollaboratorsComponent>;
-  let dataServiceDouble: jasmine.SpyObj<CollaboratorDataService>;
-  let signalServiceDouble: jasmine.SpyObj<CollaboratorSignalService>;
-  let mockProjectsDataService: jasmine.SpyObj<ProjectsDataService>;
+  let dataServiceSpy: jasmine.SpyObj<CollaboratorDataService>;
+  let signalServiceSpy: jasmine.SpyObj<CollaboratorSignalService>;
 
   let selectedCollabSignal: WritableSignal<Collaborator | undefined>;
   let selectedCollabHolidaySignal: WritableSignal<Collaborator | undefined>;
   let selectedCollabProject: WritableSignal<Collaborator | undefined>;
   let updatedCollabSignal: WritableSignal<Collaborator | undefined>;
+  let createCollabSignal: WritableSignal<Collaborator | undefined>;
 
   const collabsListDouble: Collaborator[] = [
     { 
@@ -58,17 +57,19 @@ describe('CollaboratorsComponent', () => {
     selectedCollabHolidaySignal = signal<Collaborator | undefined>(undefined);
     selectedCollabProject = signal<Collaborator | undefined>(undefined);
     updatedCollabSignal = signal<Collaborator | undefined>(undefined);
+    createCollabSignal = signal<Collaborator | undefined>(undefined);
 
 
-    const dataServiceSpy = jasmine.createSpyObj('CollaboratorDataService', [
+     dataServiceSpy = jasmine.createSpyObj('CollaboratorDataService', [
       'getCollabs', 
       'updateCollaborator',
       'getCollaboratorHolidays',
       'getAssociations'
     ]);
     
-    const signalServiceSpy = jasmine.createSpyObj('CollaboratorSignalService', [
+    signalServiceSpy = jasmine.createSpyObj('CollaboratorSignalService', [
       'selectCollaborator',
+      'updatedCollaborator',
       'selectCollaboratorHolidays', 
       'startCreateCollaborator',
       'isCreatingCollaborator'
@@ -79,23 +80,21 @@ describe('CollaboratorsComponent', () => {
       selectedCollaboratorProjects: selectedCollabProject
     });
 
-    signalServiceDouble.isCreatingCollaborator.and.returnValue(false);
     dataServiceSpy.getCollabs.and.returnValue(of(collabsListDouble));
-    mockProjectsDataService = jasmine.createSpyObj('ProjectsDataService', ['getAssociations']);
+    signalServiceSpy.isCreatingCollaborator.and.returnValue(false);
+    
+
 
     await TestBed.configureTestingModule({
       imports: [CollaboratorsComponent], 
       providers: [
         { provide: CollaboratorDataService, useValue: dataServiceSpy },
         { provide: CollaboratorSignalService, useValue: signalServiceSpy },
-        { provide: ProjectsDataService, useValue: mockProjectsDataService }
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(CollaboratorsComponent);
     component = fixture.componentInstance;
-    dataServiceDouble = TestBed.inject(CollaboratorDataService) as jasmine.SpyObj<CollaboratorDataService>;
-    signalServiceDouble = TestBed.inject(CollaboratorSignalService) as jasmine.SpyObj<CollaboratorSignalService>;
   });
 
 
@@ -106,7 +105,7 @@ describe('CollaboratorsComponent', () => {
     // act
 
     // assert
-    expect(dataServiceDouble.getCollabs).toHaveBeenCalled();
+    expect(dataServiceSpy.getCollabs).toHaveBeenCalled();
     expect(component.collaborators).toEqual(collabsListDouble);
     expect(component.collaborators.length).toBe(2);
   });
@@ -115,7 +114,7 @@ describe('CollaboratorsComponent', () => {
     // arrange
     const erro = {status: 400, message:"Bad Request"};
 
-    dataServiceDouble.getCollabs.and.returnValue(throwError(() => erro));
+    dataServiceSpy.getCollabs.and.returnValue(throwError(() => erro));
 
     spyOn(console, "error");
     spyOn(window, "alert");
@@ -137,29 +136,31 @@ describe('CollaboratorsComponent', () => {
     // act
 
     // assert
-    expect(signalServiceDouble.selectCollaborator).toHaveBeenCalledWith(undefined);
-    expect(signalServiceDouble.selectCollaboratorHolidays).toHaveBeenCalledWith(undefined);
+    expect(signalServiceSpy.selectCollaborator).toHaveBeenCalledWith(undefined);
+    expect(signalServiceSpy.selectCollaboratorHolidays).toHaveBeenCalledWith(undefined);
   });
 
-  it("should update collaborators list when a collaborator is updated", () => {
-    const updatedCollab = { 
-      collabId: "0196b4ee-a7fc-750f-a698-6a5dfd27ce71",
-      userId: "37726a9c-7246-4074-bd06-f2a58b494230",
-      names: "UpdatedName",
-      surnames: "UpdatedSurname",
-      email: "updated@gmail.com",
-      userPeriod: {
-        _initDate: new Date("2023-05-28T13:07:27.358Z"),
-        _finalDate: new Date("2028-05-28T13:07:27.358Z")
-      },
-      collaboratorPeriod: {
-        _initDate: new Date("2024-05-28T13:07:27.358Z"),
-        _finalDate: new Date("2027-05-28T13:07:27.358Z")
-      }
-    }
-
-
-  });
+  it('should update collaborator when collaboratorUpdated signal changes', fakeAsync(() => {
+    // Arrange
+    const updated = {
+      ...collabsListDouble[0],
+      names: 'New Name'
+    };
+  
+    dataServiceSpy.updateCollaborator.and.returnValue(of(updated));
+  
+    // Act
+    updatedCollabSignal.set(updated); 
+    fixture.detectChanges();
+  
+    // Assert
+    expect(dataServiceSpy.updateCollaborator).toHaveBeenCalledWith(updated);
+    
+    const updatedItem = component.collaborators.find(c => c.collabId === updated.collabId);
+    expect(updatedItem?.names).toBe('New Name');
+  }));
+  ;
+  
 
   it('should call signal service startCreateCollaborator in startCreate method', () => {
     // arrange
@@ -168,7 +169,7 @@ describe('CollaboratorsComponent', () => {
     // act
     
     // assert
-    expect(signalServiceDouble.startCreateCollaborator).toHaveBeenCalled();
+    expect(signalServiceSpy.startCreateCollaborator).toHaveBeenCalled();
   });
 
   // component.html
@@ -198,7 +199,7 @@ describe('CollaboratorsComponent', () => {
 
   it("should show create collaborator component when creating a collaborator", () => {
     // arrange
-    signalServiceDouble.isCreatingCollaborator.and.returnValue(true);
+    signalServiceSpy.isCreatingCollaborator.and.returnValue(true);
 
     // act
     fixture.detectChanges();
@@ -210,7 +211,7 @@ describe('CollaboratorsComponent', () => {
 
   it("should hide create collaborator component when not creating a collaborator", () => {
     // arrange
-    signalServiceDouble.isCreatingCollaborator.and.returnValue(false);
+    signalServiceSpy.isCreatingCollaborator.and.returnValue(false);
 
     // act
     fixture.detectChanges();
@@ -242,25 +243,18 @@ describe('CollaboratorsComponent', () => {
     expect(collaboratorDetails).toBeFalsy();
   });
 
+
   it("should show collaborator holidays if selected collaborator holidays", () => {
     // arrange
     selectedCollabHolidaySignal.set(collabsListDouble[0]);
-
+    dataServiceSpy.getCollaboratorHolidays.and.returnValue(of([]));
+  
     // act
     fixture.detectChanges();
     const collaboratorHolidays = fixture.nativeElement.querySelector('app-collaborator-holidays');
-
+  
     // assert
     expect(collaboratorHolidays).toBeTruthy();
   });
-
- /*  it("should update collabs list when collaborator updated", () => {
-    // arrange
-    updatedCollab.set()
-
-    // act
-
-    // assert
-  }) */
-
+  
 });
