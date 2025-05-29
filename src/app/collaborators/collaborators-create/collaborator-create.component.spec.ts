@@ -123,4 +123,28 @@ describe('CollaboratorCreateComponent', () => {
     expect(component.form.reset).toHaveBeenCalled();
     expect(mockSignalService.cancelCreateCollaborator).toHaveBeenCalled();
   });
+
+  it('should emit alert if required fields of collaborator are not filled in and dont request' , fakeAsync(() => {
+
+     spyOn(window, 'alert');
+      
+     const today = new Date();
+     
+     component.form.setValue({
+      names: '', //invalid input
+      surnames: 'Doe',
+      email: 'john.doe@example.com',
+      deactivationDate: today.toISOString().split('T')[0],
+      collaboratorPeriod: {
+        initDate: today.toISOString().split('T')[0],
+        finalDate: today.toISOString().split('T')[0]
+      }
+    });
+
+    component.onSubmit();
+
+    expect(window.alert).toHaveBeenCalledWith('Please fill all required fields.');
+    expect(component.collaboratorDataService.createCollaborator).not.toHaveBeenCalled();
+
+  }))
 });
