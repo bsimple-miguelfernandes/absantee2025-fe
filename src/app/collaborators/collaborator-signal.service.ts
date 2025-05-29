@@ -1,5 +1,4 @@
 import { Injectable, signal } from '@angular/core';
-import { CollaboratorDetails } from './collaborator-details/collaborator-details';
 import { Collaborator } from './collaborator';
 
 @Injectable({

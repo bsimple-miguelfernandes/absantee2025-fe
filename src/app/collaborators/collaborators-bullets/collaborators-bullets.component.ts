@@ -1,7 +1,5 @@
-import { Component, effect, inject, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
-import { CollaboratorDataService } from '../collaborator-data.service';
-import { CollaboratorDetails } from '../collaborator-details/collaborator-details';
 import { Collaborator } from '../collaborator';
 
 @Component({

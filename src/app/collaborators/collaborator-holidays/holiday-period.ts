@@ -1,6 +1,6 @@
-import { PeriodDate } from "../../PeriodDate";
+import { PeriodDate, PeriodDateString } from "../../PeriodDate";
 
 export interface HolidayPeriod {
     id: string,
-    periodDate: PeriodDate
+    periodDate: PeriodDateString
 }

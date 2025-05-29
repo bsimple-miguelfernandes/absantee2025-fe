@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { CollaboratorSignalService } from "../collaborator-signal.service";
 import { CollaboratorDataService } from "../collaborator-data.service";
 import { CollaboratorCreateRequest } from "./create-collaborator";
+import { Validators } from "@angular/forms";
 
 @Component({
   selector: 'app-collaborator-create',
@@ -15,13 +16,13 @@ export class CollaboratorCreateComponent {
   collaboratorDataService = inject(CollaboratorDataService);
 
   form = new FormGroup({
-    names: new FormControl(''),
-    surnames: new FormControl(''),
-    email: new FormControl(''),
-    deactivationDate: new FormControl(this.formatDate(new Date())),
+    names: new FormControl('' , Validators.required),
+    surnames: new FormControl('', Validators.required),
+    email: new FormControl('', Validators.required),
+    deactivationDate: new FormControl(this.formatDate(new Date()), Validators.required),
     collaboratorPeriod: new FormGroup({
-      initDate: new FormControl(this.formatDate(new Date())),
-      finalDate: new FormControl(this.formatDate(new Date()))
+      initDate: new FormControl(this.formatDate(new Date()), Validators.required),
+      finalDate: new FormControl(this.formatDate(new Date()), Validators.required)
     }),
   });
 
@@ -30,9 +31,15 @@ export class CollaboratorCreateComponent {
   }
 
   onSubmit() {
-  const formValue = this.form.value;
 
-  if (!formValue.collaboratorPeriod) return;
+    if(this.form.invalid){
+      alert("Please fill all required fields.")
+      return;
+    }
+  
+    const formValue = this.form.getRawValue();
+
+  if (!formValue.collaboratorPeriod) return; 
 
   const newCollaborator: CollaboratorCreateRequest = {
     names: formValue.names ?? '',
@@ -40,10 +47,10 @@ export class CollaboratorCreateComponent {
     email: formValue.email ?? '',
     deactivationDate: new Date(formValue.deactivationDate!),
     periodDateTime: {
-      _initDate: new Date(formValue.collaboratorPeriod.initDate!),
-      _finalDate: new Date(formValue.collaboratorPeriod.finalDate!)
+      _initDate: new Date(formValue.collaboratorPeriod!.initDate!),
+      _finalDate: new Date(formValue.collaboratorPeriod!.finalDate!)
     }
-  };
+};
 
   this.collaboratorDataService.createCollaborator(newCollaborator).subscribe({
     next: (createdCollaborator) => {

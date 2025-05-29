@@ -1,23 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CollaboratorsComponent } from './collaborators.component';
-import { CollaboratorDetails } from './collaborator-details/collaborator-details';
 import { CollaboratorSignalService } from './collaborator-signal.service';
 import { getNgModuleById, signal, WritableSignal } from '@angular/core';
 import { CollaboratorDataService } from './collaborator-data.service';
-import { Collaborator } from './collaborator';
 import { of, throwError } from 'rxjs';
+import { Collaborator } from './collaborator';
+import { ProjectsDataService } from '../projects/projects-data.service';
 
 describe('CollaboratorsComponent', () => {
   let component: CollaboratorsComponent;
   let fixture: ComponentFixture<CollaboratorsComponent>;
   let dataServiceDouble: jasmine.SpyObj<CollaboratorDataService>;
   let signalServiceDouble: jasmine.SpyObj<CollaboratorSignalService>;
+  let mockProjectsDataService: jasmine.SpyObj<ProjectsDataService>;
 
   let selectedCollabSignal: WritableSignal<Collaborator | undefined>;
   let selectedCollabHolidaySignal: WritableSignal<Collaborator | undefined>;
   let selectedCollabProject: WritableSignal<Collaborator | undefined>;
-  let updatedCollab: WritableSignal<Collaborator | undefined>;
+  let updatedCollabSignal: WritableSignal<Collaborator | undefined>;
 
   const collabsListDouble: Collaborator[] = [
     { 
@@ -56,13 +57,14 @@ describe('CollaboratorsComponent', () => {
     selectedCollabSignal = signal<Collaborator | undefined>(undefined);
     selectedCollabHolidaySignal = signal<Collaborator | undefined>(undefined);
     selectedCollabProject = signal<Collaborator | undefined>(undefined);
-    updatedCollab = signal<Collaborator | undefined>(undefined);
+    updatedCollabSignal = signal<Collaborator | undefined>(undefined);
 
 
     const dataServiceSpy = jasmine.createSpyObj('CollaboratorDataService', [
       'getCollabs', 
       'updateCollaborator',
-      'getCollaboratorHolidays'
+      'getCollaboratorHolidays',
+      'getAssociations'
     ]);
     
     const signalServiceSpy = jasmine.createSpyObj('CollaboratorSignalService', [
@@ -72,18 +74,21 @@ describe('CollaboratorsComponent', () => {
       'isCreatingCollaborator'
     ], {
       selectedCollaborator: selectedCollabSignal,
-      updatedCollaborator: signal(undefined),
+      updatedCollaborator: updatedCollabSignal,
       selectedCollaboratorHoliday: selectedCollabHolidaySignal,
       selectedCollaboratorProjects: selectedCollabProject
     });
 
+    signalServiceDouble.isCreatingCollaborator.and.returnValue(false);
     dataServiceSpy.getCollabs.and.returnValue(of(collabsListDouble));
+    mockProjectsDataService = jasmine.createSpyObj('ProjectsDataService', ['getAssociations']);
 
     await TestBed.configureTestingModule({
       imports: [CollaboratorsComponent], 
       providers: [
         { provide: CollaboratorDataService, useValue: dataServiceSpy },
-        { provide: CollaboratorSignalService, useValue: signalServiceSpy }
+        { provide: CollaboratorSignalService, useValue: signalServiceSpy },
+        { provide: ProjectsDataService, useValue: mockProjectsDataService }
       ]
     }).compileComponents();
 
