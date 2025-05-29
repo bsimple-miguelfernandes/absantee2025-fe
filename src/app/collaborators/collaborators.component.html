@@ -4,7 +4,10 @@
 <!-- <app-collaborators-bullets [collaborators]="collaborators">
 </app-collaborators-bullets> -->
 
-<button (click)="collaboratorSignalService.startCreateCollaborator()">Criar Colaborador</button>
+<button *ngIf="!collaboratorSignalService.isCreatingCollaborator()" 
+            (click)="collaboratorSignalService.startCreateCollaborator()">
+        Criar Colaborador
+</button>
 
 <app-collaborator-create *ngIf="collaboratorSignalService.isCreatingCollaborator()"></app-collaborator-create>
 

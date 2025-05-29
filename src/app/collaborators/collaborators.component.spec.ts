@@ -1,223 +1,266 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CollaboratorsComponent } from './collaborators.component';
-import { CollaboratorDetails } from './collaborator-details/collaborator-details';
 import { CollaboratorSignalService } from './collaborator-signal.service';
-import { signal, WritableSignal } from '@angular/core';
+import { getNgModuleById, signal, WritableSignal } from '@angular/core';
 import { CollaboratorDataService } from './collaborator-data.service';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
+import { Collaborator } from './collaborator';
+import { ProjectsDataService } from '../projects/projects-data.service';
 
 describe('CollaboratorsComponent', () => {
   let component: CollaboratorsComponent;
   let fixture: ComponentFixture<CollaboratorsComponent>;
-  let mockCollaboratorDataService: jasmine.SpyObj<CollaboratorDataService>;
-  let collaboratorsSignal: WritableSignal<CollaboratorDetails[]>;
-  let mockCollaboratorSignalService: jasmine.SpyObj<CollaboratorSignalService>;
-  let selectedSignal: WritableSignal<CollaboratorDetails | undefined>;
-  let updatedSignal: WritableSignal<CollaboratorDetails | undefined>;
-  let selectedCollaboratorHolidaysSignal: WritableSignal<CollaboratorDetails | undefined>;
-  let selectedCollaboratorProjectsSignal: WritableSignal<CollaboratorDetails | undefined>;
+  let dataServiceDouble: jasmine.SpyObj<CollaboratorDataService>;
+  let signalServiceDouble: jasmine.SpyObj<CollaboratorSignalService>;
+  let mockProjectsDataService: jasmine.SpyObj<ProjectsDataService>;
+
+  let selectedCollabSignal: WritableSignal<Collaborator | undefined>;
+  let selectedCollabHolidaySignal: WritableSignal<Collaborator | undefined>;
+  let selectedCollabProject: WritableSignal<Collaborator | undefined>;
+  let updatedCollabSignal: WritableSignal<Collaborator | undefined>;
+
+  const collabsListDouble: Collaborator[] = [
+    { 
+      collabId: "0196b4ee-a7fc-750f-a698-6a5dfd27ce71",
+      userId: "37726a9c-7246-4074-bd06-f2a58b494230",
+      names: "John",
+      surnames: "Doe",
+      email: "john.doe@example.com",
+      userPeriod: {
+        _initDate: new Date("2022-05-28T13:07:27.358Z"),
+        _finalDate: new Date("2027-05-28T13:07:27.358Z")
+      },
+      collaboratorPeriod: {
+        _initDate: new Date("2023-05-28T13:07:27.358Z"),
+        _finalDate: new Date("2026-05-28T13:07:27.358Z")
+      }
+    },
+    { 
+      collabId: "b2c7e5d1-8f3a-4c2e-9a1b-2e5d7f8c9b10",
+      userId: "a1b2c3d4-5678-90ab-cdef-1234567890ab",
+      names: "Jane",
+      surnames: "Smith",
+      email: "jane.smith@example.com",
+      userPeriod: {
+        _initDate: new Date("2021-03-15T09:00:00.000Z"),
+        _finalDate: new Date("2026-03-15T09:00:00.000Z")
+      },
+      collaboratorPeriod: {
+        _initDate: new Date("2022-04-01T08:30:00.000Z"),
+        _finalDate: new Date("2025-04-01T08:30:00.000Z")
+      }
+    }
+  ];
 
   beforeEach(async () => {
-    collaboratorsSignal = signal<CollaboratorDetails[]>([]);
-    mockCollaboratorDataService = jasmine.createSpyObj('CollaboratorDataService', ['updateCollaborator', 'getCollaboratorHolidays'], {
-      collaborators: collaboratorsSignal
-    })
-    selectedSignal = signal<CollaboratorDetails | undefined>(undefined);
-    updatedSignal = signal<CollaboratorDetails | undefined>(undefined);
-    selectedCollaboratorHolidaysSignal = signal<CollaboratorDetails | undefined>(undefined);
-    selectedCollaboratorProjectsSignal = signal<CollaboratorDetails | undefined>(undefined);
-    mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', ['selectCollaborator', 'selectCollaboratorHolidays'], {
-      selectedCollaborator: selectedSignal,
-      updatedCollaborator: updatedSignal,
-      selectedCollaboratorHoliday: selectedCollaboratorHolidaysSignal,
-      selectedCollaboratorProjects: selectedCollaboratorProjectsSignal
+    selectedCollabSignal = signal<Collaborator | undefined>(undefined);
+    selectedCollabHolidaySignal = signal<Collaborator | undefined>(undefined);
+    selectedCollabProject = signal<Collaborator | undefined>(undefined);
+    updatedCollabSignal = signal<Collaborator | undefined>(undefined);
+
+
+    const dataServiceSpy = jasmine.createSpyObj('CollaboratorDataService', [
+      'getCollabs', 
+      'updateCollaborator',
+      'getCollaboratorHolidays',
+      'getAssociations'
+    ]);
+    
+    const signalServiceSpy = jasmine.createSpyObj('CollaboratorSignalService', [
+      'selectCollaborator',
+      'selectCollaboratorHolidays', 
+      'startCreateCollaborator',
+      'isCreatingCollaborator'
+    ], {
+      selectedCollaborator: selectedCollabSignal,
+      updatedCollaborator: updatedCollabSignal,
+      selectedCollaboratorHoliday: selectedCollabHolidaySignal,
+      selectedCollaboratorProjects: selectedCollabProject
     });
 
+    signalServiceDouble.isCreatingCollaborator.and.returnValue(false);
+    dataServiceSpy.getCollabs.and.returnValue(of(collabsListDouble));
+    mockProjectsDataService = jasmine.createSpyObj('ProjectsDataService', ['getAssociations']);
+
     await TestBed.configureTestingModule({
-      imports: [CollaboratorsComponent],
+      imports: [CollaboratorsComponent], 
       providers: [
-        { provide: CollaboratorSignalService, useValue: mockCollaboratorSignalService },
-        { provide: CollaboratorDataService, useValue: mockCollaboratorDataService }
+        { provide: CollaboratorDataService, useValue: dataServiceSpy },
+        { provide: CollaboratorSignalService, useValue: signalServiceSpy },
+        { provide: ProjectsDataService, useValue: mockProjectsDataService }
       ]
-    })
-      .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CollaboratorsComponent);
     component = fixture.componentInstance;
-
-    collaboratorsSignal.set([
-      {
-        id: "1",
-        names: "Alice",
-        surnames: "Johnson",
-        email: "alice.johnson@example.com",
-        periodDateTime: {
-          _initDate: new Date(2019, 5, 10),
-          _finalDate: new Date(2025, 11, 31)
-        }
-      },
-      {
-        id: "2",
-        names: "Bob",
-        surnames: "Martinez",
-        email: "bob.martinez@example.com",
-        periodDateTime: {
-          _initDate: new Date(2021, 1, 1),
-          _finalDate: new Date(2024, 6, 30)
-        }
-      },
-      {
-        id: "3",
-        names: "Clara",
-        surnames: "Nguyen",
-        email: "clara.nguyen@example.com",
-        periodDateTime: {
-          _initDate: new Date(2020, 3, 15),
-          _finalDate: new Date(2030, 8, 1)
-        }
-      }
-    ]);
-
-    fixture.detectChanges();
+    dataServiceDouble = TestBed.inject(CollaboratorDataService) as jasmine.SpyObj<CollaboratorDataService>;
+    signalServiceDouble = TestBed.inject(CollaboratorSignalService) as jasmine.SpyObj<CollaboratorSignalService>;
   });
 
+
+  // component.ts
+  it("should load collaborators on initialization", () => {
+    // arrange
+
+    // act
+
+    // assert
+    expect(dataServiceDouble.getCollabs).toHaveBeenCalled();
+    expect(component.collaborators).toEqual(collabsListDouble);
+    expect(component.collaborators.length).toBe(2);
+  });
+
+  it('should handle error when loading collaborators fails', () => {
+    // arrange
+    const erro = {status: 400, message:"Bad Request"};
+
+    dataServiceDouble.getCollabs.and.returnValue(throwError(() => erro));
+
+    spyOn(console, "error");
+    spyOn(window, "alert");
+
+    // act
+    // cria-se um componente porque o erro aparece no construtor
+    fixture = TestBed.createComponent(CollaboratorsComponent);
+    fixture.detectChanges();
+
+
+    // assert
+    expect(window.alert).toHaveBeenCalledWith('Error loading collaborators');
+    expect(console.error).toHaveBeenCalledWith('Error loading collaborators', erro);
+  });
+
+  it("should initialize collaborator and collaboratorHolidayPlans as undefined", () => {
+    // arrange
+
+    // act
+
+    // assert
+    expect(signalServiceDouble.selectCollaborator).toHaveBeenCalledWith(undefined);
+    expect(signalServiceDouble.selectCollaboratorHolidays).toHaveBeenCalledWith(undefined);
+  });
+
+  it("should update collaborators list when a collaborator is updated", () => {
+    const updatedCollab = { 
+      collabId: "0196b4ee-a7fc-750f-a698-6a5dfd27ce71",
+      userId: "37726a9c-7246-4074-bd06-f2a58b494230",
+      names: "UpdatedName",
+      surnames: "UpdatedSurname",
+      email: "updated@gmail.com",
+      userPeriod: {
+        _initDate: new Date("2023-05-28T13:07:27.358Z"),
+        _finalDate: new Date("2028-05-28T13:07:27.358Z")
+      },
+      collaboratorPeriod: {
+        _initDate: new Date("2024-05-28T13:07:27.358Z"),
+        _finalDate: new Date("2027-05-28T13:07:27.358Z")
+      }
+    }
+
+
+  });
+
+  it('should call signal service startCreateCollaborator in startCreate method', () => {
+    // arrange
+    component.startCreate();
+
+    // act
+    
+    // assert
+    expect(signalServiceDouble.startCreateCollaborator).toHaveBeenCalled();
+  });
+
+  // component.html
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should not show collaborator details on init because selectedCollaborator is undefined', () => {
-    const collaboratorDetails = fixture.nativeElement.querySelector('app-collaborator-details');
-    expect(collaboratorDetails).toBeNull();
+  it("should show collaborator table component with collaborators", () => {
+    // arrange
+    const collabTableComponent = fixture.nativeElement.querySelector("app-collaborator-list");
+
+    // act
+
+    // assert
+    expect(collabTableComponent).toBeTruthy();
   });
 
-  it('should not show collaborator holidays on init because selectedCollaboratorHolidays is undefined', () => {
-    const collaboratorDetails = fixture.nativeElement.querySelector('app-collaborator-holidays');
-    expect(collaboratorDetails).toBeNull();
+  it("should show collaborator bullet list component with collaborators", () => {
+    // arrange
+    const collabListComponent = fixture.nativeElement.querySelector("app-collaborators-bullets");
+
+    // act
+
+    // assert
+    expect(collabListComponent).toBeTruthy();
   });
 
-  it('should not show collaborator projects on init because selectedCollaboratorProject is undefined', () => {
-    const collaboratorDetails = fixture.nativeElement.querySelector('app-associations-project-collaborator');
-    expect(collaboratorDetails).toBeNull();
-  });
+  it("should show create collaborator component when creating a collaborator", () => {
+    // arrange
+    signalServiceDouble.isCreatingCollaborator.and.returnValue(true);
 
-  it('should show collaborator list and collaborator bullets on init', () => {
-    const collaboratorList = fixture.nativeElement.querySelector('app-collaborator-list');
-    const collaboratorBullets = fixture.nativeElement.querySelector('app-collaborators-bullets');
-
-    expect(collaboratorList).not.toBeNull();
-    expect(collaboratorBullets).not.toBeNull();
-  });
-
-
-  it('should show collaborator details when selectedCollaborator signal changes', () => {
-    const collaborator: CollaboratorDetails = {
-      id: "1",
-      names: "Alice",
-      surnames: "Johnson",
-      email: "alice.johnson@example.com",
-      periodDateTime: {
-        _initDate: new Date(2019, 5, 10),
-        _finalDate: new Date(2025, 11, 31)
-      }
-    };
-    selectedSignal.set(collaborator);
-
+    // act
     fixture.detectChanges();
+    const createComponent = fixture.nativeElement.querySelector("app-collaborator-create");
 
-    const collaboratorDetails = fixture.nativeElement.querySelector('app-collaborator-details');
-    expect(collaboratorDetails).not.toBeNull();
+    // assert
+    expect(createComponent).toBeTruthy();
   });
 
-  it('should show collaborator holidays when selectedCollaboratorHolidays signal changes', () => {
-    const collaborator: CollaboratorDetails = {
-      id: "1",
-      names: "Alice",
-      surnames: "Johnson",
-      email: "alice.johnson@example.com",
-      periodDateTime: {
-        _initDate: new Date(2019, 5, 10),
-        _finalDate: new Date(2025, 11, 31)
-      }
-    };
-    
-    mockCollaboratorDataService.getCollaboratorHolidays.and.returnValue(of([]));
-    selectedCollaboratorHolidaysSignal.set(collaborator);
+  it("should hide create collaborator component when not creating a collaborator", () => {
+    // arrange
+    signalServiceDouble.isCreatingCollaborator.and.returnValue(false);
 
+    // act
     fixture.detectChanges();
+    const createComponent = fixture.nativeElement.querySelector("app-collaborator-create");
 
+    // assert
+    expect(createComponent).toBeFalsy();
+  });
+
+  it("should show collaborator details if selected collaborator", () => {
+    // arrange
+    selectedCollabSignal.set(collabsListDouble[0]);
+  
+    // act
+    fixture.detectChanges();
+    const collaboratorDetails = fixture.nativeElement.querySelector('app-collaborator-details');
+  
+    // assert
+    expect(collaboratorDetails).toBeTruthy();
+  });
+
+  it("should not show collaborator details if collaborator not selected", () => {
+    // arrange
+
+    // act
+    const collaboratorDetails = fixture.nativeElement.querySelector('app-collaborator-details');
+  
+    // assert
+    expect(collaboratorDetails).toBeFalsy();
+  });
+
+  it("should show collaborator holidays if selected collaborator holidays", () => {
+    // arrange
+    selectedCollabHolidaySignal.set(collabsListDouble[0]);
+
+    // act
+    fixture.detectChanges();
     const collaboratorHolidays = fixture.nativeElement.querySelector('app-collaborator-holidays');
-    expect(collaboratorHolidays).not.toBeNull();
+
+    // assert
+    expect(collaboratorHolidays).toBeTruthy();
   });
 
-  it('should show collaborator Projects when selectedCollaboratorProject signal changes', () => {
-    const collaborator: CollaboratorDetails = {
-      id: "1",
-      names: "Alice",
-      surnames: "Johnson",
-      email: "alice.johnson@example.com",
-      periodDateTime: {
-        _initDate: new Date(2019, 5, 10),
-        _finalDate: new Date(2025, 11, 31)
-      }
-    };
-    
-    selectedCollaboratorProjectsSignal.set(collaborator);
+ /*  it("should update collabs list when collaborator updated", () => {
+    // arrange
+    updatedCollab.set()
 
-    fixture.detectChanges();
+    // act
 
-    const collaboratorProjects = fixture.nativeElement.querySelector('app-associations-project-collaborator');
-    expect(collaboratorProjects).not.toBeNull();
-  });
+    // assert
+  }) */
 
-  /* it('should call updateCollaborator when a collaborator is updated', () => {
-    const collaboratorUpdated = collaboratorsSignal()[1];
-    collaboratorUpdated.email = "new-email@test.com";
-
-    updatedSignal.set(collaboratorUpdated);
-    fixture.detectChanges();
-
-    expect(mockCollaboratorDataService.updateCollaborator).toHaveBeenCalledOnceWith(collaboratorUpdated);
-  }); */
-
-  // it('should show collaborator details when button of CollaboratorListComponent is clicked', () => {
-  //   const listComponent: HTMLElement = fixture.debugElement.query(By.directive(CollaboratorListComponent)).nativeElement;
-
-  //   const button = listComponent.querySelectorAll('button')[1];
-  //   button.click();
-  //   fixture.detectChanges();
-
-  //   const collaboratorDetails = fixture.nativeElement.querySelector('app-collaborator-details');
-  //   expect(collaboratorDetails).not.toBeNull();
-  // });
-
-  // it('should update collaborator when save button is clicked on CollaboratorDetails', () => {
-  //   component.selectedCollaborator.set(collaborators[0]);
-  //   fixture.detectChanges();
-
-  //   const detailsComponent = fixture.debugElement.query(By.directive(CollaboratorDetailsComponent)).nativeElement;
-  //   const emailInput: HTMLInputElement = detailsComponent.querySelector('#email');
-  //   emailInput.value = 'changed@email.com';
-  //   fixture.detectChanges();
-
-  //   const saveButton: HTMLElement = deta
-  // ilsComponent.querySelector('button');
-  //   const newCollaborator = collaborators[0];
-  //   newCollaborator.email = 'changed@email.com';
-  //   saveButton.click();
-
-  //   expect(mockCollaboratorSignalService.updateCollaborator).toHaveBeenCalledOnceWith(newCollaborator);
-  // });
-
-  // it('should update collaborator list when getCollaborators change', () => {
-  //   const newCollaborators = collaborators
-  //   newCollaborators[1].email = 'changed@email.com';
-
-  //   mockCollaboratorSignalService.getCollaborators.and.returnValue(newCollaborators);
-  //   fixture.detectChanges();
-
-  //   const rows: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll('table tr');
-  //   const cells2 = rows[2].querySelectorAll('td');
-  //   expect(cells2[1].textContent).toEqual('changed@email.com')
-  // });
 });

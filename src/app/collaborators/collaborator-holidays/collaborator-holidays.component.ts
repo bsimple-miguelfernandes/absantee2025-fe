@@ -1,7 +1,6 @@
-import { Component, effect, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
 import { CollaboratorDataService } from '../collaborator-data.service';
-import { PeriodDate } from '../../PeriodDate';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { HolidayPeriod } from './holiday-period';
 
@@ -13,10 +12,12 @@ import { HolidayPeriod } from './holiday-period';
 })
 export class CollaboratorHolidaysComponent {
   collaboratorSignalService = inject(CollaboratorSignalService);
+  collaboratorDataService = inject(CollaboratorDataService);
+
   collaboratorHolidaysSelected = this.collaboratorSignalService.selectedCollaboratorHoliday;
 
-  collaboratorDataService = inject(CollaboratorDataService);
   collaboratorHolidays!: HolidayPeriod[];
+
   form = new FormGroup({
     holidays: new FormArray<FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string> }>>([])
   });
@@ -26,6 +27,7 @@ export class CollaboratorHolidaysComponent {
       .getCollaboratorHolidays(this.collaboratorHolidaysSelected()!.collabId)
       .subscribe((holidays) => {
         this.collaboratorHolidays = holidays
+
         const holidayControls = this.collaboratorHolidays.map(holiday =>
           new FormGroup({
             initDate: new FormControl(this.formatDate(holiday.periodDate.initDate)),
