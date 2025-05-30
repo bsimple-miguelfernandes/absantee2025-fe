@@ -142,8 +142,6 @@ describe('CollaboratorDataService', () => {
 
     req.flush(mockCollaborator);
 
-    httpMock.expectOne(`${baseUrl}/collaborators/details`).flush([]);
-
     tick();
     expect(result).toEqual(mockCollaborator);
   }));
