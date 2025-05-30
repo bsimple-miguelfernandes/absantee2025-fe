@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CollaboratorHolidaysComponent } from './collaborator-holidays.component';
-import { signal, WritableSignal } from '@angular/core';
+import { DebugElement, signal, WritableSignal } from '@angular/core';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
 import { CollaboratorDataService } from '../collaborator-data.service';
 import { HolidayPeriod } from './holiday-period';
@@ -23,7 +23,11 @@ describe('CollaboratorHolidaysComponent', () => {
     mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', [], {
       selectedCollaboratorHoliday: selectedCollaboratorHolidaysSignal
     });
-    mockCollabotadorDataService = jasmine.createSpyObj('CollaboratorDataService', ['getCollaboratorHolidays']);
+    mockCollabotadorDataService = jasmine.createSpyObj('CollaboratorDataService', [
+      'getCollaboratorHolidays',
+      'editHoliday',
+      'addHoliday'
+    ]);
     await TestBed.configureTestingModule({
       imports: [CollaboratorHolidaysComponent],
       providers: [
@@ -78,6 +82,7 @@ describe('CollaboratorHolidaysComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  //ui changes and actions
   it('should display the name and surname of selected collaborator', () => {
     const title = fixture.nativeElement.querySelector("h1").textContent;
 
@@ -111,5 +116,32 @@ describe('CollaboratorHolidaysComponent', () => {
     fixture.detectChanges();
 
     expect(fixture.debugElement.queryAll(By.css('tr')).length).toBe(prevCount + 1);
+  });
+
+  it('added elements have a \'save\' button', () => {
+    const button: HTMLElement = fixture.nativeElement.querySelector('[data-testid="add-btn"]');
+    button.click();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelectorAll('button')[2].textContent).toBe(' Save ');
+  });
+
+  //service calls
+  it('should call dataService.editHoliday when edit button is pressed and form was altered', () => {
+    component.form.markAsDirty();
+    const button : HTMLElement = fixture.debugElement.query(By.css('button')).nativeElement;
+    button.click();
+    fixture.detectChanges();
+
+    expect(mockCollabotadorDataService.editHoliday).toHaveBeenCalled();
+  });
+
+  it('should call dataService.addHoliday when save button is pressed and form was altered', () => {
+    component.form.markAsDirty();
+    const button : HTMLElement = fixture.debugElement.query(By.css('button')).nativeElement;
+    button.click();
+    fixture.detectChanges();
+
+    expect(mockCollabotadorDataService.editHoliday).toHaveBeenCalled();
   });
 });

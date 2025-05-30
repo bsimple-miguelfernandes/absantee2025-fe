@@ -68,4 +68,60 @@ describe('CollaboratorService', () => {
 
     expect(service.updatedCollaborator()).toEqual(collaboratorUpdated);
   });
+
+  it('should set isCreatingCollaborator to true when startCreateCollaborator is called', () => {
+    service.startCreateCollaborator();
+
+    expect(service.isCreatingCollaborator()).toBe(true);
+  });
+
+  it('should set isCreatingCollaborator to false when cancelCreateCollaborator is called', () => {
+    service.cancelCreateCollaborator();
+
+    expect(service.isCreatingCollaborator()).toBe(false);
+  });
+
+  it('should set selectedCollaboratorHoliday when selectCollaboratorHolidays is called', () => {
+    const collaborator : Collaborator =
+    {
+      collabId: "1",
+      userId: "1",
+      names: "Alice",
+      surnames: "Johnson",
+      email: "alice.johnson@example.com",
+      userPeriod: {
+        _initDate: new Date('2019-06-10'),
+        _finalDate: new Date('2025-11-31')
+      },
+      collaboratorPeriod: {
+        _initDate: new Date('2019-06-10'),
+        _finalDate: new Date('2025-11-31')
+      }
+    };
+    service.selectCollaboratorHolidays(collaborator)
+
+    expect(service.selectedCollaboratorHoliday()).toEqual(collaborator);
+  });
+
+  it('should set selectedCollaboratorProjects when selectCollaboratorProjects is called', () => {
+    const collaborator : Collaborator =
+    {
+      collabId: "1",
+      userId: "1",
+      names: "Alice",
+      surnames: "Johnson",
+      email: "alice.johnson@example.com",
+      userPeriod: {
+        _initDate: new Date('2019-06-10'),
+        _finalDate: new Date('2025-11-31')
+      },
+      collaboratorPeriod: {
+        _initDate: new Date('2019-06-10'),
+        _finalDate: new Date('2025-11-31')
+      }
+    };
+    service.selectCollaboratorProjects(collaborator)
+
+    expect(service.selectedCollaboratorProjects()).toEqual(collaborator);
+  });
 });
