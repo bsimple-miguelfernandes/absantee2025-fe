@@ -1,5 +1,46 @@
+@if(trainingSubject()) {
+  @if(!formMode) {
+    <div class="details-card">
+      <h2>Training Subject Details</h2>
 
-@if(trainingSubject()){
-    <p>training-subject-details of {{trainingSubject()?.subject}} works!</p>
+      <div class="detail-row">
+        <span class="label">ID:</span>
+        <span class="value">{{ trainingSubject()?.id }}</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="label">Subject Name:</span>
+        <span class="value">{{ trainingSubject()?.subject }}</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="label">Description:</span>
+        <span class="value">{{ trainingSubject()?.description }}</span>
+      </div>
+
+      <div class="actions">
+        <button (click)="close()">Close</button>
+        <button (click)="edit(trainingSubject()!)">Edit</button>
+      </div>
+    </div>
+  } @else {
+    <form [formGroup]="trainingSubjectForm" (ngSubmit)="save()" class="form-card">
+      <h2>Edit Training Subject</h2>
+
+      <div class="form-row">
+        <label class="form-label">Subject</label>
+        <input type="text" formControlName="subject" class="form-input" />
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Description</label>
+        <input type="text" formControlName="description" class="form-input" />
+      </div>
+
+      <div class="actions">
+        <button type="button" (click)="cancel()">Cancel</button>
+        <button type="submit" [disabled]="trainingSubjectForm.invalid">Save</button>
+      </div>
+    </form>
+  }
 }
-

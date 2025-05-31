@@ -12,6 +12,9 @@ export class TrainingModuleSignalService {
     private selectedTrainingSubjectSignal = signal<TrainingSubject | undefined>(undefined);
     readonly selectedTrainingSubject = this.selectedTrainingSubjectSignal.asReadonly();
 
+    private updatedTrainingSubjectSignal = signal<TrainingSubject | undefined>(undefined);
+    readonly updatedTrainingSubject = this.selectedTrainingSubjectSignal.asReadonly();
+
     selectTrainingModule(trainingModule: TrainingModule){
         this.selectedTrainingModuleSignal.set(trainingModule);
         console.log(this.selectedTrainingModuleSignal);
@@ -19,5 +22,13 @@ export class TrainingModuleSignalService {
 
     selectTrainingSubject(trainingSubject: TrainingSubject){
         this.selectedTrainingSubjectSignal.set(trainingSubject);
+    }
+
+    disableSubjectDetails(){
+        this.selectedTrainingSubjectSignal.set(undefined);
+    }
+
+    updateTrainingSubject(trainingSubject: TrainingSubject){
+        this.updatedTrainingSubjectSignal.set(trainingSubject);
     }
 }

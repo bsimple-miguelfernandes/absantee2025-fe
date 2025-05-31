@@ -45,4 +45,8 @@ export class TrainingModuleDataService {
         return this.trainingSubject$;
     }
 
+    updateTrainingSubject(trainingSubject: TrainingSubject){
+        
+    }
+
 }

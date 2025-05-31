@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { TrainingModulesListComponent } from "./training-modules-list/training-modules-list.component";
 import { TrainingModuleDataService } from './training-modules-data.service';
 import { TrainingModule } from './training-module';
@@ -6,6 +6,7 @@ import { TrainingSubjectsListComponent } from './training-subjects-list/training
 import { TrainingSubject } from './training-subjects-list/training-subject';
 import { TrainingModuleDetailsComponent } from "./training-module-details/training-module-details.component";
 import { TrainingSubjectDetailsComponent } from "./training-subject-details/training-subject-details.component";
+import { TrainingModuleSignalService } from './training-modules-signals.service';
 
 @Component({
   selector: 'app-training-modules',
@@ -15,6 +16,8 @@ import { TrainingSubjectDetailsComponent } from "./training-subject-details/trai
 })
 export class TrainingModulesComponent {
   trainingModuleDataService = inject(TrainingModuleDataService);
+  trainingModuleSignalService = inject(TrainingModuleSignalService)
+  subjectUpdated = this.trainingModuleSignalService.updatedTrainingSubject;
 
   trainingModules: TrainingModule[] = [];
   trainingSubjects: TrainingSubject[] = [];
@@ -38,7 +41,14 @@ export class TrainingModulesComponent {
         alert('Error loading training subjects');
         console.error('Error loading training subjects' , err);
       }
-    })
+    });
+
+     effect(() => {
+        const updatedSubject = this.subjectUpdated();
+        if(updatedSubject){
+        }
+      })
+      
 
   }
 }
