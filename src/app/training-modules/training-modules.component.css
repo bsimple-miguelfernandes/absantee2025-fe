@@ -1,0 +1,9 @@
+.container {
+  display: flex;
+}
+
+.box {
+  padding: 20px;
+  background-color: rgb(197, 223, 231);
+  margin: 5px;
+}
