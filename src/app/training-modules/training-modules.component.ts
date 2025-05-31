@@ -2,10 +2,12 @@ import { Component, inject } from '@angular/core';
 import { TrainingModulesListComponent } from "./training-modules-list/training-modules-list.component";
 import { TrainingModuleDataService } from './training-modules-data.service';
 import { TrainingModule } from './training-module';
+import { TrainingSubjectsListComponent } from './training-subjects-list/training-subjects-list.component';
+import { TrainingSubject } from './training-subjects-list/training-subject';
 
 @Component({
   selector: 'app-training-modules',
-  imports: [TrainingModulesListComponent],
+  imports: [TrainingModulesListComponent, TrainingSubjectsListComponent],
   templateUrl: './training-modules.component.html',
   styleUrl: './training-modules.component.css'
 })
@@ -13,6 +15,7 @@ export class TrainingModulesComponent {
   trainingModuleDataService = inject(TrainingModuleDataService);
 
   trainingModules: TrainingModule[] = [];
+  trainingSubjects: TrainingSubject[] = [];
 
   constructor(){
     this.trainingModuleDataService.getTrainingModules().subscribe({
@@ -20,10 +23,20 @@ export class TrainingModulesComponent {
         this.trainingModules = trainingModules;
       },
       error: (err) => {
-        alert('Error loading trainign modules');
+        alert('Error loading training modules');
         console.error('Error loading training modules', err);
       }
     });
+
+    this.trainingModuleDataService.getTrainingSubjects().subscribe({
+      next: (trainingSubjects) => {
+        this.trainingSubjects = trainingSubjects;
+      },
+      error: (err) => {
+        alert('Error loading training subjects');
+        console.error('Error loading training subjects' , err);
+      }
+    })
 
   }
 }
