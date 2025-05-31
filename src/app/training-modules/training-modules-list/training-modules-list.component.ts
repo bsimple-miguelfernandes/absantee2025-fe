@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { TrainingModule } from '../training-module';
+import { TrainingModuleSignalService } from '../training-modules-signals.service';
 
 @Component({
   selector: 'app-training-modules-list',
@@ -9,5 +10,13 @@ import { TrainingModule } from '../training-module';
   styleUrl: './training-modules-list.component.css'
 })
 export class TrainingModulesListComponent {
+  trainingModuleSignalService = inject(TrainingModuleSignalService);
+
   trainingModules = input.required<TrainingModule[]>();
+
+  selectTrainingModule(trainingModule: TrainingModule){
+    this.trainingModuleSignalService.selectTrainingModule(trainingModule);
+  }
+
+
 }

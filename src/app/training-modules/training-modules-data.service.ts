@@ -12,9 +12,9 @@ export class TrainingModuleDataService {
     private httpClient = inject(HttpClient);
     private readonly baseUrl = environment.apiBaseUrl;
 
+    //subjects
     private trainingModuleSubject = new BehaviorSubject<TrainingModule[]>([]);
     trainingModule$ = this.trainingModuleSubject.asObservable();
-
     private trainingSubjectSubject = new BehaviorSubject<TrainingSubject[]>([]);
     trainingSubject$ = this.trainingSubjectSubject.asObservable();
 

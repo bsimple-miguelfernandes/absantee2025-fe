@@ -4,10 +4,12 @@ import { TrainingModuleDataService } from './training-modules-data.service';
 import { TrainingModule } from './training-module';
 import { TrainingSubjectsListComponent } from './training-subjects-list/training-subjects-list.component';
 import { TrainingSubject } from './training-subjects-list/training-subject';
+import { TrainingModuleDetailsComponent } from "./training-module-details/training-module-details.component";
+import { TrainingSubjectDetailsComponent } from "./training-subject-details/training-subject-details.component";
 
 @Component({
   selector: 'app-training-modules',
-  imports: [TrainingModulesListComponent, TrainingSubjectsListComponent],
+  imports: [TrainingModulesListComponent, TrainingSubjectsListComponent, TrainingModuleDetailsComponent, TrainingModuleDetailsComponent, TrainingSubjectDetailsComponent, TrainingSubjectDetailsComponent],
   templateUrl: './training-modules.component.html',
   styleUrl: './training-modules.component.css'
 })
