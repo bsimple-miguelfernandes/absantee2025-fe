@@ -15,5 +15,7 @@
   </tbody>
 </table>
 
-<button (click)="addTrainingSubject()" style="margin-top: 1%;">Add Training Subject</button>
+@if (!isCreatingSubject()) {
+    <button (click)="addTrainingSubject()" style="margin-top: 1%;">Add Training Subject</button>
+}
 

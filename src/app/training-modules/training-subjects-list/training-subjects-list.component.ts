@@ -11,6 +11,8 @@ import { TrainingModuleSignalService } from '../training-modules-signals.service
 export class TrainingSubjectsListComponent {
   trainingModulesSignalsService = inject(TrainingModuleSignalService);
 
+  isCreatingSubject = this.trainingModulesSignalsService.isCreatingSubject;
+
   trainingSubjects = input.required<TrainingSubject[]>();
 
   selectTrainingSubject(trainingSubject: TrainingSubject){
