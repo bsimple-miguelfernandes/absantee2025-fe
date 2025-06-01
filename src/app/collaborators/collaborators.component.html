@@ -29,3 +29,8 @@
 @else if (selectedCollaboratorProject()) {
 <app-associations-project-collaborator [collaboratorId]="selectedCollaboratorProject()!.collabId" />
 }
+
+@else if (selectedCollaboratorTrainingModules())
+{
+<app-associations-training-module-collaborator [collaboratorId]="selectedCollaboratorTrainingModules()!.collabId"></app-associations-training-module-collaborator>
+}

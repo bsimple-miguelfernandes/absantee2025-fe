@@ -1,0 +1,8 @@
+@if(collaboratorModulesSelected()) {
+  <ul *ngIf="associations.length > 0">
+    <li *ngFor="let assoc of associations">
+      Módulo: {{ assoc.trainingModuleId }}
+    </li>
+  </ul>
+  <p *ngIf="associations.length === 0">Sem associações.</p>
+}

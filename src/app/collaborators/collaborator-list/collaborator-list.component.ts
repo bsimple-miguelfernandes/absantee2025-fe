@@ -24,4 +24,8 @@ export class CollaboratorListComponent {
   onSelectCollaboratorProjects(collaborator: Collaborator){
     this.collaboratorSignalService.selectCollaboratorProjects(collaborator);
   }
+
+  onSelectCollaboratorTrainingModules(collaborator: Collaborator){
+    this.collaboratorSignalService.selectCollaboratorTrainingModules(collaborator);
+  }
 }

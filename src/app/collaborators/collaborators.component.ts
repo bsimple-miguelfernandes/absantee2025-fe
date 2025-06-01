@@ -9,6 +9,7 @@ import { CollaboratorDataService } from './collaborator-data.service';
 import { Collaborator } from './collaborator';
 import { CollaboratorCreateComponent } from './collaborators-create/collaborator-create.component';
 import { CommonModule } from '@angular/common';
+import { AssociationsTrainingModuleCollaboratorComponent } from '../associations-training-module-collaborator/associations-training-module-collaborator.component';
 
 @Component({
   selector: 'app-collaborators',
@@ -20,7 +21,8 @@ import { CommonModule } from '@angular/common';
     CollaboratorsBulletsComponent,
     CollaboratorHolidaysComponent,
     AssociationsProjectCollaboratorComponent,
-    CollaboratorCreateComponent
+    CollaboratorCreateComponent,
+    AssociationsTrainingModuleCollaboratorComponent
   ],
   templateUrl: './collaborators.component.html',
   styleUrls: ['./collaborators.component.css']  
@@ -33,6 +35,7 @@ export class CollaboratorsComponent {
   collaboratorUpdated = this.collaboratorSignalService.updatedCollaborator;
   selectedCollaboratorHolidays = this.collaboratorSignalService.selectedCollaboratorHoliday;
   selectedCollaboratorProject = this.collaboratorSignalService.selectedCollaboratorProjects;
+  selectedCollaboratorTrainingModules = this.collaboratorSignalService.selectedCollaboratorTrainingModules;
 
   collaborators: Collaborator[] = [];
 

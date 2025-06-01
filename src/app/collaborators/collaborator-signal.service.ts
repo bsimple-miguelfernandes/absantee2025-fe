@@ -19,6 +19,9 @@ export class CollaboratorSignalService {
   private selectedCollaboratorProjectsSignal = signal<Collaborator | undefined>(undefined);
   readonly selectedCollaboratorProjects = this.selectedCollaboratorProjectsSignal.asReadonly();
 
+  private selectedCollaboratorTrainingModulesSignal = signal<Collaborator | undefined>(undefined);
+  readonly selectedCollaboratorTrainingModules = this.selectedCollaboratorTrainingModulesSignal.asReadonly();
+
   private isCreatingCollaboratorSignal = signal(false);
   readonly isCreatingCollaborator = this.isCreatingCollaboratorSignal.asReadonly();
   
@@ -44,20 +47,30 @@ export class CollaboratorSignalService {
   }
 
   selectCollaborator(selected: Collaborator | undefined){
+    this.selectedCollaboratorTrainingModulesSignal.set(undefined);
     this.selectedCollaboratorHolidaysSignal.set(undefined);
     this.selectedCollaboratorProjectsSignal.set(undefined);
     this.selectedCollaboratorSignal.set(selected);
   }
 
   selectCollaboratorHolidays(selected: Collaborator | undefined){
+    this.selectedCollaboratorTrainingModulesSignal.set(undefined);
     this.selectedCollaboratorSignal.set(undefined);
     this.selectedCollaboratorProjectsSignal.set(undefined);
     this.selectedCollaboratorHolidaysSignal.set(selected);
   }
 
   selectCollaboratorProjects(selected: Collaborator | undefined){
+    this.selectedCollaboratorTrainingModulesSignal.set(undefined);
     this.selectedCollaboratorSignal.set(undefined);
     this.selectedCollaboratorHolidaysSignal.set(undefined);
     this.selectedCollaboratorProjectsSignal.set(selected);
+  }
+
+  selectCollaboratorTrainingModules(selected: Collaborator | undefined){
+    this.selectedCollaboratorTrainingModulesSignal.set(selected);
+    this.selectedCollaboratorSignal.set(undefined);
+    this.selectedCollaboratorHolidaysSignal.set(undefined);
+    this.selectedCollaboratorProjectsSignal.set(undefined);
   }
 }

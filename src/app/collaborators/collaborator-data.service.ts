@@ -6,6 +6,7 @@ import { HolidayPeriod } from './collaborator-holidays/holiday-period';
 import { Collaborator } from './collaborator';
 import { CollaboratorCreateRequest } from './collaborators-create/create-collaborator';
 import { environment } from '../../environments/environment';
+import { AssociationTrainingModuleCollaborator } from '../training-modules/association-training-module-collaborator';
 
 @Injectable({
   providedIn: 'root'
@@ -68,5 +69,9 @@ export class CollaboratorDataService {
 
   getAssociations(id: string): Observable<AssociationProjectCollaborators[]> {
     return this.httpClient.get<AssociationProjectCollaborators[]>(`${this.baseUrl}/collaborators/${id}/associations`);
+  }
+
+  getTrainingModuleAssociations(id: string): Observable<AssociationTrainingModuleCollaborator[]> {
+    return this.httpClient.get<AssociationTrainingModuleCollaborator[]>(`${this.baseUrl}/collaborators/${id}/trainingAssociations`);
   }
 }

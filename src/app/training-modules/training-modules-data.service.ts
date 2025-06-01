@@ -4,6 +4,7 @@ import { environment } from "../../environments/environment";
 import { BehaviorSubject, Observable } from "rxjs";
 import { TrainingModule } from "./training-module";
 import { TrainingSubject } from "./training-subjects-list/training-subject";
+import { AssociationTrainingModuleCollaborator } from "./association-training-module-collaborator";
 
 @Injectable({
     providedIn: 'root'
@@ -53,4 +54,7 @@ export class TrainingModuleDataService {
         return this.httpClient.post<TrainingSubject>(`${this.baseUrl}/trainingSubjects`, trainingSubject);
     }
 
+    getAssociations(id: string): Observable<AssociationTrainingModuleCollaborator[]>{
+        return this.httpClient.get<AssociationTrainingModuleCollaborator[]>(`${this.baseUrl}/trainingModules/${id}/associations`);
+    }
 }
