@@ -46,7 +46,11 @@ export class TrainingModuleDataService {
     }
 
     updateTrainingSubject(trainingSubject: TrainingSubject){
-        
+        return this.httpClient.put<TrainingSubject>(`${this.baseUrl}/trainingSubjects`, trainingSubject)
+    }
+
+    addTrainingSubject(trainingSubject: TrainingSubject){
+        return this.httpClient.post<TrainingSubject>(`${this.baseUrl}/trainingSubjects`, trainingSubject);
     }
 
 }

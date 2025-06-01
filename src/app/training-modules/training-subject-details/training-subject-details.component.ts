@@ -42,9 +42,10 @@ export class TrainingSubjectDetailsComponent {
 
   save(){
     if(this.trainingSubjectForm.valid){
-      const updated = {...this.trainingSubject, ...this.trainingSubjectForm.value};
+      const updated = {...this.trainingSubject(), ...this.trainingSubjectForm.value};
       this.trainingModuleSignalService.updateTrainingSubject(updated);
       this.formMode = false;
+      this.trainingModuleSignalService.selectTrainingSubject(updated);
     }
   }
 }

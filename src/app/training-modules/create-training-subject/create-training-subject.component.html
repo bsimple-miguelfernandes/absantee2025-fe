@@ -1,0 +1,21 @@
+@if (isCreatingTrainingSubject()) {
+    <form [formGroup]="trainingSubjectForm" (ngSubmit)="add()" class="form-card">
+        <h2>Add Training Subject</h2>
+
+        <div class="form-row">
+        <label class="form-label">Subject</label>
+        <input type="text" formControlName="subject" class="form-input" />
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Description</label>
+        <input type="text" formControlName="description" class="form-input" />
+      </div>
+
+      <div class="actions">
+        <button type="button" (click)="cancel()">Cancel</button>
+        <button type="submit" [disabled]="trainingSubjectForm.invalid">Add</button>
+      </div>
+    </form>
+}
+

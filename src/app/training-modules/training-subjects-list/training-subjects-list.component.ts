@@ -16,4 +16,8 @@ export class TrainingSubjectsListComponent {
   selectTrainingSubject(trainingSubject: TrainingSubject){
     this.trainingModulesSignalsService.selectTrainingSubject(trainingSubject);
   }
+
+  addTrainingSubject(){
+    this.trainingModulesSignalsService.addTrainingSubject();
+  }
 }

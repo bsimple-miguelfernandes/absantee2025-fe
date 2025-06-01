@@ -7,10 +7,12 @@ import { TrainingSubject } from './training-subjects-list/training-subject';
 import { TrainingModuleDetailsComponent } from "./training-module-details/training-module-details.component";
 import { TrainingSubjectDetailsComponent } from "./training-subject-details/training-subject-details.component";
 import { TrainingModuleSignalService } from './training-modules-signals.service';
+import { CollaboratorCreateComponent } from "../collaborators/collaborators-create/collaborator-create.component";
+import { CreateTrainingSubjectComponent } from "./create-training-subject/create-training-subject.component";
 
 @Component({
   selector: 'app-training-modules',
-  imports: [TrainingModulesListComponent, TrainingSubjectsListComponent, TrainingModuleDetailsComponent, TrainingModuleDetailsComponent, TrainingSubjectDetailsComponent, TrainingSubjectDetailsComponent],
+  imports: [TrainingModulesListComponent, TrainingSubjectsListComponent, TrainingModuleDetailsComponent, TrainingModuleDetailsComponent, TrainingSubjectDetailsComponent, TrainingSubjectDetailsComponent, CreateTrainingSubjectComponent , CreateTrainingSubjectComponent],
   templateUrl: './training-modules.component.html',
   styleUrl: './training-modules.component.css'
 })
@@ -18,6 +20,7 @@ export class TrainingModulesComponent {
   trainingModuleDataService = inject(TrainingModuleDataService);
   trainingModuleSignalService = inject(TrainingModuleSignalService)
   subjectUpdated = this.trainingModuleSignalService.updatedTrainingSubject;
+  subjectCreated = this.trainingModuleSignalService.createdSubject;
 
   trainingModules: TrainingModule[] = [];
   trainingSubjects: TrainingSubject[] = [];
@@ -46,8 +49,26 @@ export class TrainingModulesComponent {
      effect(() => {
         const updatedSubject = this.subjectUpdated();
         if(updatedSubject){
+          this.trainingModuleDataService.updateTrainingSubject(updatedSubject).subscribe({
+            next: (updatedSubject) => {
+              this.trainingSubjects = this.trainingSubjects.map(subject => 
+                subject.id === updatedSubject.id ? updatedSubject : subject
+              );
+            },
+            error: (err) => console.error('Errors updating training subject', err)
+          });
         }
-      })
+
+         const createdSubject = this.subjectCreated();
+         if (createdSubject){
+          this.trainingModuleDataService.addTrainingSubject(createdSubject).subscribe({
+            next: (createdSubject) => {
+              this.trainingSubjects.push(createdSubject);
+            },
+            error: (err) => console.error('Error adding training subject', err)
+          });
+         }
+      });
       
 
   }
