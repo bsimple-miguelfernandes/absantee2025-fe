@@ -63,7 +63,7 @@ export class TrainingModulesComponent {
          if (createdSubject){
           this.trainingModuleDataService.addTrainingSubject(createdSubject).subscribe({
             next: (createdSubject) => {
-              this.trainingSubjects.push(createdSubject);
+            this.trainingSubjects = [...this.trainingSubjects, createdSubject];
             },
             error: (err) => console.error('Error adding training subject', err)
           });
