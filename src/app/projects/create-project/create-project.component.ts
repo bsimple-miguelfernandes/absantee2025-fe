@@ -3,7 +3,6 @@ import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ReactiveForm
 import { ProjectsSignalsService } from "../projects-signals.service";
 import { ProjectsDataService } from "../projects-data.service";
 import { ProjectCreateRequest } from "./create-project";
-import { Observable } from "rxjs";
 
 @Component({
     selector: 'app-project-create',
