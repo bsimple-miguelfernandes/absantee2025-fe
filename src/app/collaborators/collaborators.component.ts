@@ -51,17 +51,7 @@ export class CollaboratorsComponent {
     this.collaboratorSignalService.selectCollaborator(undefined);
     this.collaboratorSignalService.selectCollaboratorHolidays(undefined);
 
-    effect(() => {
-      const create = this.createCollaborator();
-      if(create) {
-        this.collaboratorDataService.createCollaborator(create).subscribe({
-          next: (createdCollab) => {
-            //this.collaborators = [...this.collaborators, createdCollab];
-          }
-        })
-      }
-    })
-
+    
     effect(() => {
       const updated = this.collaboratorUpdated();
       if (updated) {

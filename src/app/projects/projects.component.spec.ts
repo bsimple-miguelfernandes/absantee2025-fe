@@ -20,15 +20,18 @@ describe('ProjectsComponent', () => {
   let projectSelectedSignal: WritableSignal<Project | undefined>;
   let projectCollaboratorsSelectedSignal: WritableSignal<Project | undefined>;
   let mockCollaboratorDataService: jasmine.SpyObj<CollaboratorDataService>;
+  let isCreatingProjectSignal: WritableSignal<boolean>;
 
   beforeEach(async () => {
     mockProjectsDataService = jasmine.createSpyObj('ProjectsDataService', ['getProjects', 'getAssociations']);
 
     projectSelectedSignal = signal<Project | undefined>(undefined);
     projectCollaboratorsSelectedSignal = signal<Project | undefined>(undefined);
-    mockProjectSignalService = jasmine.createSpyObj('ProjectsSignalsService', ['selectProject', 'selectProjectCollaborators'], {
+    isCreatingProjectSignal = signal<boolean>(false);
+    mockProjectSignalService = jasmine.createSpyObj('ProjectsSignalsService', ['selectProject', 'selectProjectCollaborators', 'startCreateProject', 'cancelCreateProject'], {
       projectSelected: projectSelectedSignal,
-      projectCollaboratorSelected: projectCollaboratorsSelectedSignal
+      projectCollaboratorSelected: projectCollaboratorsSelectedSignal,
+      isCreatingProject: isCreatingProjectSignal
     })
 
     mockCollaboratorDataService = jasmine.createSpyObj('CollaboratorDataService', ['getAssociations']);

@@ -16,7 +16,7 @@ describe('CollaboratorCreateComponent', () => {
   beforeEach(async () => {
     // Criação de versões "falsas" (spies) dos serviços com os métodos necessários espiados
     mockDataService = jasmine.createSpyObj('CollaboratorDataService', ['createCollaborator']);
-    mockSignalService = jasmine.createSpyObj('CollaboratorSignalService', ['cancelCreateCollaborator']);
+    mockSignalService = jasmine.createSpyObj('CollaboratorSignalService', ['createCollaborator', 'cancelCreateCollaborator']);
 
     // Configuração do ambiente de teste com o componente e suas dependências
     await TestBed.configureTestingModule({
