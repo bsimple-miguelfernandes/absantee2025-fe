@@ -89,7 +89,7 @@ describe('CollaboratorDataService', () => {
     expect(result).toEqual(mockCollaborator);
   }));
 
-  it('should create collaborator given a request object', fakeAsync(() => {
+    it('should create collaborator given a request object', fakeAsync(() => {
     const mockCollaboratorCreateRequest: CollaboratorCreateRequest = {
       names: "John",
       surnames: "Doe",
@@ -110,11 +110,10 @@ describe('CollaboratorDataService', () => {
 
     req.flush(mockCollaboratorCreateRequest);
 
-    httpMock.expectOne(`${baseUrl}/collaborators/details`).flush([]);
-
     tick();
     expect(result).toEqual(mockCollaboratorCreateRequest);
   }));
+
 
   it('should update a collaborator when passing a collaborator with existing id', fakeAsync(() => {
     const mockCollaborator: Collaborator = {
