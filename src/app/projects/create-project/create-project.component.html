@@ -5,17 +5,17 @@
     <input type="text" formControlName="title" />
   </label>
   @if (title.touched && title.invalid) {
-    <div>
-      @if (title.errors?.['required']) {
-        <small class="error">Title is required.</small>
-      }
-      @if (title.errors?.['minlength']) {
-        <small class="error">Title must be at least 1 character.</small>
-      }
-      @if (title.errors?.['maxlength']) {
-        <small class="error">Title must be at most 50 characters.</small>
-      }
-    </div>
+  <div>
+    @if (title.errors?.['required']) {
+    <small class="error">Title is required.</small>
+    }
+    @if (title.errors?.['minlength']) {
+    <small class="error">Title must be at least 1 character.</small>
+    }
+    @if (title.errors?.['maxlength']) {
+    <small class="error">Title must be at most 50 characters.</small>
+    }
+  </div>
   }
 
   <label>
@@ -23,14 +23,14 @@
     <input type="text" formControlName="acronym" />
   </label>
   @if (acronym.touched && acronym.invalid) {
-    <div>
-      @if (acronym.errors?.['required']) {
-        <small class="error">Acronym is required.</small>
-      }
-      @if (acronym.errors?.['pattern']) {
-        <small class="error">Acronym must be 1 to 10 uppercase letters or digits only.</small>
-      }
-    </div>
+  <div>
+    @if (acronym.errors?.['required']) {
+    <small class="error">Acronym is required.</small>
+    }
+    @if (acronym.errors?.['pattern']) {
+    <small class="error">Acronym must be 1 to 10 uppercase letters or digits only.</small>
+    }
+  </div>
   }
 
   <div formGroupName="periodDate">
@@ -45,6 +45,6 @@
     </label>
   </div>
 
-  <button type="submit">Create Project</button>
+  <button type="submit" [disabled]="form.invalid">Create Project</button>
   <button type="button" (click)="onCancel()">Cancel</button>
 </form>

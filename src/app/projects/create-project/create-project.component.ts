@@ -1,8 +1,9 @@
 import { Component, inject } from "@angular/core";
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
 import { ProjectsSignalsService } from "../projects-signals.service";
 import { ProjectsDataService } from "../projects-data.service";
 import { ProjectCreateRequest } from "./create-project";
+import { Observable } from "rxjs";
 
 @Component({
     selector: 'app-project-create',
@@ -16,28 +17,42 @@ export class ProjectCreateComponent {
     projectDataService = inject(ProjectsDataService);
 
     form = new FormGroup({
-        title: new FormControl('', [
+        title: new FormControl<string>('', [
             Validators.required,
             Validators.maxLength(50),
             Validators.minLength(1)
         ]),
-        acronym: new FormControl('', [
+        acronym: new FormControl<string>('', [
             Validators.required,
             Validators.pattern(/^[A-Z0-9]{1,10}$/)
         ]),
         periodDate: new FormGroup({
-            initDate: new FormControl(this.formatDate(new Date()), Validators.required),
-            finalDate: new FormControl(this.formatDate(new Date()), Validators.required),
-        }),
+            initDate: new FormControl<string>(this.formatDate(new Date()), Validators.required),
+            finalDate: new FormControl<string>(this.formatDate(new Date()), Validators.required),
+        }, { validators: this.dateRangeValidator() }),
     });
 
     private formatDate(date: Date): string {
-        return date.toISOString().split('T')[0]; 
+        return date.toISOString().split('T')[0];
+    }
+
+    dateRangeValidator(): ValidatorFn {
+        return (group: AbstractControl): ValidationErrors | null => {
+            const init = group.get('initDate')?.value;
+            const final = group.get('finalDate')?.value;
+
+            if (!init || !final) return null; // Don't validate if either date is missing
+
+            const initDate = new Date(init);
+            const finalDate = new Date(final);
+
+            return initDate < finalDate ? null : { dateRangeInvalid: true };
+        };
     }
 
     onSubmit() {
         if (this.form.invalid) {
-            this.form.markAllAsTouched(); 
+            this.form.markAllAsTouched();
             return;
         }
 
