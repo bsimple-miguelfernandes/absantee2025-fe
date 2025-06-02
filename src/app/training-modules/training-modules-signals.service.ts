@@ -21,6 +21,12 @@ export class TrainingModuleSignalService {
     private createdSubjectSignal = signal<TrainingSubject | undefined>(undefined);
     readonly createdSubject = this.createdSubjectSignal.asReadonly();
 
+    private isSubjectFormOpenSignal = signal(false);
+    readonly isSubjectFormOpen = this.isSubjectFormOpenSignal.asReadonly();
+
+    private isEditingSubjectSignal = signal<TrainingSubject | undefined>(undefined);
+    readonly isEditingSubject = this.isEditingSubjectSignal.asReadonly();
+
     selectTrainingModule(trainingModule: TrainingModule){
         this.selectedTrainingModuleSignal.set(trainingModule);
         console.log(this.selectedTrainingModuleSignal);
@@ -36,6 +42,7 @@ export class TrainingModuleSignalService {
 
     updateTrainingSubject(trainingSubject: TrainingSubject){
         this.updatedTrainingSubjectSignal.set(trainingSubject);
+        this.cancelEditSubject();
     }
 
     addTrainingSubject(){
@@ -50,5 +57,13 @@ export class TrainingModuleSignalService {
 
     cancelCreateSubject(){
         this.isCreatingSubjectSignal.set(false);
+    }
+
+    cancelEditSubject(){
+        this.isEditingSubjectSignal.set(undefined);
+    }
+
+    openEditForm(trainingSubject: TrainingSubject){
+        this.isEditingSubjectSignal.set(trainingSubject);
     }
 }

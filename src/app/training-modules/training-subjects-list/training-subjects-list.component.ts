@@ -20,6 +20,7 @@ export class TrainingSubjectsListComponent {
   }
 
   addTrainingSubject(){
+    this.trainingModulesSignalsService.cancelEditSubject();
     this.trainingModulesSignalsService.addTrainingSubject();
   }
 }

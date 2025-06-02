@@ -1,5 +1,4 @@
 @if(trainingSubject()) {
-  @if(!formMode) {
     <div class="details-card">
       <h2>Training Subject Details</h2>
 
@@ -23,24 +22,5 @@
         <button (click)="edit(trainingSubject()!)">Edit</button>
       </div>
     </div>
-  } @else {
-    <form [formGroup]="trainingSubjectForm" (ngSubmit)="save()" class="form-card">
-      <h2>Edit Training Subject</h2>
-
-      <div class="form-row">
-        <label class="form-label">Subject</label>
-        <input type="text" formControlName="subject" class="form-input" />
-      </div>
-
-      <div class="form-row">
-        <label class="form-label">Description</label>
-        <input type="text" formControlName="description" class="form-input" />
-      </div>
-
-      <div class="actions">
-        <button type="button" (click)="cancel()">Cancel</button>
-        <button type="submit" [disabled]="trainingSubjectForm.invalid">Save</button>
-      </div>
-    </form>
   }
-}
+

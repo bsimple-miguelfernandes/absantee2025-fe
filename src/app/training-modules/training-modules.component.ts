@@ -7,12 +7,12 @@ import { TrainingSubject } from './training-subjects-list/training-subject';
 import { TrainingModuleDetailsComponent } from "./training-module-details/training-module-details.component";
 import { TrainingSubjectDetailsComponent } from "./training-subject-details/training-subject-details.component";
 import { TrainingModuleSignalService } from './training-modules-signals.service';
-import { CollaboratorCreateComponent } from "../collaborators/collaborators-create/collaborator-create.component";
-import { CreateTrainingSubjectComponent } from "./create-training-subject/create-training-subject.component";
+//import { CollaboratorCreateComponent } from "../collaborators/collaborators-create/collaborator-create.component";
+import { TrainingSubjectFormComponent } from "./training-subject-form/training-subject-form.component";
 
 @Component({
   selector: 'app-training-modules',
-  imports: [TrainingModulesListComponent, TrainingSubjectsListComponent, TrainingModuleDetailsComponent, TrainingModuleDetailsComponent, TrainingSubjectDetailsComponent, TrainingSubjectDetailsComponent, CreateTrainingSubjectComponent , CreateTrainingSubjectComponent],
+  imports: [TrainingModulesListComponent, TrainingSubjectsListComponent, TrainingModuleDetailsComponent, TrainingModuleDetailsComponent, TrainingSubjectDetailsComponent, TrainingSubjectDetailsComponent, TrainingSubjectFormComponent],
   templateUrl: './training-modules.component.html',
   styleUrl: './training-modules.component.css'
 })
