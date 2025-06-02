@@ -57,6 +57,7 @@ export class CollaboratorCreateComponent {
   this.collaboratorDataService.createCollaborator(newCollaborator).subscribe({
     next: (createdCollaborator) => {
       console.log('Created collaborator:', createdCollaborator);
+      this.collaboratorSignalService.createCollaborator(createdCollaborator);
       this.collaboratorSignalService.cancelCreateCollaborator?.();
       this.form.reset();
       

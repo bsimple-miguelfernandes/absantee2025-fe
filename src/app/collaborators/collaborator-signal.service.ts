@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { Collaborator } from './collaborator';
+import { CollaboratorCreateRequest } from './collaborators-create/create-collaborator';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +23,8 @@ export class CollaboratorSignalService {
   private isCreatingCollaboratorSignal = signal(false);
   readonly isCreatingCollaborator = this.isCreatingCollaboratorSignal.asReadonly();
   
+  private creatingCollaboratorSignal = signal<CollaboratorCreateRequest  | undefined>(undefined);
+  readonly creatingCollaborator = this.creatingCollaboratorSignal.asReadonly();
 
   // getCollaboratorsIds(): Observable<string[]> {
   //   return this.httpClient.get<string[]>('https://localhost:7271/api/collaborators/');
@@ -37,6 +40,10 @@ export class CollaboratorSignalService {
 
   startCreateCollaborator() {
     this.isCreatingCollaboratorSignal.set(true);
+  }
+
+  createCollaborator(create: CollaboratorCreateRequest ) {
+    this.creatingCollaboratorSignal.set(create)
   }
 
   cancelCreateCollaborator() {

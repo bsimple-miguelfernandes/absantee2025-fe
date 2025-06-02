@@ -12,3 +12,8 @@ export interface PeriodDateTime {
     _initDate: Date,
     _finalDate: Date
 }
+
+export interface PeriodDateTimeString{
+    _initDate: string,
+    _finalDate: string
+}
