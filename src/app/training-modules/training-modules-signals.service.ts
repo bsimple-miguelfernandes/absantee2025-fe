@@ -18,14 +18,11 @@ export class TrainingModuleSignalService {
     private isCreatingSubjectSignal = signal(false);
     readonly isCreatingSubject = this.isCreatingSubjectSignal.asReadonly();
 
-    private createdSubjectSignal = signal<TrainingSubject | undefined>(undefined);
-    readonly createdSubject = this.createdSubjectSignal.asReadonly();
-
-    private isSubjectFormOpenSignal = signal(false);
-    readonly isSubjectFormOpen = this.isSubjectFormOpenSignal.asReadonly();
-
     private isEditingSubjectSignal = signal<TrainingSubject | undefined>(undefined);
     readonly isEditingSubject = this.isEditingSubjectSignal.asReadonly();
+
+    private createdSubjectSignal = signal<TrainingSubject | undefined>(undefined);
+    readonly createdSubject = this.createdSubjectSignal.asReadonly();
 
     selectTrainingModule(trainingModule: TrainingModule){
         this.selectedTrainingModuleSignal.set(trainingModule);
