@@ -41,13 +41,12 @@ export class CollaboratorDataService {
   }
 
   //O Observable que ele retorna
-  createCollaborator(newCollaborator: CollaboratorCreateRequest): Observable<CollaboratorCreateRequest> {
+  createCollaborator(newCollaborator: CollaboratorCreateRequest ): Observable<CollaboratorCreateRequest > {
 
     //O método .pipe() é usado para encadear operadores RxJS que transformam, filtram ou reagem aos valores emitidos.
-    return this.httpClient.post<CollaboratorCreateRequest>(`${this.baseUrl}/collaborators`, newCollaborator).pipe(
+    return this.httpClient.post<CollaboratorCreateRequest >(`${this.baseUrl}/collaborators`, newCollaborator)
       //O operador tap() é usado dentro do .pipe() para executar efeitos colaterais, como console.log(), chamadas de função, debug, etc.
-      tap(() => this.loadCollaborators()) 
-    )
+    
   }
 
   updateCollaborator(updatedCollaborator: Collaborator) {

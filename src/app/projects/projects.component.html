@@ -1,8 +1,20 @@
+
+
 <app-projects-table [projects]="projects"></app-projects-table>
 
 <p>
 
 </p>
+
+@if(!projectSignalService.isCreatingProject()) {
+    <button data-test-id="create-project-button" (click)="projectSignalService.startCreateProject()"> 
+        Criar projeto
+    </button>
+}
+@else{
+    <app-project-create></app-project-create>
+}
+
 
 @if (projectSelected()) {
     <app-project></app-project>

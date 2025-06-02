@@ -1,7 +1,7 @@
 import { PeriodDate, PeriodDateString } from "../../PeriodDate";
 
 export interface Project {
-    id: string,
+    id?: string,
     title: string,
     acronym: string,
     periodDate : PeriodDate

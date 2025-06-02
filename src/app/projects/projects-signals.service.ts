@@ -9,7 +9,18 @@ export class ProjectsSignalsService {
   projectSelected = this.projectSelectedSignal.asReadonly();
 
   private projectCollaboratorsSelectedSignal = signal<Project | undefined>(undefined);
-  projectCollaboratorSelected = this.projectCollaboratorsSelectedSignal.asReadonly();
+  readonly projectCollaboratorSelected = this.projectCollaboratorsSelectedSignal.asReadonly();
+  private isCreatingProjectSignal = signal(false);
+  readonly isCreatingProject = this.isCreatingProjectSignal.asReadonly();
+
+  startCreateProject() {
+    this.isCreatingProjectSignal.set(true);
+  }
+
+  cancelCreateProject() {
+    this.isCreatingProjectSignal.set(false);
+  }
+
 
   selectProject(selected: Project | undefined){
     this.projectCollaboratorsSelectedSignal.set(undefined);
