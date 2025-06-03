@@ -107,7 +107,7 @@ describe('CollaboratorCreateComponent', () => {
     // Simula erro da API
     mockDataService.createCollaborator.and.returnValue(throwError(() => new Error('API error')));
 
-    // Espiona o console para verificar se o erro é logado
+    // Espia o consola para verificar se o erro é logado
     spyOn(console, 'error');
     component.onSubmit();
     tick();
@@ -117,7 +117,7 @@ describe('CollaboratorCreateComponent', () => {
 
   // Testa se o formulário é resetado e o cancelamento emitido ao cancelar
   it('should reset form and call cancel on cancel', () => {
-    spyOn(component.form, 'reset'); // Espiona o método reset do formulário
+    spyOn(component.form, 'reset'); // Espia o método reset do formulário
     component.onCancel();
 
     expect(component.form.reset).toHaveBeenCalled();
