@@ -110,15 +110,14 @@ describe('CollaboratorDetailsComponent', () => {
   });
 
   it('should call updateCollaborator when form is submitted', () => {
-  const emailControl = component.form.get('email')!;
-  emailControl.setValue('email-changed@test.com');
-  emailControl.markAsDirty();
+    const emailControl = component.form.get('email')!;
+    emailControl.setValue('email-changed@test.com');
+    emailControl.markAsDirty();
 
-  component.onSubmit();
+    component.onSubmit();
 
-  expect(mockCollaboratorSignalService.updateCollaborator).toHaveBeenCalledOnceWith(jasmine.objectContaining({
-      email: 'email-changed@test.com'
+    expect(mockCollaboratorSignalService.updateCollaborator).toHaveBeenCalledOnceWith(jasmine.objectContaining({
+        email: 'email-changed@test.com'
     }));
   });
- 
 });

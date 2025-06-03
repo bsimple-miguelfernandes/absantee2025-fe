@@ -1,7 +1,8 @@
 import { Component, effect, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
-import { Collaborator } from '../collaborator';
+import { Collaborator, CollaboratorDetailsForm } from '../collaborator';
+import { PeriodDateTimeForm } from '../../PeriodDate';
 
 @Component({
   selector: 'app-collaborator-details',
@@ -22,17 +23,17 @@ export class CollaboratorDetailsComponent {
       if (!collaboratorObj) return;
 
       if (!this.form) {
-        this.form = new FormGroup({
+        this.form = new FormGroup<CollaboratorDetailsForm>({
           names: new FormControl(collaboratorObj.names),
           surnames: new FormControl(collaboratorObj.surnames),
           email: new FormControl(collaboratorObj.email),
-          userPeriodDateTime: new FormGroup({
-            userInitDate: new FormControl(this.formatDate(collaboratorObj.userPeriod._initDate)),
-            userEndDate: new FormControl(this.formatDate(collaboratorObj.userPeriod._finalDate)),
+          userPeriodDateTime: new FormGroup<PeriodDateTimeForm>({
+            _initDate: new FormControl(this.formatDate(collaboratorObj.userPeriod._initDate)),
+            _finalDate: new FormControl(this.formatDate(collaboratorObj.userPeriod._finalDate)),
           }), 
-          collaboratorPeriodDateTime: new FormGroup({
-            collabInitDate: new FormControl(this.formatDate(collaboratorObj.collaboratorPeriod._initDate)),
-            collabEndDate: new FormControl(this.formatDate(collaboratorObj.collaboratorPeriod._finalDate)),
+          collaboratorPeriodDateTime: new FormGroup<PeriodDateTimeForm>({
+            _initDate: new FormControl(this.formatDate(collaboratorObj.collaboratorPeriod._initDate)),
+            _finalDate: new FormControl(this.formatDate(collaboratorObj.collaboratorPeriod._finalDate)),
           })
         });
       } else {
