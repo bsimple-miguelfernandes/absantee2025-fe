@@ -1,10 +1,9 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
 import { ProjectsDataService } from './projects-data.service';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Project } from './project/project';
-import { AssociationProjectCollaborators } from '../associations-project-collaborator/association-project-collaborator.model';
 
 describe('ProjectsDataService', () => {
   let service: ProjectsDataService;
@@ -26,7 +25,7 @@ describe('ProjectsDataService', () => {
 
   afterEach(() => httpMock.verify());
 
-  it('should fetch all projects', fakeAsync(() => {
+  it('should fetch all projects', (() => {
     const mockProjects: Project[] = [
       {
         id: '1',
@@ -47,11 +46,10 @@ describe('ProjectsDataService', () => {
     expect(req.request.method).toBe('GET');
     req.flush(mockProjects);
 
-    tick();
     expect(result).toEqual(mockProjects);
   }));
 
-    it('should fetch project by id', fakeAsync(() => {
+    it('should fetch project by id', (() => {
     const mockProject: Project = {
       id: '1',
       title: 'Project 1',
@@ -69,12 +67,12 @@ describe('ProjectsDataService', () => {
       expect(req.request.method).toBe('GET');
       req.flush(mockProject);
 
-      tick();
+      
       expect(result).toEqual(mockProject);
     }));
 
 
-  // it('should fetch associations by id', fakeAsync(() => {
+  // it('should fetch associations by id', (() => {
   //   const mockAssociations: AssociationProjectCollaborators[] = [
   //     {
   //       id: "1",
@@ -96,7 +94,7 @@ describe('ProjectsDataService', () => {
   //   expect(req.request.method).toBe('GET');
   //   req.flush(mockAssociations);
 
-  //   tick();
+  //   
   //   expect(result).toEqual(mockAssociations);
   // }));
 });
