@@ -101,7 +101,17 @@ describe('CollaboratorDataService', () => {
       }
     };
 
-    let result: CollaboratorCreateRequest | undefined;
+    const createdCollaborator: Collaborator = {
+      collabId: '1',
+      userId: '1',
+      names: mockCollaboratorCreateRequest.names,
+      surnames: mockCollaboratorCreateRequest.surnames,
+      email: mockCollaboratorCreateRequest.email,
+      collaboratorPeriod: mockCollaboratorCreateRequest.periodDateTime,
+      userPeriod: mockCollaboratorCreateRequest.periodDateTime
+    }
+
+    let result: Collaborator | undefined;
     service.createCollaborator(mockCollaboratorCreateRequest).subscribe(p => (result = p));
 
     const req = httpMock.expectOne(`${baseUrl}/collaborators`);
@@ -111,7 +121,7 @@ describe('CollaboratorDataService', () => {
     req.flush(mockCollaboratorCreateRequest);
 
     tick();
-    expect(result).toEqual(mockCollaboratorCreateRequest);
+    expect(result).toEqual(createdCollaborator);
   }));
 
 

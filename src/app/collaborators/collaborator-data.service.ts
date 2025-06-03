@@ -26,9 +26,8 @@ export class CollaboratorDataService {
     return this.httpClient.get<Collaborator>(`${this.baseUrl}/collaborators/${id}/details`);
   }
 
-  createCollaborator(newCollaborator: CollaboratorCreateRequest ): Observable<CollaboratorCreateRequest > {
-    return this.httpClient.post<CollaboratorCreateRequest >(`${this.baseUrl}/collaborators`, newCollaborator)
-    
+  createCollaborator(newCollaborator: CollaboratorCreateRequest ): Observable<Collaborator> {
+    return this.httpClient.post<Collaborator>(`${this.baseUrl}/collaborators`, newCollaborator)
   }
 
   updateCollaborator(updatedCollaborator: Collaborator) {

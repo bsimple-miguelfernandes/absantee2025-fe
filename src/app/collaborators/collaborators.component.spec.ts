@@ -87,7 +87,8 @@ describe('CollaboratorsComponent', () => {
       selectedCollaborator: selectedCollabSignal,
       updatedCollaborator: updatedCollabSignal,
       selectedCollaboratorHoliday: selectedCollabHolidaySignal,
-      selectedCollaboratorProjects: selectedCollabProject
+      selectedCollaboratorProjects: selectedCollabProject,
+      createdCollaborator: createCollabSignal
     });
 
     dataServiceSpy.getCollabs.and.returnValue(of(collabsListDouble));
@@ -107,6 +108,8 @@ describe('CollaboratorsComponent', () => {
 
     fixture = TestBed.createComponent(CollaboratorsComponent);
     component = fixture.componentInstance;
+
+    fixture.detectChanges();
   });
 
 
@@ -118,8 +121,8 @@ describe('CollaboratorsComponent', () => {
 
     // assert
     expect(dataServiceSpy.getCollabs).toHaveBeenCalled();
-    expect(component.collaborators).toEqual(collabsListDouble);
-    expect(component.collaborators.length).toBe(2);
+    expect(component.collaborators()).toEqual(collabsListDouble);
+    expect(component.collaborators().length).toBe(2);
   });
 
   it('should handle error when loading collaborators fails', () => {
@@ -159,16 +162,12 @@ describe('CollaboratorsComponent', () => {
       names: 'New Name'
     };
   
-    dataServiceSpy.updateCollaborator.and.returnValue(of(updated));
-  
     // Act
     updatedCollabSignal.set(updated); 
     fixture.detectChanges();
   
-    // Assert
-    expect(dataServiceSpy.updateCollaborator).toHaveBeenCalledWith(updated);
-    
-    const updatedItem = component.collaborators.find(c => c.collabId === updated.collabId);
+    // Assert    
+    const updatedItem = component.collaborators().find(c => c.collabId === updated.collabId);
     expect(updatedItem?.names).toBe('New Name');
   }));
   ;

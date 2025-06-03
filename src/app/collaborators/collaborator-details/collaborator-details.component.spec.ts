@@ -3,12 +3,14 @@ import { CollaboratorDetailsComponent } from './collaborator-details.component';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
 import { signal, WritableSignal } from '@angular/core';
 import { Collaborator } from '../collaborator';
+import { CollaboratorDataService } from '../collaborator-data.service';
 
 describe('CollaboratorDetailsComponent', () => {
   let component: CollaboratorDetailsComponent;
   let fixture: ComponentFixture<CollaboratorDetailsComponent>;
   let collaborator: Collaborator;
   let mockCollaboratorSignalService: jasmine.SpyObj<CollaboratorSignalService>;
+  let mockCollaboratorDataService: jasmine.SpyObj<CollaboratorDataService>;
   let selectedSignal: WritableSignal<Collaborator | undefined>;
 
   beforeEach(async () => {
@@ -16,11 +18,13 @@ describe('CollaboratorDetailsComponent', () => {
     mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', ['updateCollaborator'], {
       selectedCollaborator: selectedSignal
     });
+    mockCollaboratorDataService = jasmine.createSpyObj('CollaboratorDataService',  ['updateCollaborator']);
 
     await TestBed.configureTestingModule({
       imports: [CollaboratorDetailsComponent],
       providers: [
-        { provide: CollaboratorSignalService, useValue: mockCollaboratorSignalService }
+        { provide: CollaboratorSignalService, useValue: mockCollaboratorSignalService },
+        { provide: CollaboratorDataService, useValue: mockCollaboratorDataService }
       ]
     }).compileComponents();
 

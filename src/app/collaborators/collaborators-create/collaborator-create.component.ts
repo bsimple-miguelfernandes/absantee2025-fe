@@ -16,7 +16,7 @@ export class CollaboratorCreateComponent {
   collaboratorDataService = inject(CollaboratorDataService);
 
   form = new FormGroup({
-    names: new FormControl('' , Validators.required),
+    names: new FormControl('', Validators.required),
     surnames: new FormControl('', Validators.required),
     email: new FormControl('', Validators.required),
     deactivationDate: new FormControl(this.formatDate(new Date()), Validators.required),
@@ -31,42 +31,41 @@ export class CollaboratorCreateComponent {
   }
 
   onSubmit() {
-
-    if(this.form.invalid){
+    if (this.form.invalid) {
       alert("Please fill all required fields.")
       return;
     }
-  
+
     const formValue = this.form.getRawValue();
 
-  if (!formValue.collaboratorPeriod) return; 
+    if (!formValue.collaboratorPeriod) return;
 
-  const newCollaborator: CollaboratorCreateRequest = {
-    names: formValue.names ?? '',
-    surnames: formValue.surnames ?? '',
-    email: formValue.email ?? '',
-    deactivationDate: new Date(formValue.deactivationDate!),
-    periodDateTime: {
-      _initDate: new Date(formValue.collaboratorPeriod!.initDate!),
-      _finalDate: new Date(formValue.collaboratorPeriod!.finalDate!)
-    }
-};
+    const newCollaborator: CollaboratorCreateRequest = {
+      names: formValue.names!,
+      surnames: formValue.surnames!,
+      email: formValue.email!,
+      deactivationDate: new Date(formValue.deactivationDate!),
+      periodDateTime: {
+        _initDate: new Date(formValue.collaboratorPeriod!.initDate!),
+        _finalDate: new Date(formValue.collaboratorPeriod!.finalDate!)
+      }
+    };
 
 
-  // O subscribe é necessario porque ao fazeres um pedido http ele retorna um Observable que tem de ser subscrito
-  this.collaboratorDataService.createCollaborator(newCollaborator).subscribe({
-    next: (createdCollaborator) => {
-      console.log('Created collaborator:', createdCollaborator);
-      this.collaboratorSignalService.createCollaborator(createdCollaborator);
-      this.collaboratorSignalService.cancelCreateCollaborator?.();
-      this.form.reset();
-      
-    },
-    error: (error) => {
-      console.error('Error creating collaborator:', error);
-    }
-  });
-}
+    // O subscribe é necessario porque ao fazeres um pedido http ele retorna um Observable que tem de ser subscrito
+    this.collaboratorDataService.createCollaborator(newCollaborator).subscribe({
+      next: (createdCollaborator) => {
+        console.log('Created collaborator:', createdCollaborator);
+        this.collaboratorSignalService.createCollaborator(createdCollaborator);
+        this.collaboratorSignalService.cancelCreateCollaborator?.();
+        this.form.reset();
+
+      },
+      error: (error) => {
+        console.error('Error creating collaborator:', error);
+      }
+    });
+  }
 
 
   onCancel() {

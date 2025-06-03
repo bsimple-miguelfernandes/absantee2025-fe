@@ -5,6 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
 import { CollaboratorDataService } from '../collaborator-data.service';
 import { of, throwError } from 'rxjs';
+import { Collaborator } from '../collaborator';
 
 describe('CollaboratorCreateComponent', () => {
   let component: CollaboratorCreateComponent;
@@ -51,12 +52,17 @@ describe('CollaboratorCreateComponent', () => {
   // Testa o envio do formulário com valores válidos
   it('should call createCollaborator with correct data on submit', fakeAsync(() => {
     const today = new Date();
-    const mockResponse = {
+    const mockResponse : Collaborator = {
+      collabId: '1',
+      userId: '1',
       names: 'John',
       surnames: 'Doe',
       email: 'john.doe@example.com',
-      deactivationDate: today,
-      periodDateTime: {
+      collaboratorPeriod: {
+        _initDate: today,
+        _finalDate: today
+      },
+      userPeriod: {
         _initDate: today,
         _finalDate: today
       }

@@ -132,4 +132,24 @@ describe('ProjectsComponent', () => {
     const associations = fixture.nativeElement.querySelector('app-associations-project-collaborator');
     expect(associations).not.toBeNull();
   });
+
+  it('should update projects list when projectCreatedSignal changes', () => {
+    const project: Project = {
+      id: '3',
+      title: 'Test 3',
+      acronym: 'T3',
+      periodDate: {
+        initDate: new Date(2020, 1, 1),
+        finalDate: new Date(2021, 1, 1)
+      }
+    };
+
+    projectCreatedSignal.set(project);
+
+    fixture.detectChanges();
+
+    const projectList = [...projects, project];
+
+    expect(component.projects()).toEqual(projectList);
+  });
 });

@@ -23,16 +23,8 @@ export class CollaboratorSignalService {
   private isCreatingCollaboratorSignal = signal(false);
   readonly isCreatingCollaborator = this.isCreatingCollaboratorSignal.asReadonly();
   
-  private creatingCollaboratorSignal = signal<CollaboratorCreateRequest  | undefined>(undefined);
-  readonly creatingCollaborator = this.creatingCollaboratorSignal.asReadonly();
-
-  // getCollaboratorsIds(): Observable<string[]> {
-  //   return this.httpClient.get<string[]>('https://localhost:7271/api/collaborators/');
-  // }
-
-  // getCollaboratorById(id: string): Observable<Collaborator> {
-  //   return this.httpClient.get<Collaborator>('https://localhost:7271/api/collaborators/' + id);
-  // }
+  private createdCollaboratorSignal = signal<Collaborator  | undefined>(undefined);
+  readonly createdCollaborator = this.createdCollaboratorSignal.asReadonly();
 
   updateCollaborator(updated: Collaborator) {
     this.updateCollaboratorSignal.set(updated);
@@ -42,8 +34,8 @@ export class CollaboratorSignalService {
     this.isCreatingCollaboratorSignal.set(true);
   }
 
-  createCollaborator(create: CollaboratorCreateRequest ) {
-    this.creatingCollaboratorSignal.set(create)
+  createCollaborator(create: Collaborator) {
+    this.createdCollaboratorSignal.set(create)
   }
 
   cancelCreateCollaborator() {

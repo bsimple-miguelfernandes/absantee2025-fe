@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
 import { Collaborator, CollaboratorDetailsForm } from '../collaborator';
 import { PeriodDateTimeForm } from '../../PeriodDate';
+import { CollaboratorDataService } from '../collaborator-data.service';
 
 @Component({
   selector: 'app-collaborator-details',
@@ -12,6 +13,7 @@ import { PeriodDateTimeForm } from '../../PeriodDate';
 })
 export class CollaboratorDetailsComponent {
   collaboratorService = inject(CollaboratorSignalService);
+  collaboratorDataService = inject(CollaboratorDataService);
   collaborator = this.collaboratorService.selectedCollaborator;
   form!: FormGroup;
 
@@ -78,8 +80,15 @@ export class CollaboratorDetailsComponent {
         _finalDate: new Date(formValue.collaboratorPeriodDateTime._finalDate)
       }
     };
-
-    this.collaboratorService.updateCollaborator(updatedCollaborator);
-    this.form.markAsPristine();
+    this.collaboratorDataService.updateCollaborator(updatedCollaborator).subscribe({
+      next: (updated) => {
+        this.collaboratorService.updateCollaborator(updated);
+        this.collaboratorService.cancelCreateCollaborator();
+        this.form.markAsPristine();
+      },
+      error: (error) => {
+        console.log("Error updating collaborator: ", error)
+      }
+    });    
   }
 }
