@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, effect, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { ProjectComponent } from "./project/project.component";
 import { ProjectsTableComponent } from "./projects-table/projects-table.component";
 import { ProjectsSignalsService } from './projects-signals.service';
@@ -17,14 +17,16 @@ export class ProjectsComponent {
   projectSignalService = inject(ProjectsSignalsService);
   projectSelected = this.projectSignalService.projectSelected;
   projectCollaboratorsSelected = this.projectSignalService.projectCollaboratorSelected;
+  isCreatingProjectSignal = this.projectSignalService.isCreatingProject;
+  projectCreatedSignal = this.projectSignalService.projectCreated;
 
   projectDataService = inject(ProjectsDataService);
-  projects : Project[] = [];
+  projects = signal<Project[]>([]);
 
   constructor() {
     this.projectDataService.getProjects().subscribe({
     next: (projects) => {
-      this.projects = projects;
+      this.projects.set(projects);
     },
     error:(error) => {
       alert('Error loading projects');
@@ -34,6 +36,14 @@ export class ProjectsComponent {
 
     this.projectSignalService.selectProject(undefined);
     this.projectSignalService.selectProjectCollaborators(undefined);
+
+    effect(() => {
+      const projectCreated = this.projectCreatedSignal();
+
+      if(projectCreated){
+        this.projects.update(projects => [...projects, projectCreated]); 
+      }
+    })
   }
 
 

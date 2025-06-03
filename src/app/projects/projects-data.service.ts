@@ -6,27 +6,16 @@ import { AssociationProjectCollaborators } from "../associations-project-collabo
 import { ProjectCreateRequest } from "./create-project/create-project";
 import { Injectable } from "@angular/core";
 
-@Injectable({ providedIn: 'root' }) // <-- ADICIONE ISSO
+@Injectable({ providedIn: 'root' }) 
 
 export class ProjectsDataService {
   private readonly baseUrl = environment.apiBaseUrl;
 
-  private projectSubject = new BehaviorSubject<Project[]>([]);
-  project$ = this.projectSubject.asObservable();
-
   constructor(private http: HttpClient) {
-    this.loadProjects(); // <- agora usa this.http que é interceptável
-  }
-
-  loadProjects() {
-    this.http.get<Project[]>(`${this.baseUrl}/Project`).subscribe({
-      next: (projects) => this.projectSubject.next(projects),
-      error: (err) => console.error('Erro ao carregar projectos', err)
-    });
   }
 
   getProjects(): Observable<Project[]> {
-    return this.project$;
+    return this.http.get<Project[]>(`${this.baseUrl}/Project`)
   }
 
   getProjectById(id: string): Observable<Project> {
@@ -38,11 +27,6 @@ export class ProjectsDataService {
   }
 
   createProject(newProject: ProjectCreateRequest): Observable<Project> {
-    return this.http.post<Project>(`${this.baseUrl}/Project`, newProject).pipe(
-      tap((createdProject) => {
-        const currentProjects = this.projectSubject.getValue();
-        this.projectSubject.next([...currentProjects, createdProject]);
-      })
-    );
+    return this.http.post<Project>(`${this.baseUrl}/Project`, newProject);
   }
 }

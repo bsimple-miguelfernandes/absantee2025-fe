@@ -13,6 +13,9 @@ export class ProjectsSignalsService {
   private isCreatingProjectSignal = signal(false);
   readonly isCreatingProject = this.isCreatingProjectSignal.asReadonly();
 
+  private projectCreatedSignal = signal<Project | undefined>(undefined);
+  readonly projectCreated = this.projectCreatedSignal.asReadonly();
+
   startCreateProject() {
     this.isCreatingProjectSignal.set(true);
   }
@@ -30,5 +33,9 @@ export class ProjectsSignalsService {
   selectProjectCollaborators(selected: Project | undefined){
     this.projectSelectedSignal.set(undefined);
     this.projectCollaboratorsSelectedSignal.set(selected);
+  }
+
+  createProject(projectCreated : Project){
+    this.projectCreatedSignal.set(projectCreated);
   }
 }

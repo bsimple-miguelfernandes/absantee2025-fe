@@ -69,7 +69,8 @@ export class ProjectCreateComponent {
         this.projectDataService.createProject(newProject).subscribe({
             next: (createdProject) => {
                 console.log('Created project:', createdProject);
-                this.projectSignalService.cancelCreateProject?.();
+                this.projectSignalService.cancelCreateProject();
+                this.projectSignalService.createProject(createdProject);
                 this.form.reset();
             },
             error: (error) => {
@@ -79,7 +80,7 @@ export class ProjectCreateComponent {
     }
 
     onCancel() {
-        this.projectSignalService.cancelCreateProject?.();
+        this.projectSignalService.cancelCreateProject();
         this.form.reset();
     }
 
