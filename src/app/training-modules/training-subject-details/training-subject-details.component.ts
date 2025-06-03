@@ -24,5 +24,6 @@ export class TrainingSubjectDetailsComponent {
   edit(trainingSubject: TrainingSubject){
     this.trainingModuleSignalService.openEditForm(trainingSubject);
     this.trainingModuleSignalService.disableSubjectDetails();
+    this.trainingModuleSignalService.cancelCreateSubject();
   }
 }
