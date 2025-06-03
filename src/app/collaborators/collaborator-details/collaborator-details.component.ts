@@ -42,12 +42,12 @@ export class CollaboratorDetailsComponent {
           surnames: collaboratorObj.surnames,
           email: collaboratorObj.email,
           userPeriodDateTime: {
-            userInitDate: this.formatDate(collaboratorObj.userPeriod._initDate),
-            userEndDate: this.formatDate(collaboratorObj.userPeriod._finalDate)
+            _initDate: this.formatDate(collaboratorObj.userPeriod._initDate),
+            _finalDate: this.formatDate(collaboratorObj.userPeriod._finalDate)
           },
           collaboratorPeriodDateTime : {
-            collabInitDate: this.formatDate(collaboratorObj.collaboratorPeriod._initDate),
-            collabEndDate: this.formatDate(collaboratorObj.collaboratorPeriod._finalDate)
+            _initDate: this.formatDate(collaboratorObj.collaboratorPeriod._initDate),
+            _finalDate: this.formatDate(collaboratorObj.collaboratorPeriod._finalDate)
           }
         });
       }
@@ -70,12 +70,12 @@ export class CollaboratorDetailsComponent {
       surnames: formValue.surnames,
       email: formValue.email,
       userPeriod : {
-          _initDate: new Date(formValue.userPeriodDateTime.userInitDate),
-          _finalDate: new Date(formValue.userPeriodDateTime.userEndDate)
+          _initDate: new Date(formValue.userPeriodDateTime._initDate),
+          _finalDate: new Date(formValue.userPeriodDateTime._finalDate)
       },
       collaboratorPeriod: {
-        _initDate: new Date(formValue.collaboratorPeriodDateTime.collabInitDate),
-        _finalDate: new Date(formValue.collaboratorPeriodDateTime.collabEndDate)
+        _initDate: new Date(formValue.collaboratorPeriodDateTime._initDate),
+        _finalDate: new Date(formValue.collaboratorPeriodDateTime._finalDate)
       }
     };
 
