@@ -62,9 +62,6 @@ describe('ProjectsDataService', () => {
       }
     };
 
-    
-      httpMock.expectOne('http://localhost:5073/api/Project').flush([]);
-
       let result!: Project;
       service.getProjectById('1').subscribe(p => (result = p));
 

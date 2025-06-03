@@ -23,8 +23,6 @@ describe('CollaboratorDataService', () => {
     });
     service = TestBed.inject(CollaboratorDataService);
     httpMock = TestBed.inject(HttpTestingController);
-
-    httpMock.expectOne(`${baseUrl}/collaborators/details`).flush([]);
   });
 
   afterEach(() => httpMock.verify());
@@ -52,8 +50,10 @@ describe('CollaboratorDataService', () => {
     let result: Collaborator[] = [];
     
     service.getCollabs().subscribe(r => (result = r));
-    service['collaboratorSubject'].next(mockCollaborators);
-
+    
+    const req = httpMock.expectOne(`${baseUrl}/collaborators/details`);
+    expect(req.request.method).toBe('GET');
+    req.flush(mockCollaborators);
 
     tick();
     expect(result).toEqual(mockCollaborators);
