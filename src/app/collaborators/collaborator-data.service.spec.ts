@@ -118,7 +118,7 @@ describe('CollaboratorDataService', () => {
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(mockCollaboratorCreateRequest);
 
-    req.flush(mockCollaboratorCreateRequest);
+    req.flush(createdCollaborator);
 
     tick();
     expect(result).toEqual(createdCollaborator);

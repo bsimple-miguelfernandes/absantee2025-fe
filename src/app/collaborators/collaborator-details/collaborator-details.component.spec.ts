@@ -4,6 +4,7 @@ import { CollaboratorSignalService } from '../collaborator-signal.service';
 import { signal, WritableSignal } from '@angular/core';
 import { Collaborator } from '../collaborator';
 import { CollaboratorDataService } from '../collaborator-data.service';
+import { of } from 'rxjs';
 
 describe('CollaboratorDetailsComponent', () => {
   let component: CollaboratorDetailsComponent;
@@ -15,7 +16,7 @@ describe('CollaboratorDetailsComponent', () => {
 
   beforeEach(async () => {
     selectedSignal = signal<Collaborator | undefined>(undefined);
-    mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', ['updateCollaborator'], {
+    mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', ['updateCollaborator', 'cancelCreateCollaborator'], {
       selectedCollaborator: selectedSignal
     });
     mockCollaboratorDataService = jasmine.createSpyObj('CollaboratorDataService',  ['updateCollaborator']);
@@ -118,10 +119,13 @@ describe('CollaboratorDetailsComponent', () => {
     emailControl.setValue('email-changed@test.com');
     emailControl.markAsDirty();
 
+    const updatedCollaborator = collaborator;
+    updatedCollaborator.email = 'email-changed@test.com';
+
+    mockCollaboratorDataService.updateCollaborator.and.returnValue(of(updatedCollaborator));
     component.onSubmit();
 
-    expect(mockCollaboratorSignalService.updateCollaborator).toHaveBeenCalledOnceWith(jasmine.objectContaining({
-        email: 'email-changed@test.com'
-    }));
+    expect(mockCollaboratorSignalService.updateCollaborator).toHaveBeenCalledOnceWith(updatedCollaborator);
+    expect(mockCollaboratorSignalService.cancelCreateCollaborator).toHaveBeenCalledOnceWith();
   });
 });
