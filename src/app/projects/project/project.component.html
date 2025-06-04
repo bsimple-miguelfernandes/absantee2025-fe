@@ -6,7 +6,5 @@
     <p class="dates">
       {{ projectSelected()!.periodDate.initDate| date: 'longDate' }} – {{ projectSelected()!.periodDate.finalDate| date: 'longDate' }}
     </p>
-    <a class="collab-link">
-        Manage Project
-      </a>
+    <button (click)="editProject(projectSelected()!)">Manage Project</button>
   </div>

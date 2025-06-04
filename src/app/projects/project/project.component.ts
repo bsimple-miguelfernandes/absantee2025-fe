@@ -1,6 +1,7 @@
 import { Component, inject, input } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ProjectsSignalsService } from '../projects-signals.service';
+import { Project } from './project';
 
 @Component({
   selector: 'app-project',
@@ -11,4 +12,8 @@ import { ProjectsSignalsService } from '../projects-signals.service';
 export class ProjectComponent {
   projectSignalService = inject(ProjectsSignalsService);
   projectSelected = this.projectSignalService.projectSelected;
+
+  editProject(project: Project){
+    this.projectSignalService.startEditProject(project);
+  }
 }

@@ -21,8 +21,8 @@ export type PeriodDateTimeForm = {
 }
 
 export type PeriodDateForm = {
-    _initDate: FormControl<string | null>,
-    _finalDate: FormControl<string | null>
+    initDate: FormControl<string | null>,
+    finalDate: FormControl<string | null>
 }
 
 export interface PeriodDateTimeString {

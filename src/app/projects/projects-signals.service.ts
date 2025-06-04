@@ -24,9 +24,15 @@ export class ProjectsSignalsService {
 
   startCreateProject() {
     this.isCreatingProjectFormSignal.set(true);
+    this.isEditingProjectFormSignal.set(undefined);
   }
 
   cancelCreateProject() {
+    this.isCreatingProjectFormSignal.set(false);
+  }
+
+  startEditProject(project: Project){
+    this.isEditingProjectFormSignal.set(project)
     this.isCreatingProjectFormSignal.set(false);
   }
 
