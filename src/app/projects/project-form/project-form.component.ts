@@ -68,6 +68,14 @@ export class ProjectFormComponent {
         })
       } else if (this.isEditingProjectForm()) {
         this.projectSignalsService.updateProject(project);
+
+        this.projectDataService.updateProject(project).subscribe({
+          next: (updatedProject) => {
+            console.log("Updated Project: ", updatedProject);
+            this.projectSignalsService.updateProject(project);
+            this.projectSignalsService.cancelEditProject();
+          }
+        })
       }
       this.projectForm.reset();
     }

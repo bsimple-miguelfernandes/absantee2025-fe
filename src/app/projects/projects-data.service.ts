@@ -31,6 +31,10 @@ export class ProjectsDataService {
     return this.http.post<Project>(`${this.baseUrl}/Project`, newProject);
   }
 
+  updateProject(updatedProject: Project): Observable<Project> {
+    return this.http.put<Project>(`${this.baseUrl}/Project`, updatedProject);
+  }
+
   createAssociation(id: string, newAssoc: AssociationProjectCollaboratorCreateRequest): Observable<AssociationProjectCollaboratorsDTO> {
     return this.http.post<AssociationProjectCollaborators>(`${this.baseUrl}/Project/${id}/collaborators`, newAssoc).pipe(
       map(dto => mapToAssociationProjectCollaborators(dto))
