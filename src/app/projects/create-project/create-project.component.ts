@@ -66,7 +66,7 @@ export class ProjectCreateComponent {
             }
         };
 
-        this.projectDataService.createProject(newProject).subscribe({
+        /* this.projectDataService.createProject(newProject).subscribe({
             next: (createdProject) => {
                 console.log('Created project:', createdProject);
                 this.projectSignalService.cancelCreateProject();
@@ -76,7 +76,7 @@ export class ProjectCreateComponent {
             error: (error) => {
                 console.error('Error creating project:', error);
             }
-        });
+        }); */
     }
 
     onCancel() {

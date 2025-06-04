@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { AssociationProjectCollaborators } from '../associations-project-collaborator/association-project-collaborator.model';
+import { AssociationProjectCollaborators, mapToAssociationProjectCollaborators } from '../associations-project-collaborator/association-project-collaborator.model';
 import { HolidayPeriod, HolidayPeriodDTO } from './collaborator-holidays/holiday-period';
 import { Collaborator } from './collaborator';
 import { CollaboratorCreateRequest } from './collaborators-create/create-collaborator';
@@ -64,7 +64,9 @@ export class CollaboratorDataService {
   }
 
   createAssociation(id: string, newAssoc: AssociationCollaboratorProjectCreateRequest): Observable<AssociationProjectCollaborators> {
-    return this.httpClient.post<AssociationProjectCollaborators>(`${this.baseUrl}/collaborators/${id}/projects`, newAssoc);
+    return this.httpClient.post<AssociationProjectCollaborators>(`${this.baseUrl}/collaborators/${id}/projects`, newAssoc).pipe(
+      map(dto => mapToAssociationProjectCollaborators(dto))
+    );;
   }
 
 }

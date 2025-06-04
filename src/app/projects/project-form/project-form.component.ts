@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, effect } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProjectsSignalsService } from '../projects-signals.service';
 import { ProjectForm } from '../project/project';
 import { PeriodDateForm } from '../../PeriodDate';
+import { ProjectsDataService } from '../projects-data.service';
 
 @Component({
   selector: 'app-project-form',
@@ -13,6 +14,7 @@ import { PeriodDateForm } from '../../PeriodDate';
 })
 export class ProjectFormComponent {
   projectSignalsService = inject(ProjectsSignalsService);
+  projectDataService = inject(ProjectsDataService)
 
   isEditingProjectForm = this.projectSignalsService.isEditingProjectForm;
   isCreatingProjectForm = this.projectSignalsService.isCreatingProjectForm;
@@ -22,11 +24,11 @@ export class ProjectFormComponent {
   constructor() {
 
     this.projectForm = new FormGroup<ProjectForm>({
-      title: new FormControl(),
-      acronym: new FormControl(),
+      title: new FormControl('', Validators.required),
+      acronym: new FormControl('', Validators.required),
       periodDate: new FormGroup<PeriodDateForm>({
-        _initDate: new FormControl(),
-        _finalDate: new FormControl(),
+        initDate: new FormControl(this.formatDate(new Date()), Validators.required),
+        finalDate: new FormControl(this.formatDate(new Date()), Validators.required),
       })
     });
 
@@ -40,6 +42,10 @@ export class ProjectFormComponent {
     });
   };
 
+  private formatDate(date: Date): string {
+    return date.toISOString().split('T')[0];
+  }
+
   cancel() {
     this.projectSignalsService.cancelCreateProject();
     this.projectSignalsService.cancelEditProject();
@@ -52,7 +58,14 @@ export class ProjectFormComponent {
       const project = this.isEditingProjectForm() ? { ...this.isEditingProjectForm(), ...formValue } : formValue;
 
       if (this.isCreatingProjectForm()) {
+
+        this.projectDataService.createProject(project).subscribe({
+          next: (createdProject) => {
+            console.log("Created project: ", createdProject);
         this.projectSignalsService.saveProject(project);
+        this.projectSignalsService.cancelCreateProject();
+          }
+        })
       } else if (this.isEditingProjectForm()) {
         this.projectSignalsService.updateProject(project);
       }

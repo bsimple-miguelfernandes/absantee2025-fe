@@ -20,6 +20,7 @@ export class ProjectsComponent {
   projectSelected = this.projectSignalService.projectSelected;
   projectCollaboratorsSelected = this.projectSignalService.projectCollaboratorSelected;
   isCreatingProjectSignal = this.projectSignalService.isCreatingProjectForm;
+  isEditingProjectSignal = this.projectSignalService.isEditingProjectForm;
   projectCreatedSignal = this.projectSignalService.projectCreated;
 
   projectDataService = inject(ProjectsDataService);

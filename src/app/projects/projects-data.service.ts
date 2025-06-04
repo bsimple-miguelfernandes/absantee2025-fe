@@ -1,8 +1,8 @@
-import { BehaviorSubject, Observable, tap } from "rxjs";
+import { BehaviorSubject, map, Observable, tap } from "rxjs";
 import { environment } from "../../environments/environment";
 import { Project } from "./project/project";
 import { HttpClient } from "@angular/common/http";
-import { AssociationProjectCollaborators } from "../associations-project-collaborator/association-project-collaborator.model";
+import { AssociationProjectCollaborators, AssociationProjectCollaboratorsDTO, mapToAssociationProjectCollaborators } from "../associations-project-collaborator/association-project-collaborator.model";
 import { ProjectCreateRequest } from "./create-project/create-project";
 import { Injectable } from "@angular/core";
 import { AssociationProjectCollaboratorCreateRequest } from "../associations-project-collaborator/add-collaborator-project/add-association";
@@ -31,7 +31,9 @@ export class ProjectsDataService {
     return this.http.post<Project>(`${this.baseUrl}/Project`, newProject);
   }
 
-  createAssociation(id: string, newAssoc: AssociationProjectCollaboratorCreateRequest): Observable<AssociationProjectCollaborators> {
-    return this.http.post<AssociationProjectCollaborators>(`${this.baseUrl}/Project/${id}/collaborators`, newAssoc);
+  createAssociation(id: string, newAssoc: AssociationProjectCollaboratorCreateRequest): Observable<AssociationProjectCollaboratorsDTO> {
+    return this.http.post<AssociationProjectCollaborators>(`${this.baseUrl}/Project/${id}/collaborators`, newAssoc).pipe(
+      map(dto => mapToAssociationProjectCollaborators(dto))
+    );;
   }
 }
