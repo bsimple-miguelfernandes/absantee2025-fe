@@ -128,4 +128,62 @@ describe('CollaboratorDetailsComponent', () => {
     expect(mockCollaboratorSignalService.updateCollaborator).toHaveBeenCalledOnceWith(updatedCollaborator);
     expect(mockCollaboratorSignalService.cancelCreateCollaborator).toHaveBeenCalledOnceWith();
   });
+
+  it('should call updateCollaborator with form data', async () => {
+    const newCollaborator : Collaborator = {
+      collabId: "1",
+      userId: '1',
+      names: "Bob",
+      surnames: "Martinez",
+      email: "bob.martinez@example.com",
+      userPeriod:{
+        _initDate: new Date(2021, 1, 1),
+        _finalDate: new Date(2024, 6, 30)
+      },
+      collaboratorPeriod: {
+        _initDate: new Date(2021, 1, 1),
+        _finalDate: new Date(2024, 6, 30)
+      }
+    };
+
+    selectedSignal.set(collaborator);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    component.form.patchValue(newCollaborator);
+    component.form.markAsDirty();
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    mockCollaboratorDataService.updateCollaborator.and.returnValue(of(newCollaborator));
+    component.onSubmit();
+
+    expect(mockCollaboratorDataService.updateCollaborator).toHaveBeenCalledWith(jasmine.objectContaining({
+      names: 'Bob',
+      surnames: 'Martinez',
+      email: 'bob.martinez@example.com',
+      userPeriod: {
+        _initDate: new Date('2020-01-01'),
+        _finalDate: new Date('2025-12-31'),
+      },
+      collaboratorPeriod: {
+        _initDate: new Date('2020-02-01'),
+        _finalDate: new Date('2024-11-30'),
+      }
+    }));
+  });
+
+  it('should not make any calls if form isn\'t dirty', () => {
+    const emailControl = component.form.get('email')!;
+    emailControl.setValue('email-changed@test.com');
+
+    const updatedCollaborator = collaborator;
+    updatedCollaborator.email = 'email-changed@test.com';
+
+    mockCollaboratorDataService.updateCollaborator.and.returnValue(of(updatedCollaborator));
+    component.onSubmit();
+
+    expect(mockCollaboratorSignalService.updateCollaborator).toHaveBeenCalledTimes(0);
+    expect(mockCollaboratorSignalService.cancelCreateCollaborator).toHaveBeenCalledTimes(0);
+  });
 });

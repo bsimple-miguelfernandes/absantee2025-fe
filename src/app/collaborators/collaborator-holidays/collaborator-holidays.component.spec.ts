@@ -191,4 +191,5 @@ describe('CollaboratorHolidaysComponent', () => {
 
     expect(mockCollabotadorDataService.addHoliday).toHaveBeenCalled();
   });
+
 });

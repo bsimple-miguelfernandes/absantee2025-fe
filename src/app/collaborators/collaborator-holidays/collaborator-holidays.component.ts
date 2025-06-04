@@ -68,36 +68,40 @@ export class CollaboratorHolidaysComponent {
     if (!this.form.dirty) {
       window.alert("No changes made to this holiday. ");
     }
-    const holidayGroup = this.holidaysForm.at(index);
-    if (holidayGroup.valid) {
-      if (index >= this.collaboratorHolidays.length) {
-        this.collaboratorDataService.addHoliday(this.collaboratorHolidaysSelected()!.collabId,
-          holidayGroup.value.initDate!,
-          holidayGroup.value.finalDate!)
-          .subscribe({
-            next: h => {
-              holidayGroup.get('buttonText')?.setValue("Edit"),
-                console.log(h);
-            },
-            error: e => {
-              console.log(e);
-            }
-          });
-      }
-      else {
-        const updatedHoliday: HolidayPeriod = {
-          id: this.collaboratorHolidays[index].id,
-          periodDate: {
-            initDate: this.formatDate(holidayGroup.get('initDate')!.value),
-            finalDate: this.formatDate(holidayGroup.get('finalDate')!.value)
-          }
-        }
-
-        this.collaboratorDataService.editHoliday(this.collaboratorHolidaysSelected()!.collabId, updatedHoliday).subscribe(h => console.log(h));
-        this.form.markAsPristine();
-      }
+    if(this.holidaysForm.length == 0) {
+      
     } else {
-      window.alert("Final Date must be after Innit Date");
+      const holidayGroup = this.holidaysForm.at(index);
+      if (holidayGroup.valid) {
+        if (index >= this.collaboratorHolidays.length) {
+          this.collaboratorDataService.addHoliday(this.collaboratorHolidaysSelected()!.collabId,
+            holidayGroup.value.initDate!,
+            holidayGroup.value.finalDate!)
+            .subscribe({
+              next: h => {
+                holidayGroup.get('buttonText')?.setValue("Edit"),
+                  console.log(h);
+              },
+              error: e => {
+                console.log(e);
+              }
+            });
+        }
+        else {
+          const updatedHoliday: HolidayPeriod = {
+            id: this.collaboratorHolidays[index].id,
+            periodDate: {
+              initDate: this.formatDate(holidayGroup.get('initDate')!.value),
+              finalDate: this.formatDate(holidayGroup.get('finalDate')!.value)
+            }
+          }
+
+          this.collaboratorDataService.editHoliday(this.collaboratorHolidaysSelected()!.collabId, updatedHoliday).subscribe(h => console.log(h));
+          this.form.markAsPristine();
+        }
+      } else {
+        window.alert("Final Date must be after Innit Date");
+      }
     }
   }
 

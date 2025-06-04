@@ -33,6 +33,17 @@ describe('AppComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should request projects after \'Absantee\' button in the header is clicked', fakeAsync(() => {
+    const projectButton = fixture.debugElement.queryAll(By.css('a'));
+    projectButton[0].nativeElement.click();
+    tick();
+    fixture.detectChanges();
+
+    expect(projectButton[0].nativeElement.textContent).toBe("Absantee");
+
+    expect(fixture.debugElement.query(By.css('h1')).nativeElement.textContent).toContain('Welcome');
+  }));
+
   it('should request projects after \'Projects\' button in the header is clicked', fakeAsync(() => {
     const projectButton = fixture.debugElement.queryAll(By.css('a'));
     projectButton[1].nativeElement.click();
