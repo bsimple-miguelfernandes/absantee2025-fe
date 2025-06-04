@@ -1,0 +1,32 @@
+<form [formGroup]="projectForm" (ngSubmit)="onSubmit()" class="form-card">
+  <h2>{{ isEditingProjectForm() ? "Edit Project" : "Add Project" }}</h2>
+
+  <div class="form-row">
+    <label class="form-label">Title</label>
+    <input type="text" formControlName="title" class="form-input" />
+  </div>
+
+  <div class="form-row">
+    <label class="form-label">Acronym</label>
+    <input type="text" formControlName="acronym" class="form-input" />
+  </div>
+
+  <div formGroupName="periodDate" class="period-group">
+    <div class="form-row">
+      <label class="form-label">Project Start Date</label>
+      <input type="date" formControlName="_initDate" class="form-input" />
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">Project End Date</label>
+      <input type="date" formControlName="_finalDate" class="form-input" />
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="button" (click)="cancel()">Cancel</button>
+    <button type="submit" [disabled]="projectForm.invalid">
+      {{ isEditingProjectForm() ? "Save" : "Add" }}
+    </button>
+  </div>
+</form>

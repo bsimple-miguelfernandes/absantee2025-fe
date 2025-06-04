@@ -6,22 +6,32 @@ import { Project } from './project/project';
 })
 export class ProjectsSignalsService {
   private projectSelectedSignal = signal<Project | undefined>(undefined);
-  projectSelected = this.projectSelectedSignal.asReadonly();
+  readonly projectSelected = this.projectSelectedSignal.asReadonly();
 
   private projectCollaboratorsSelectedSignal = signal<Project | undefined>(undefined);
   readonly projectCollaboratorSelected = this.projectCollaboratorsSelectedSignal.asReadonly();
-  private isCreatingProjectSignal = signal(false);
-  readonly isCreatingProject = this.isCreatingProjectSignal.asReadonly();
+
+  private isCreatingProjectFormSignal = signal(false);
+  readonly isCreatingProjectForm = this.isCreatingProjectFormSignal.asReadonly();
+  private isEditingProjectFormSignal = signal<Project | undefined>(undefined);
+  readonly isEditingProjectForm = this.isEditingProjectFormSignal.asReadonly();
 
   private projectCreatedSignal = signal<Project | undefined>(undefined);
   readonly projectCreated = this.projectCreatedSignal.asReadonly();
 
+  private projectUpdatedSignal = signal<Project | undefined>(undefined);
+  readonly projectUpdated = this.projectUpdatedSignal.asReadonly();
+
   startCreateProject() {
-    this.isCreatingProjectSignal.set(true);
+    this.isCreatingProjectFormSignal.set(true);
   }
 
   cancelCreateProject() {
-    this.isCreatingProjectSignal.set(false);
+    this.isCreatingProjectFormSignal.set(false);
+  }
+
+  cancelEditProject(){
+    this.isEditingProjectFormSignal.set(undefined);
   }
 
 
@@ -37,5 +47,15 @@ export class ProjectsSignalsService {
 
   createProject(projectCreated : Project){
     this.projectCreatedSignal.set(projectCreated);
+  }
+
+  saveProject(project: Project){
+    this.projectCreatedSignal.set(project);
+    this.cancelCreateProject();
+  }
+
+  updateProject(project: Project){
+    this.projectUpdatedSignal.set(project);
+    this.cancelEditProject();
   }
 }
