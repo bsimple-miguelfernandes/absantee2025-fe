@@ -1,8 +1,8 @@
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { AssociationProjectCollaborators } from '../associations-project-collaborator/association-project-collaborator.model';
-import { HolidayPeriod } from './collaborator-holidays/holiday-period';
+import { HolidayPeriod, HolidayPeriodDTO } from './collaborator-holidays/holiday-period';
 import { Collaborator } from './collaborator';
 import { CollaboratorCreateRequest } from './collaborators-create/create-collaborator';
 import { environment } from '../../environments/environment';
@@ -15,7 +15,7 @@ export class CollaboratorDataService {
   private readonly baseUrl = environment.apiBaseUrl;
 
 
-  constructor(){
+  constructor() {
   }
 
   getCollabs(): Observable<Collaborator[]> {
@@ -26,7 +26,7 @@ export class CollaboratorDataService {
     return this.httpClient.get<Collaborator>(`${this.baseUrl}/collaborators/${id}/details`);
   }
 
-  createCollaborator(newCollaborator: CollaboratorCreateRequest ): Observable<Collaborator> {
+  createCollaborator(newCollaborator: CollaboratorCreateRequest): Observable<Collaborator> {
     return this.httpClient.post<Collaborator>(`${this.baseUrl}/collaborators`, newCollaborator)
   }
 
@@ -35,14 +35,26 @@ export class CollaboratorDataService {
   }
 
   getCollaboratorHolidays(collaboratorId: string): Observable<HolidayPeriod[]> {
-    return this.httpClient.get<HolidayPeriod[]>(`${this.baseUrl}/collaborators/${collaboratorId}/holidayplan/holidayperiod`);
+    return this.httpClient
+      .get<HolidayPeriodDTO[]>(`${this.baseUrl}/collaborators/${collaboratorId}/holidayplan/holidayperiod`)
+      .pipe(
+        map((dtoList) =>
+          dtoList.map(dto => ({
+            id: dto.id,
+            periodDate: {
+              initDate: dto.periodDate.initDate,
+              finalDate: dto.periodDate.finalDate
+            }
+          }) as HolidayPeriod)
+        )
+      );
   }
 
   addHoliday(collabId: string, initDate: string, finalDate: string) {
-    return this.httpClient.post<HolidayPeriod>(`${this.baseUrl}/collaborators/${collabId}/holidayplan/holidayperiod`, {initDate: initDate, finalDate: finalDate});
+    return this.httpClient.post<HolidayPeriod>(`${this.baseUrl}/collaborators/${collabId}/holidayplan/holidayperiod`, { initDate: initDate, finalDate: finalDate });
   }
 
-  editHoliday(collaboratorId: string, updatedPeriod: HolidayPeriod){
+  editHoliday(collaboratorId: string, updatedPeriod: HolidayPeriod) {
     return this.httpClient.put<HolidayPeriod>(`${this.baseUrl}/collaborators/${collaboratorId}/holidayplan/holidayperiod`, updatedPeriod);
   }
 

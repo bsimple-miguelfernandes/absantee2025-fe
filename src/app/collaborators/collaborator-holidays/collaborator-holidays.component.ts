@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
 import { CollaboratorDataService } from '../collaborator-data.service';
 import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
@@ -36,7 +36,8 @@ export class CollaboratorHolidaysComponent {
   });
 
   constructor() {
-    this.collaboratorDataService
+    effect(() => {
+      this.collaboratorDataService
       .getCollaboratorHolidays(this.collaboratorHolidaysSelected()!.collabId)
       .subscribe((holidays) => {
         this.collaboratorHolidays = holidays
@@ -52,8 +53,7 @@ export class CollaboratorHolidaysComponent {
 
         this.form.setControl('holidays', new FormArray(holidayControls));
       });
-
-
+    })    
   }
 
   get holidaysForm(): FormArray<FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string>, buttonText: FormControl<string> }>> {
