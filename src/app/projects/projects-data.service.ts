@@ -29,4 +29,8 @@ export class ProjectsDataService {
   createProject(newProject: ProjectCreateRequest): Observable<Project> {
     return this.http.post<Project>(`${this.baseUrl}/Project`, newProject);
   }
+
+  updateProject(updatedProject: Project) : Observable<Project> {
+    return this.http.put<Project>(`${this.baseUrl}/Project`, updatedProject);
+  }
 }

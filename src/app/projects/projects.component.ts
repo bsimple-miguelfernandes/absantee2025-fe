@@ -22,6 +22,7 @@ export class ProjectsComponent {
   isCreatingProjectSignal = this.projectSignalService.isCreatingProjectForm;
   isEditingProjectSignal = this.projectSignalService.isEditingProjectForm;
   projectCreatedSignal = this.projectSignalService.projectCreated;
+  projectUpdatedSignal = this.projectSignalService.projectUpdated;
 
   projectDataService = inject(ProjectsDataService);
   projects = signal<Project[]>([]);
@@ -42,9 +43,16 @@ export class ProjectsComponent {
 
     effect(() => {
       const projectCreated = this.projectCreatedSignal();
+      const projectEdited = this.projectUpdatedSignal();
 
       if (projectCreated) {
         this.projects.update(projects => [...projects, projectCreated]);
+      }
+
+      if (projectEdited) {
+        this.projects.update(projects =>
+        projects.map(p => p.id === projectEdited.id ? projectEdited : p)
+        );
       }
     })
   }
