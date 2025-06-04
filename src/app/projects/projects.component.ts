@@ -10,7 +10,7 @@ import { ProjectFormComponent } from "./project-form/project-form.component";
 
 @Component({
   selector: 'app-projects',
-  imports: [ProjectsTableComponent, ProjectComponent, AssociationsProjectCollaboratorComponent, ProjectCreateComponent, ProjectFormComponent],
+  imports: [ProjectsTableComponent, ProjectComponent, AssociationsProjectCollaboratorComponent, ProjectFormComponent],
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.css'
 })

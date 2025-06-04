@@ -7,10 +7,11 @@ import { CollaboratorDetailsComponent } from "../collaborators/collaborator-deta
 import { ProjectComponent } from "../projects/project/project.component";
 import { DatePipe } from '@angular/common';
 import { AssociationProjectCollaborators } from './association-project-collaborator.model';
+import { AddCollaboratorProjectComponent } from "./add-collaborator-project/add-collaborator-project.component";
 
 @Component({
   selector: 'app-associations-project-collaborator',
-  imports: [CollaboratorDetailsComponent, ProjectComponent, DatePipe],
+  imports: [CollaboratorDetailsComponent, ProjectComponent, DatePipe, AddCollaboratorProjectComponent],
   templateUrl: './associations-project-collaborator.component.html',
   styleUrl: './associations-project-collaborator.component.css'
 })
@@ -21,6 +22,7 @@ export class AssociationsProjectCollaboratorComponent {
   projectSignalService = inject(ProjectsSignalsService);
   projectSelected = this.projectSignalService.projectSelected;
   projectCollaboratorsSelected = this.projectSignalService.projectCollaboratorSelected;
+  isCreatingAssocProjCollabSignal = this.projectSignalService.isCreatingAssociation;
 
   projectsDataService = inject(ProjectsDataService);
   associations!: AssociationProjectCollaborators[];
@@ -30,6 +32,7 @@ export class AssociationsProjectCollaboratorComponent {
   collaboratorSignalService = inject(CollaboratorSignalService);
   collaboratorSelected = this.collaboratorSignalService.selectedCollaborator;
   collaboratorProjectsSelected = this.collaboratorSignalService.selectedCollaboratorProjects;
+  isCreatingAssocCollabProjSignal = this.collaboratorSignalService.isCreatingAssociation;
 
   constructor() {
     effect(() => {
@@ -46,6 +49,22 @@ export class AssociationsProjectCollaboratorComponent {
         this.collaboratorDataService.getAssociations(this.collaboratorId()!).subscribe((associations) => {
           this.associations = associations;
         });
+      }
+    });
+
+    effect(() => {
+      const assocCollabProjCreated = this.collaboratorSignalService.createdAssociation();
+
+      if (assocCollabProjCreated) {
+        this.associations = [...this.associations, assocCollabProjCreated];
+      }
+    });
+
+    effect(() => {
+      const assocProjCollabCreated = this.projectSignalService.createdAssociation();
+
+      if (assocProjCollabCreated) {
+        this.associations = [...this.associations, assocProjCollabCreated];
       }
     });
   }

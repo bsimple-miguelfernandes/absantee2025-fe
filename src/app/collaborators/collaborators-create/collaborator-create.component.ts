@@ -57,7 +57,7 @@ export class CollaboratorCreateComponent {
       next: (createdCollaborator) => {
         console.log('Created collaborator:', createdCollaborator);
         this.collaboratorSignalService.createCollaborator(createdCollaborator);
-        this.collaboratorSignalService.cancelCreateCollaborator?.();
+        this.collaboratorSignalService.cancelCreateCollaborator();
         this.form.reset();
 
       },
@@ -69,7 +69,7 @@ export class CollaboratorCreateComponent {
 
 
   onCancel() {
-    this.collaboratorSignalService.cancelCreateCollaborator?.();
+    this.collaboratorSignalService.cancelCreateCollaborator();
     this.form.reset();
   }
 }

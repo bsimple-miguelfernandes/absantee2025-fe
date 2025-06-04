@@ -6,6 +6,7 @@ import { HolidayPeriod, HolidayPeriodDTO } from './collaborator-holidays/holiday
 import { Collaborator } from './collaborator';
 import { CollaboratorCreateRequest } from './collaborators-create/create-collaborator';
 import { environment } from '../../environments/environment';
+import { AssociationCollaboratorProjectCreateRequest } from '../associations-project-collaborator/add-collaborator-project/add-association';
 
 @Injectable({
   providedIn: 'root'
@@ -61,4 +62,9 @@ export class CollaboratorDataService {
   getAssociations(id: string): Observable<AssociationProjectCollaborators[]> {
     return this.httpClient.get<AssociationProjectCollaborators[]>(`${this.baseUrl}/collaborators/${id}/associations`);
   }
+
+  createAssociation(id: string, newAssoc: AssociationCollaboratorProjectCreateRequest): Observable<AssociationProjectCollaborators> {
+    return this.httpClient.post<AssociationProjectCollaborators>(`${this.baseUrl}/collaborators/${id}/projects`, newAssoc);
+  }
+
 }
