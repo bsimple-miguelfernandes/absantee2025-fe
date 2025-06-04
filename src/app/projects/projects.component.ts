@@ -6,18 +6,20 @@ import { AssociationsProjectCollaboratorComponent } from "../associations-projec
 import { ProjectsDataService } from './projects-data.service';
 import { Project } from './project/project';
 import { ProjectCreateComponent } from "./create-project/create-project.component";
+import { ProjectFormComponent } from "./project-form/project-form.component";
 
 @Component({
   selector: 'app-projects',
-  imports: [ProjectsTableComponent, ProjectComponent, AssociationsProjectCollaboratorComponent, ProjectCreateComponent],
+  imports: [ProjectsTableComponent, ProjectComponent, AssociationsProjectCollaboratorComponent, ProjectCreateComponent, ProjectFormComponent],
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.css'
 })
+
 export class ProjectsComponent {
   projectSignalService = inject(ProjectsSignalsService);
   projectSelected = this.projectSignalService.projectSelected;
   projectCollaboratorsSelected = this.projectSignalService.projectCollaboratorSelected;
-  isCreatingProjectSignal = this.projectSignalService.isCreatingProject;
+  isCreatingProjectSignal = this.projectSignalService.isCreatingProjectForm;
   projectCreatedSignal = this.projectSignalService.projectCreated;
 
   projectDataService = inject(ProjectsDataService);
@@ -25,14 +27,14 @@ export class ProjectsComponent {
 
   constructor() {
     this.projectDataService.getProjects().subscribe({
-    next: (projects) => {
-      this.projects.set(projects);
-    },
-    error:(error) => {
-      alert('Error loading projects');
-      console.error('Error loading projects', error);
-    }
-   })
+      next: (projects) => {
+        this.projects.set(projects);
+      },
+      error: (error) => {
+        alert('Error loading projects');
+        console.error('Error loading projects', error);
+      }
+    })
 
     this.projectSignalService.selectProject(undefined);
     this.projectSignalService.selectProjectCollaborators(undefined);
@@ -40,8 +42,8 @@ export class ProjectsComponent {
     effect(() => {
       const projectCreated = this.projectCreatedSignal();
 
-      if(projectCreated){
-        this.projects.update(projects => [...projects, projectCreated]); 
+      if (projectCreated) {
+        this.projects.update(projects => [...projects, projectCreated]);
       }
     })
   }

@@ -20,7 +20,12 @@ export type PeriodDateTimeForm = {
     _finalDate: FormControl<string | null>
 }
 
-export interface PeriodDateTimeString{
+export type PeriodDateForm = {
+    _initDate: FormControl<string | null>,
+    _finalDate: FormControl<string | null>
+}
+
+export interface PeriodDateTimeString {
     _initDate: string,
     _finalDate: string
 }

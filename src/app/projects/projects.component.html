@@ -1,5 +1,3 @@
-
-
 <app-projects-table [projects]="projects()"></app-projects-table>
 
 <p>
@@ -7,18 +5,18 @@
 </p>
 
 @if(!isCreatingProjectSignal()) {
-    <button data-test-id="create-project-button" (click)="projectSignalService.startCreateProject()"> 
-        Criar projeto
-    </button>
+<button data-test-id="create-project-button" (click)="projectSignalService.startCreateProject()">
+    Criar projeto
+</button>
 }
 @else{
-    <app-project-create></app-project-create>
+<app-project-form />
 }
 
 
 @if (projectSelected()) {
-    <app-project></app-project>
+<app-project></app-project>
 }
 @if (projectCollaboratorsSelected()) {
-    <app-associations-project-collaborator [projectId]="projectCollaboratorsSelected()!.id" />
+<app-associations-project-collaborator [projectId]="projectCollaboratorsSelected()!.id" />
 }

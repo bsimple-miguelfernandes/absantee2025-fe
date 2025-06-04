@@ -8,7 +8,6 @@ import { routes } from '../app.routes';
 import { ProjectsDataService } from './projects-data.service';
 import { signal, WritableSignal } from '@angular/core';
 import { ProjectsSignalsService } from './projects-signals.service';
-import { Collaborator } from '../collaborators/collaborator';
 import { CollaboratorDataService } from '../collaborators/collaborator-data.service';
 
 describe('ProjectsComponent', () => {
@@ -20,7 +19,7 @@ describe('ProjectsComponent', () => {
   let projectSelectedSignal: WritableSignal<Project | undefined>;
   let projectCollaboratorsSelectedSignal: WritableSignal<Project | undefined>;
   let mockCollaboratorDataService: jasmine.SpyObj<CollaboratorDataService>;
-  let isCreatingProjectSignal: WritableSignal<boolean>;
+  let isCreatingProjectFormSignal: WritableSignal<boolean>;
   let projectCreatedSignal: WritableSignal<Project | undefined>;
 
   beforeEach(async () => {
@@ -28,13 +27,13 @@ describe('ProjectsComponent', () => {
 
     projectSelectedSignal = signal<Project | undefined>(undefined);
     projectCollaboratorsSelectedSignal = signal<Project | undefined>(undefined);
-    isCreatingProjectSignal = signal<boolean>(false);
+    isCreatingProjectFormSignal = signal<boolean>(false);
     projectCreatedSignal = signal<Project | undefined>(undefined);
     mockProjectSignalService = jasmine.createSpyObj('ProjectsSignalsService', ['selectProject', 'selectProjectCollaborators', 'startCreateProject', 'cancelCreateProject'], {
       projectSelected: projectSelectedSignal,
       projectCollaboratorSelected: projectCollaboratorsSelectedSignal,
-      isCreatingProject: isCreatingProjectSignal,
-      projectCreated : projectCreatedSignal
+      isCreatingProjectForm: isCreatingProjectFormSignal,
+      projectCreated: projectCreatedSignal
     })
 
     mockCollaboratorDataService = jasmine.createSpyObj('CollaboratorDataService', ['getAssociations']);
