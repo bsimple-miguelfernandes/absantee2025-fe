@@ -2,6 +2,7 @@ import { Component, inject, input } from '@angular/core';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
 import { Collaborator } from '../collaborator';
 import { CommonModule } from '@angular/common';
+import { CollaboratorViewModel } from '../collaborator-details/collaborator.viewmodel';
 
 @Component({
   selector: 'app-collaborator-list',
@@ -13,15 +14,15 @@ export class CollaboratorListComponent {
   collaboratorSignalService = inject(CollaboratorSignalService);
   collaborators = input.required<Collaborator[]>();
 
-  onSelectCollaborator(collaborator: Collaborator){
+  onSelectCollaborator(collaborator: CollaboratorViewModel ){
     this.collaboratorSignalService.selectCollaborator(collaborator);
   }
 
-  onSelectCollaboratorHolidays(collaborator: Collaborator){
+  onSelectCollaboratorHolidays(collaborator: CollaboratorViewModel ){
     this.collaboratorSignalService.selectCollaboratorHolidays(collaborator);
   }
 
-  onSelectCollaboratorProjects(collaborator: Collaborator){
+  onSelectCollaboratorProjects(collaborator: CollaboratorViewModel ){
     this.collaboratorSignalService.selectCollaboratorProjects(collaborator);
   }
 }

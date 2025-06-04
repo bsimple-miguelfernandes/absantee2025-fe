@@ -4,6 +4,8 @@ import { CollaboratorSignalService } from '../collaborator-signal.service';
 import { Collaborator, CollaboratorDetailsForm } from '../collaborator';
 import { PeriodDateTimeForm } from '../../PeriodDate';
 import { CollaboratorDataService } from '../collaborator-data.service';
+import { CollaboratorViewModel } from './collaborator.viewmodel';
+import { fromCollaboratorViewModel } from '../mappers/collaborator.mapper';
 
 @Component({
   selector: 'app-collaborator-details',
@@ -65,7 +67,7 @@ export class CollaboratorDetailsComponent {
 
     const formValue = this.form.value;
 
-    const updatedCollaborator: Collaborator = {
+    const updatedCollaboratorVM: CollaboratorViewModel = {
       collabId: this.collaborator()!.collabId,
       userId : this.collaborator()!.userId,
       names: formValue.names,
@@ -80,8 +82,16 @@ export class CollaboratorDetailsComponent {
         _finalDate: new Date(formValue.collaboratorPeriodDateTime._finalDate)
       }
     };
+
+
+
+    const updatedCollaborator = fromCollaboratorViewModel(updatedCollaboratorVM);
+    
+
     this.collaboratorDataService.updateCollaborator(updatedCollaborator).subscribe({
       next: (updated) => {
+
+
         this.collaboratorService.updateCollaborator(updated);
         this.collaboratorService.cancelCreateCollaborator();
         this.form.markAsPristine();

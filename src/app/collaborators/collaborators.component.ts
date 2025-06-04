@@ -9,6 +9,8 @@ import { CollaboratorDataService } from './collaborator-data.service';
 import { Collaborator } from './collaborator';
 import { CollaboratorCreateComponent } from './collaborators-create/collaborator-create.component';
 import { CommonModule } from '@angular/common';
+import { CollaboratorViewModel } from './collaborator-details/collaborator.viewmodel';
+import { toCollaboratorViewModel } from './mappers/collaborator.mapper';
 
 @Component({
   selector: 'app-collaborators',
@@ -35,12 +37,14 @@ export class CollaboratorsComponent {
   selectedCollaboratorHolidays = this.collaboratorSignalService.selectedCollaboratorHoliday;
   selectedCollaboratorProject = this.collaboratorSignalService.selectedCollaboratorProjects;
 
-  collaborators = signal<Collaborator[]>([]);
+  collaborators = signal<CollaboratorViewModel[]>([]);
 
   constructor() {
     this.collaboratorDataService.getCollabs().subscribe({
       next: (collaborators) => {
-        this.collaborators.set(collaborators);
+        const collabVM = collaborators.map(toCollaboratorViewModel)
+
+        this.collaborators.set(collabVM);
       },
       error: (err) => {
         alert('Error loading collaborators');

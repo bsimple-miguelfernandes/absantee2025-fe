@@ -3,11 +3,12 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CollaboratorListComponent } from './collaborator-list.component';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
 import { Collaborator } from '../collaborator';
+import { CollaboratorViewModel } from '../collaborator-details/collaborator.viewmodel';
 
 describe('CollaboratorListComponent', () => {
   let component: CollaboratorListComponent;
   let fixture: ComponentFixture<CollaboratorListComponent>;
-  let collaborators: Collaborator[];
+  let collaborators: CollaboratorViewModel [];
   let mockCollaboratorSignalService: jasmine.SpyObj<CollaboratorSignalService>;
 
   beforeEach(async () => {
@@ -108,7 +109,7 @@ describe('CollaboratorListComponent', () => {
   });
 
   it('should change the table content if new input arrived', () => {
-    const newCollaborators : Collaborator[] = [
+    const newCollaborators : CollaboratorViewModel [] = [
       {
         collabId: "4",
         userId: "4",

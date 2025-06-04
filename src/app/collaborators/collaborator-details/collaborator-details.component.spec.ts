@@ -5,17 +5,18 @@ import { signal, WritableSignal } from '@angular/core';
 import { Collaborator } from '../collaborator';
 import { CollaboratorDataService } from '../collaborator-data.service';
 import { of } from 'rxjs';
+import { CollaboratorViewModel } from './collaborator.viewmodel';
 
 describe('CollaboratorDetailsComponent', () => {
   let component: CollaboratorDetailsComponent;
   let fixture: ComponentFixture<CollaboratorDetailsComponent>;
-  let collaborator: Collaborator;
+  let collaborator: CollaboratorViewModel ;
   let mockCollaboratorSignalService: jasmine.SpyObj<CollaboratorSignalService>;
   let mockCollaboratorDataService: jasmine.SpyObj<CollaboratorDataService>;
-  let selectedSignal: WritableSignal<Collaborator | undefined>;
+  let selectedSignal: WritableSignal<CollaboratorViewModel | undefined>;
 
   beforeEach(async () => {
-    selectedSignal = signal<Collaborator | undefined>(undefined);
+    selectedSignal = signal<CollaboratorViewModel  | undefined>(undefined);
     mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', ['updateCollaborator', 'cancelCreateCollaborator'], {
       selectedCollaborator: selectedSignal
     });
@@ -77,7 +78,7 @@ describe('CollaboratorDetailsComponent', () => {
   });
 
   it('should update form inputs when collaborator input changes', async () => {
-    const newCollaborator : Collaborator = {
+    const newCollaborator : CollaboratorViewModel  = {
       collabId: "2",
       userId: '2',
       names: "Bob",
@@ -130,7 +131,7 @@ describe('CollaboratorDetailsComponent', () => {
   });
 
   it('should call updateCollaborator with form data', async () => {
-    const newCollaborator : Collaborator = {
+    const newCollaborator : CollaboratorViewModel  = {
       collabId: "1",
       userId: '1',
       names: "Bob",
