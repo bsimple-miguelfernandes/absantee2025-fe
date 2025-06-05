@@ -60,10 +60,12 @@ export class CollaboratorDataService {
   }
 
   getAssociations(id: string): Observable<AssociationProjectCollaborators[]> {
-    return this.httpClient.get<AssociationProjectCollaborators[]>(`${this.baseUrl}/collaborators/${id}/associations`);
+    return this.httpClient.get<AssociationProjectCollaboratorsDTO[]>(`${this.baseUrl}/collaborators/${id}/associations`).pipe(
+      map(dtoList => dtoList.map(dto => mapToAssociationProjectCollaborators(dto)))
+    );
   }
 
-  createAssociation(id: string, newAssoc: AssociationCollaboratorProjectCreateRequest): Observable<AssociationProjectCollaboratorsDTO> {
+  createAssociation(id: string, newAssoc: AssociationCollaboratorProjectCreateRequest): Observable<AssociationProjectCollaborators> {
     return this.httpClient.post<AssociationProjectCollaboratorsDTO>(`${this.baseUrl}/collaborators/${id}/projects`, newAssoc).pipe(
       map(dto => mapToAssociationProjectCollaborators(dto))
     );
