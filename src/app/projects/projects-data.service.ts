@@ -36,7 +36,7 @@ export class ProjectsDataService {
   }
 
   createAssociation(id: string, newAssoc: AssociationProjectCollaboratorCreateRequest): Observable<AssociationProjectCollaboratorsDTO> {
-    return this.http.post<AssociationProjectCollaborators>(`${this.baseUrl}/Project/${id}/collaborators`, newAssoc).pipe(
+    return this.http.post<AssociationProjectCollaboratorsDTO>(`${this.baseUrl}/Project/${id}/collaborators`, newAssoc).pipe(
       map(dto => mapToAssociationProjectCollaborators(dto))
     );;
   }

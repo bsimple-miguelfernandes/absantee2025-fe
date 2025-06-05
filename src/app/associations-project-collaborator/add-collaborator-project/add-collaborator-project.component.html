@@ -32,5 +32,5 @@
         </div>
     </fieldset>
     <button type="submit">Create Association</button>
-    <button type="button" (click)="onCancel()">Cancel</button>
+    <button type="button" [disabled]="form.invalid" (click)="onCancel()">Cancel</button>
 </form>
