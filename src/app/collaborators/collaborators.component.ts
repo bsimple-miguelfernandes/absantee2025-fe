@@ -11,18 +11,18 @@ import { CollaboratorCreateComponent } from './collaborators-create/collaborator
 import { CommonModule } from '@angular/common';
 import { CollaboratorViewModel } from './collaborator-details/collaborator.viewmodel';
 import { toCollaboratorViewModel } from './mappers/collaborator.mapper';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-collaborators',
   standalone: true,
   imports: [
     CommonModule,
-    CollaboratorDetailsComponent,
     CollaboratorListComponent,
-    CollaboratorsBulletsComponent,
     CollaboratorHolidaysComponent,
     AssociationsProjectCollaboratorComponent,
-    CollaboratorCreateComponent
+    CollaboratorCreateComponent,
+    RouterOutlet
   ],
   templateUrl: './collaborators.component.html',
   styleUrls: ['./collaborators.component.css']

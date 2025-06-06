@@ -8,10 +8,11 @@ import { ProjectComponent } from "../projects/project/project.component";
 import { DatePipe } from '@angular/common';
 import { AssociationProjectCollaborators } from './association-project-collaborator.model';
 import { AddCollaboratorProjectComponent } from "./add-collaborator-project/add-collaborator-project.component";
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-associations-project-collaborator',
-  imports: [CollaboratorDetailsComponent, ProjectComponent, DatePipe, AddCollaboratorProjectComponent],
+  imports: [ProjectComponent, DatePipe, AddCollaboratorProjectComponent, RouterOutlet],
   templateUrl: './associations-project-collaborator.component.html',
   styleUrl: './associations-project-collaborator.component.css'
 })

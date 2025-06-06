@@ -35,20 +35,9 @@ export class CollaboratorDataService {
     return this.httpClient.put<Collaborator>(`${this.baseUrl}/collaborators`, updatedCollaborator);
   }
 
-  getCollaboratorHolidays(collaboratorId: string): Observable<HolidayPeriod[]> {
+  getCollaboratorHolidays(collaboratorId: string): Observable<HolidayPeriodDTO[]> {
     return this.httpClient
-      .get<HolidayPeriodDTO[]>(`${this.baseUrl}/collaborators/${collaboratorId}/holidayplan/holidayperiod`)
-      .pipe(
-        map((dtoList) =>
-          dtoList.map(dto => ({
-            id: dto.id,
-            periodDate: {
-              initDate: dto.periodDate.initDate,
-              finalDate: dto.periodDate.finalDate
-            }
-          }) as HolidayPeriod)
-        )
-      );
+      .get<HolidayPeriodDTO[]>(`${this.baseUrl}/collaborators/${collaboratorId}/holidayplan/holidayperiod`);
   }
 
   addHoliday(collabId: string, initDate: string, finalDate: string) {

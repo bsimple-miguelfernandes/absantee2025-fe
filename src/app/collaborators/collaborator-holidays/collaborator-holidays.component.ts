@@ -2,7 +2,7 @@ import { Component, effect, inject } from '@angular/core';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
 import { CollaboratorDataService } from '../collaborator-data.service';
 import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
-import { HolidayPeriod } from './holiday-period';
+import { HolidayPeriod, mapHolidayPeriodDtoToHolidayPeriod } from './holiday-period';
 
 
 function dateRangeValidator(group: AbstractControl): ValidationErrors | null {
@@ -16,6 +16,10 @@ function dateRangeValidator(group: AbstractControl): ValidationErrors | null {
     : { dateRangeInvalid: true };
 }
 
+export enum ButtonType {
+  Edit,
+  Save
+}
 
 @Component({
   selector: 'app-collaborator-holidays',
@@ -32,7 +36,7 @@ export class CollaboratorHolidaysComponent {
   collaboratorHolidays!: HolidayPeriod[];
 
   form = new FormGroup({
-    holidays: new FormArray<FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string>, buttonText: FormControl<string> }>>([])
+    holidays: new FormArray<FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string>, buttonText: FormControl<ButtonType> }>>([])
   });
 
   constructor() {
@@ -40,15 +44,15 @@ export class CollaboratorHolidaysComponent {
       this.collaboratorDataService
       .getCollaboratorHolidays(this.collaboratorHolidaysSelected()!.collabId)
       .subscribe((holidays) => {
-        this.collaboratorHolidays = holidays
+        this.collaboratorHolidays = holidays.map(mapHolidayPeriodDtoToHolidayPeriod);
 
         const holidayControls = this.collaboratorHolidays.map(holiday =>
           new FormGroup({
             initDate: new FormControl(holiday.periodDate.initDate),
             finalDate: new FormControl(holiday.periodDate.finalDate),
-            buttonText: new FormControl("Edit")
+            buttonText: new FormControl(ButtonType.Edit)
           },
-            { validators: dateRangeValidator }) as FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string>, buttonText: FormControl<string> }>
+            { validators: dateRangeValidator }) as FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string>, buttonText: FormControl<ButtonType> }>
         );
 
         this.form.setControl('holidays', new FormArray(holidayControls));
@@ -56,8 +60,12 @@ export class CollaboratorHolidaysComponent {
     })    
   }
 
-  get holidaysForm(): FormArray<FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string>, buttonText: FormControl<string> }>> {
+  get holidaysForm(): FormArray<FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string>, buttonText: FormControl<ButtonType> }>> {
     return this.form.get('holidays') as FormArray;
+  }
+
+  getButtonText(value: ButtonType): string {
+    return ButtonType[value];
   }
 
   private formatDate(date: string): string {
@@ -68,19 +76,18 @@ export class CollaboratorHolidaysComponent {
     if (!this.form.dirty) {
       window.alert("No changes made to this holiday. ");
     }
-    if(this.holidaysForm.length == 0) {
-      
-    } else {
+    if(this.holidaysForm.length > 0) {
       const holidayGroup = this.holidaysForm.at(index);
       if (holidayGroup.valid) {
-        if (index >= this.collaboratorHolidays.length) {
+        if (holidayGroup.value.buttonText == ButtonType.Save) {
           this.collaboratorDataService.addHoliday(this.collaboratorHolidaysSelected()!.collabId,
             holidayGroup.value.initDate!,
             holidayGroup.value.finalDate!)
             .subscribe({
               next: h => {
-                holidayGroup.get('buttonText')?.setValue("Edit"),
-                  console.log(h);
+                holidayGroup.get('buttonText')?.setValue(ButtonType.Edit),
+                console.log(h);
+                this.collaboratorHolidays.push(h);
               },
               error: e => {
                 console.log(e);
@@ -110,8 +117,8 @@ export class CollaboratorHolidaysComponent {
       new FormGroup({
         initDate: new FormControl(this.formatDate(new Date().toDateString())),
         finalDate: new FormControl(this.formatDate(new Date().toDateString())),
-        buttonText: new FormControl("Save")
-      }, { validators: dateRangeValidator }) as FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string>, buttonText: FormControl<string> }>
+        buttonText: new FormControl(ButtonType.Save)
+      }, { validators: dateRangeValidator }) as FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string>, buttonText: FormControl<ButtonType> }>
     );
   }
 }

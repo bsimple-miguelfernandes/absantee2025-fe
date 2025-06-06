@@ -51,7 +51,7 @@
 </table>
 
 @if (projectId() && collaboratorSelected()) {
-<app-collaborator-details />
+<router-outlet></router-outlet>
 }
 
 @if (collaboratorId() && projectSelected()) {
