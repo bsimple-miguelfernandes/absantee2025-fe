@@ -1,26 +1,25 @@
-@if(trainingSubject()) {
     <div class="details-card">
       <h2>Training Subject Details</h2>
 
       <div class="detail-row">
         <span class="label">ID:</span>
-        <span class="value">{{ trainingSubject()?.id }}</span>
+        <span class="value">{{ trainingSubject.id }}</span>
       </div>
 
       <div class="detail-row">
         <span class="label">Subject Name:</span>
-        <span class="value">{{ trainingSubject()?.subject }}</span>
+        <span class="value">{{ trainingSubject.subject }}</span>
       </div>
 
       <div class="detail-row">
         <span class="label">Description:</span>
-        <span class="value">{{ trainingSubject()?.description }}</span>
+        <span class="value">{{ trainingSubject.description }}</span>
       </div>
 
       <div class="actions">
         <button (click)="close()">Close</button>
-        <button (click)="edit(trainingSubject()!)">Edit</button>
+        <button (click)="edit()">Edit</button>
       </div>
     </div>
-  }
+
 

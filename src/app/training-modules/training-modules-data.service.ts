@@ -35,6 +35,10 @@ export class TrainingModuleDataService {
         return this.trainingModule$;
     }
 
+    getTrainingModuleById(id: string): Observable<TrainingModule> {
+        return this.httpClient.get<TrainingModule>(`${this.baseUrl}/trainingModules/${id}`)
+    }
+
     loadTrainingSubjects(){
         this.httpClient.get<TrainingSubject[]>(`${this.baseUrl}/trainingSubjects`).subscribe({
             next: (trainingSubjects) => this.trainingSubjectSubject.next(trainingSubjects),
@@ -44,6 +48,10 @@ export class TrainingModuleDataService {
 
     getTrainingSubjects(): Observable<TrainingSubject[]>{
         return this.trainingSubject$;
+    }
+
+    getTrainingSubjectById(id: string): Observable<TrainingSubject>{
+        return this.httpClient.get<TrainingSubject>(`${this.baseUrl}/trainingSubjects/${id}`)
     }
 
     updateTrainingSubject(trainingSubject: TrainingSubject){

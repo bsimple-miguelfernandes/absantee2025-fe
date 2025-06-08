@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TrainingSubject } from '../training-subjects-list/training-subject';
 import { TrainingModuleDataService } from '../training-modules-data.service';
+import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from '@angular/router';
 
 @Component({
   selector: 'app-training-subject-details',
@@ -13,17 +14,33 @@ import { TrainingModuleDataService } from '../training-modules-data.service';
 })
 export class TrainingSubjectDetailsComponent {
   trainingModuleSignalService = inject(TrainingModuleSignalService);
+
+  private route = inject(ActivatedRoute);
   trainingModuleDataService = inject(TrainingModuleDataService)
 
-  trainingSubject = this.trainingModuleSignalService.selectedTrainingSubject;
+  trainingSubject!: TrainingSubject;
+
+  ngOnInit(){
+    this.route.data.subscribe(data => {
+      this.trainingSubject = data['trainingSubject'];
+    });
+  }
 
   close(){
-    this.trainingModuleSignalService.disableSubjectDetails();
+    history.back();
   }
 
-  edit(trainingSubject: TrainingSubject){
-    this.trainingModuleSignalService.openEditForm(trainingSubject);
-    this.trainingModuleSignalService.disableSubjectDetails();
+  edit(){
+    this.trainingModuleSignalService.openEditForm(this.trainingSubject);
     this.trainingModuleSignalService.cancelCreateSubject();
   }
+}
+
+export const resolverTrainingSubject: ResolveFn<TrainingSubject> = (
+  activatedRoute: ActivatedRouteSnapshot,
+  routerState: RouterStateSnapshot
+) => {
+  const trainingSubjectService = inject(TrainingModuleDataService);
+  const trainingSubject = trainingSubjectService.getTrainingSubjectById(activatedRoute.params['trainingSubjectId'])
+  return trainingSubject;
 }

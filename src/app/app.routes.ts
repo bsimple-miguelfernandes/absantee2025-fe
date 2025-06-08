@@ -5,6 +5,8 @@ import { HomeComponent } from './home/home.component';
 import { CollaboratorsComponent } from './collaborators/collaborators.component';
 import { TrainingModulesComponent } from './training-modules/training-modules.component';
 import { CollaboratorDetailsComponent, resolverCollaborator } from './collaborators/collaborator-details/collaborator-details.component';
+import { resolverTrainingModule, TrainingModuleDetailsComponent } from './training-modules/training-module-details/training-module-details.component';
+import { resolverTrainingSubject, TrainingSubjectDetailsComponent } from './training-modules/training-subject-details/training-subject-details.component';
 
 export const routes: Routes = [
     {
@@ -30,6 +32,22 @@ export const routes: Routes = [
     },
     {
         path: 'training-modules',
-        component: TrainingModulesComponent
+        component: TrainingModulesComponent,
+        children: [
+            {
+                path: ':trainingModuleId',
+                component: TrainingModuleDetailsComponent,
+                resolve: {
+                    trainingModule: resolverTrainingModule
+                }
+            },
+            {
+                path: 'subjects/:trainingSubjectId',
+                component: TrainingSubjectDetailsComponent,
+                resolve: {
+                    trainingSubject: resolverTrainingSubject
+                }
+            }
+        ]
     }
 ];

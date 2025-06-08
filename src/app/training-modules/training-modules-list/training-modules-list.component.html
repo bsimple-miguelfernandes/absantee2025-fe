@@ -9,7 +9,7 @@
         <td>{{trainingModule.id}}</td>
         <td>{{trainingModule.trainingSubjectId}}</td>
         <td>
-            <button (click)="selectTrainingModule(trainingModule)">Details</button>
+            <button [routerLink]='[trainingModule.id]'>Details</button>
         </td>
     </tr>
     }

@@ -4,14 +4,14 @@ import { TrainingModuleDataService } from './training-modules-data.service';
 import { TrainingModule } from './training-module';
 import { TrainingSubjectsListComponent } from './training-subjects-list/training-subjects-list.component';
 import { TrainingSubject } from './training-subjects-list/training-subject';
-import { TrainingModuleDetailsComponent } from "./training-module-details/training-module-details.component";
 import { TrainingSubjectDetailsComponent } from "./training-subject-details/training-subject-details.component";
 import { TrainingModuleSignalService } from './training-modules-signals.service';
 //import { CollaboratorCreateComponent } from "../collaborators/collaborators-create/collaborator-create.component";
 import { TrainingSubjectFormComponent } from "./training-subject-form/training-subject-form.component";
+import { RouterOutlet } from '@angular/router';
 @Component({
   selector: 'app-training-modules',
-  imports: [TrainingModulesListComponent, TrainingSubjectsListComponent, TrainingModuleDetailsComponent, TrainingModuleDetailsComponent, TrainingSubjectDetailsComponent, TrainingSubjectDetailsComponent, TrainingSubjectFormComponent],
+  imports: [TrainingModulesListComponent, TrainingSubjectsListComponent, TrainingSubjectDetailsComponent, TrainingSubjectDetailsComponent, TrainingSubjectFormComponent, RouterOutlet],
   templateUrl: './training-modules.component.html',
   styleUrl: './training-modules.component.css'
 })

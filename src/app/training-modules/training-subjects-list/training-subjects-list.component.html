@@ -8,7 +8,9 @@
       <tr>
         <td>{{trainingSubject.subject}}</td>
         <td>
-          <button (click)="selectTrainingSubject(trainingSubject)">Details</button>
+        <button [routerLink]="['/training-modules', 'subjects', trainingSubject.id]">
+           Details
+        </button>
         </td>
       </tr>
     }
@@ -16,6 +18,7 @@
 </table>
 
 @if (!isCreatingSubject()) {
-    <button (click)="addTrainingSubject()" style="margin-top: 1%;">Add Training Subject</button>
+    <button (click)="addTrainingSubject()"
+    style="margin-top: 1%;">Add Training Subject</button>
 }
 

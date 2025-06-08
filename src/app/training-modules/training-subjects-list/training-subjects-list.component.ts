@@ -1,10 +1,11 @@
 import { Component, inject, input } from '@angular/core';
 import { TrainingSubject } from './training-subject';
 import { TrainingModuleSignalService } from '../training-modules-signals.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-training-subjects-list',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './training-subjects-list.component.html',
   styleUrl: './training-subjects-list.component.css'
 })
@@ -15,9 +16,6 @@ export class TrainingSubjectsListComponent {
 
   trainingSubjects = input.required<TrainingSubject[]>();
 
-  selectTrainingSubject(trainingSubject: TrainingSubject){
-    this.trainingModulesSignalsService.selectTrainingSubject(trainingSubject);
-  }
 
   addTrainingSubject(){
     this.trainingModulesSignalsService.cancelEditSubject();
