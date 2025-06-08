@@ -27,5 +27,9 @@ export const routes: Routes = [
                 }
             }
         ]
+    },
+    {
+        path: 'training-modules',
+        component: TrainingModulesComponent
     }
 ];

@@ -9,7 +9,6 @@ import { TrainingSubjectDetailsComponent } from "./training-subject-details/trai
 import { TrainingModuleSignalService } from './training-modules-signals.service';
 //import { CollaboratorCreateComponent } from "../collaborators/collaborators-create/collaborator-create.component";
 import { TrainingSubjectFormComponent } from "./training-subject-form/training-subject-form.component";
-
 @Component({
   selector: 'app-training-modules',
   imports: [TrainingModulesListComponent, TrainingSubjectsListComponent, TrainingModuleDetailsComponent, TrainingModuleDetailsComponent, TrainingSubjectDetailsComponent, TrainingSubjectDetailsComponent, TrainingSubjectFormComponent],
@@ -25,7 +24,7 @@ export class TrainingModulesComponent {
   trainingModules: TrainingModule[] = [];
   trainingSubjects: TrainingSubject[] = [];
 
-  constructor(){
+  constructor() {
     this.trainingModuleDataService.getTrainingModules().subscribe({
       next: (trainingModules) => {
         this.trainingModules = trainingModules;
@@ -42,34 +41,34 @@ export class TrainingModulesComponent {
       },
       error: (err) => {
         alert('Error loading training subjects');
-        console.error('Error loading training subjects' , err);
+        console.error('Error loading training subjects', err);
       }
     });
 
-     effect(() => {
-        const updatedSubject = this.subjectUpdated();
-        if(updatedSubject){
-          this.trainingModuleDataService.updateTrainingSubject(updatedSubject).subscribe({
-            next: (updatedSubject) => {
-              this.trainingSubjects = this.trainingSubjects.map(subject => 
-                subject.id === updatedSubject.id ? updatedSubject : subject
-              );
-            },
-            error: (err) => console.error('Errors updating training subject', err)
-          });
-        }
+    effect(() => {
+      const updatedSubject = this.subjectUpdated();
+      if (updatedSubject) {
+        this.trainingModuleDataService.updateTrainingSubject(updatedSubject).subscribe({
+          next: (updatedSubject) => {
+            this.trainingSubjects = this.trainingSubjects.map(subject =>
+              subject.id === updatedSubject.id ? updatedSubject : subject
+            );
+          },
+          error: (err) => console.error('Errors updating training subject', err)
+        });
+      }
 
-         const createdSubject = this.subjectCreated();
-         if (createdSubject){
-          this.trainingModuleDataService.addTrainingSubject(createdSubject).subscribe({
-            next: (createdSubject) => {
+      const createdSubject = this.subjectCreated();
+      if (createdSubject) {
+        this.trainingModuleDataService.addTrainingSubject(createdSubject).subscribe({
+          next: (createdSubject) => {
             this.trainingSubjects = [...this.trainingSubjects, createdSubject];
-            },
-            error: (err) => console.error('Error adding training subject', err)
-          });
-         }
-      });
-      
+          },
+          error: (err) => console.error('Error adding training subject', err)
+        });
+      }
+    });
+
 
   }
 }
