@@ -3,24 +3,30 @@ import { CollaboratorDetailsComponent } from './collaborator-details.component';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
 import { signal, WritableSignal } from '@angular/core';
 import { Collaborator } from '../collaborator';
+import { CollaboratorDataService } from '../collaborator-data.service';
+import { of } from 'rxjs';
+import { CollaboratorViewModel } from './collaborator.viewmodel';
 
 describe('CollaboratorDetailsComponent', () => {
   let component: CollaboratorDetailsComponent;
   let fixture: ComponentFixture<CollaboratorDetailsComponent>;
-  let collaborator: Collaborator;
+  let collaborator: CollaboratorViewModel ;
   let mockCollaboratorSignalService: jasmine.SpyObj<CollaboratorSignalService>;
-  let selectedSignal: WritableSignal<Collaborator | undefined>;
+  let mockCollaboratorDataService: jasmine.SpyObj<CollaboratorDataService>;
+  let selectedSignal: WritableSignal<CollaboratorViewModel | undefined>;
 
   beforeEach(async () => {
-    selectedSignal = signal<Collaborator | undefined>(undefined);
-    mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', ['updateCollaborator'], {
+    selectedSignal = signal<CollaboratorViewModel  | undefined>(undefined);
+    mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', ['updateCollaborator', 'cancelCreateCollaborator'], {
       selectedCollaborator: selectedSignal
     });
+    mockCollaboratorDataService = jasmine.createSpyObj('CollaboratorDataService',  ['updateCollaborator']);
 
     await TestBed.configureTestingModule({
       imports: [CollaboratorDetailsComponent],
       providers: [
-        { provide: CollaboratorSignalService, useValue: mockCollaboratorSignalService }
+        { provide: CollaboratorSignalService, useValue: mockCollaboratorSignalService },
+        { provide: CollaboratorDataService, useValue: mockCollaboratorDataService }
       ]
     }).compileComponents();
 
@@ -72,7 +78,7 @@ describe('CollaboratorDetailsComponent', () => {
   });
 
   it('should update form inputs when collaborator input changes', async () => {
-    const newCollaborator : Collaborator = {
+    const newCollaborator : CollaboratorViewModel  = {
       collabId: "2",
       userId: '2',
       names: "Bob",
@@ -110,15 +116,75 @@ describe('CollaboratorDetailsComponent', () => {
   });
 
   it('should call updateCollaborator when form is submitted', () => {
-  const emailControl = component.form.get('email')!;
-  emailControl.setValue('email-changed@test.com');
-  emailControl.markAsDirty();
+    const emailControl = component.form.get('email')!;
+    emailControl.setValue('email-changed@test.com');
+    emailControl.markAsDirty();
 
-  component.onSubmit();
+    const updatedCollaborator = collaborator;
+    updatedCollaborator.email = 'email-changed@test.com';
 
-  expect(mockCollaboratorSignalService.updateCollaborator).toHaveBeenCalledOnceWith(jasmine.objectContaining({
-      email: 'email-changed@test.com'
+    mockCollaboratorDataService.updateCollaborator.and.returnValue(of(updatedCollaborator));
+    component.onSubmit();
+
+    expect(mockCollaboratorSignalService.updateCollaborator).toHaveBeenCalledOnceWith(updatedCollaborator);
+    expect(mockCollaboratorSignalService.cancelCreateCollaborator).toHaveBeenCalledOnceWith();
+  });
+
+  it('should call updateCollaborator with form data', async () => {
+    const newCollaborator : CollaboratorViewModel  = {
+      collabId: "1",
+      userId: '1',
+      names: "Bob",
+      surnames: "Martinez",
+      email: "bob.martinez@example.com",
+      userPeriod:{
+        _initDate: new Date(2021, 1, 1),
+        _finalDate: new Date(2024, 6, 30)
+      },
+      collaboratorPeriod: {
+        _initDate: new Date(2021, 1, 1),
+        _finalDate: new Date(2024, 6, 30)
+      }
+    };
+
+    selectedSignal.set(collaborator);
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    component.form.patchValue(newCollaborator);
+    component.form.markAsDirty();
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    mockCollaboratorDataService.updateCollaborator.and.returnValue(of(newCollaborator));
+    component.onSubmit();
+
+    expect(mockCollaboratorDataService.updateCollaborator).toHaveBeenCalledWith(jasmine.objectContaining({
+      names: 'Bob',
+      surnames: 'Martinez',
+      email: 'bob.martinez@example.com',
+      userPeriod: {
+        _initDate: new Date('2020-01-01'),
+        _finalDate: new Date('2025-12-31'),
+      },
+      collaboratorPeriod: {
+        _initDate: new Date('2020-02-01'),
+        _finalDate: new Date('2024-11-30'),
+      }
     }));
   });
- 
+
+  it('should not make any calls if form isn\'t dirty', () => {
+    const emailControl = component.form.get('email')!;
+    emailControl.setValue('email-changed@test.com');
+
+    const updatedCollaborator = collaborator;
+    updatedCollaborator.email = 'email-changed@test.com';
+
+    mockCollaboratorDataService.updateCollaborator.and.returnValue(of(updatedCollaborator));
+    component.onSubmit();
+
+    expect(mockCollaboratorSignalService.updateCollaborator).toHaveBeenCalledTimes(0);
+    expect(mockCollaboratorSignalService.cancelCreateCollaborator).toHaveBeenCalledTimes(0);
+  });
 });

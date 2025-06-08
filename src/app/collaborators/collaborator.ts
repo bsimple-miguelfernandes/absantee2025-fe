@@ -1,4 +1,5 @@
-import { PeriodDateTime } from "../PeriodDate";
+import { FormControl, FormGroup } from "@angular/forms";
+import { PeriodDateTime, PeriodDateTimeForm } from "../PeriodDate";
 
 export interface Collaborator {
     collabId: string,
@@ -8,4 +9,12 @@ export interface Collaborator {
     email : string,
     userPeriod : PeriodDateTime
     collaboratorPeriod : PeriodDateTime
+}
+
+export type CollaboratorDetailsForm = {
+    names: FormControl<string | null>,
+    surnames: FormControl<string | null>,
+    email: FormControl<string | null>,
+    userPeriodDateTime: FormGroup<PeriodDateTimeForm>,
+    collaboratorPeriodDateTime: FormGroup<PeriodDateTimeForm>
 }

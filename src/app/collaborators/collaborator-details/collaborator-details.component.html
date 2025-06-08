@@ -10,18 +10,18 @@
 
   <div formGroupName="userPeriodDateTime" class="period-group">
     <label for="userInitDate">User Start Date</label>
-    <input type="date" id="userInitDate" formControlName="userInitDate"/>
+    <input type="date" id="userInitDate" formControlName="_initDate"/>
 
     <label for="userEndDate">User End Date</label>
-    <input type="date" id="userEndDate" formControlName="userEndDate" />
+    <input type="date" id="userEndDate" formControlName="_finalDate" />
   </div>
 
   <div formGroupName="collaboratorPeriodDateTime" class="period-group">
     <label for="collabInitDate">Collaborator Start Date</label>
-    <input type="date" id="collabInitDate" formControlName="collabInitDate"/>
+    <input type="date" id="collabInitDate" formControlName="_initDate"/>
 
     <label for="collabEndDate">Collaborator End Date</label>
-    <input type="date" id="collabEndDate" formControlName="collabEndDate" />
+    <input type="date" id="collabEndDate" formControlName="_finalDate" />
   </div>
 
   <button class="button">Save</button>

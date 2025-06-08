@@ -1,5 +1,8 @@
 import { Injectable, signal } from '@angular/core';
 import { Collaborator } from './collaborator';
+import { CollaboratorCreateRequest } from './collaborators-create/create-collaborator';
+import { AssociationProjectCollaborators } from '../associations-project-collaborator/association-project-collaborator.model';
+import { CollaboratorViewModel } from './collaborator-details/collaborator.viewmodel';
 
 @Injectable({
   providedIn: 'root'
@@ -7,16 +10,16 @@ import { Collaborator } from './collaborator';
 export class CollaboratorSignalService {
   //private httpClient = inject(HttpClient);
 
-  private updateCollaboratorSignal = signal<Collaborator | undefined>(undefined);
+  private updateCollaboratorSignal = signal<CollaboratorViewModel | undefined>(undefined);
   readonly updatedCollaborator = this.updateCollaboratorSignal.asReadonly();
 
-  private selectedCollaboratorSignal = signal<Collaborator | undefined>(undefined);
+  private selectedCollaboratorSignal = signal<CollaboratorViewModel | undefined>(undefined);
   readonly selectedCollaborator = this.selectedCollaboratorSignal.asReadonly();
 
-  private selectedCollaboratorHolidaysSignal = signal<Collaborator | undefined>(undefined);
+  private selectedCollaboratorHolidaysSignal = signal<CollaboratorViewModel | undefined>(undefined);
   readonly selectedCollaboratorHoliday = this.selectedCollaboratorHolidaysSignal.asReadonly();
 
-  private selectedCollaboratorProjectsSignal = signal<Collaborator | undefined>(undefined);
+  private selectedCollaboratorProjectsSignal = signal<CollaboratorViewModel | undefined>(undefined);
   readonly selectedCollaboratorProjects = this.selectedCollaboratorProjectsSignal.asReadonly();
 
   private selectedCollaboratorTrainingModulesSignal = signal<Collaborator | undefined>(undefined);
@@ -24,17 +27,29 @@ export class CollaboratorSignalService {
 
   private isCreatingCollaboratorSignal = signal(false);
   readonly isCreatingCollaborator = this.isCreatingCollaboratorSignal.asReadonly();
-  
 
-  // getCollaboratorsIds(): Observable<string[]> {
-  //   return this.httpClient.get<string[]>('https://localhost:7271/api/collaborators/');
-  // }
+  private createdCollaboratorSignal = signal<CollaboratorViewModel | undefined>(undefined);
+  readonly createdCollaborator = this.createdCollaboratorSignal.asReadonly();
 
-  // getCollaboratorById(id: string): Observable<Collaborator> {
-  //   return this.httpClient.get<Collaborator>('https://localhost:7271/api/collaborators/' + id);
-  // }
+  private isCreatingAssociationSignal = signal(false);
+  readonly isCreatingAssociation = this.isCreatingAssociationSignal.asReadonly();
 
-  updateCollaborator(updated: Collaborator) {
+  private createdAssociationSignal = signal<AssociationProjectCollaborators | undefined>(undefined);
+  readonly createdAssociation = this.createdAssociationSignal.asReadonly();
+
+  startCreateAssociation() {
+    this.isCreatingAssociationSignal.set(true);
+  }
+
+  cancelCreateAssociation() {
+    this.isCreatingAssociationSignal.set(false);
+  }
+
+  createAssociation(assoc: AssociationProjectCollaborators) {
+    this.createdAssociationSignal.set(assoc);
+  }
+
+  updateCollaborator(updated: CollaboratorViewModel) {
     this.updateCollaboratorSignal.set(updated);
   }
 
@@ -42,32 +57,33 @@ export class CollaboratorSignalService {
     this.isCreatingCollaboratorSignal.set(true);
   }
 
+  createCollaborator(create: CollaboratorViewModel) {
+    this.createdCollaboratorSignal.set(create)
+  }
+
   cancelCreateCollaborator() {
     this.isCreatingCollaboratorSignal.set(false);
   }
 
-  selectCollaborator(selected: Collaborator | undefined){
-    this.selectedCollaboratorTrainingModulesSignal.set(undefined);
+  selectCollaborator(selected: CollaboratorViewModel | undefined) {
     this.selectedCollaboratorHolidaysSignal.set(undefined);
     this.selectedCollaboratorProjectsSignal.set(undefined);
     this.selectedCollaboratorSignal.set(selected);
   }
 
-  selectCollaboratorHolidays(selected: Collaborator | undefined){
-    this.selectedCollaboratorTrainingModulesSignal.set(undefined);
+  selectCollaboratorHolidays(selected: CollaboratorViewModel | undefined) {
     this.selectedCollaboratorSignal.set(undefined);
     this.selectedCollaboratorProjectsSignal.set(undefined);
     this.selectedCollaboratorHolidaysSignal.set(selected);
   }
 
-  selectCollaboratorProjects(selected: Collaborator | undefined){
-    this.selectedCollaboratorTrainingModulesSignal.set(undefined);
+  selectCollaboratorProjects(selected: CollaboratorViewModel | undefined) {
     this.selectedCollaboratorSignal.set(undefined);
     this.selectedCollaboratorHolidaysSignal.set(undefined);
     this.selectedCollaboratorProjectsSignal.set(selected);
   }
 
-  selectCollaboratorTrainingModules(selected: Collaborator | undefined){
+  selectCollaboratorTrainingModules(selected: Collaborator | undefined) {
     this.selectedCollaboratorTrainingModulesSignal.set(selected);
     this.selectedCollaboratorSignal.set(undefined);
     this.selectedCollaboratorHolidaysSignal.set(undefined);

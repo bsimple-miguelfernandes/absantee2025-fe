@@ -8,7 +8,6 @@ import { routes } from '../app.routes';
 import { ProjectsDataService } from './projects-data.service';
 import { signal, WritableSignal } from '@angular/core';
 import { ProjectsSignalsService } from './projects-signals.service';
-import { Collaborator } from '../collaborators/collaborator';
 import { CollaboratorDataService } from '../collaborators/collaborator-data.service';
 
 describe('ProjectsComponent', () => {
@@ -20,15 +19,28 @@ describe('ProjectsComponent', () => {
   let projectSelectedSignal: WritableSignal<Project | undefined>;
   let projectCollaboratorsSelectedSignal: WritableSignal<Project | undefined>;
   let mockCollaboratorDataService: jasmine.SpyObj<CollaboratorDataService>;
+  let isCreatingProjectFormSignal: WritableSignal<boolean>;
+  let isEditingProjectFormSignal: WritableSignal<Project | undefined>;
+  let projectCreatedSignal: WritableSignal<Project | undefined>;
+  let projectUpdatedSignal: WritableSignal<Project | undefined>;
 
   beforeEach(async () => {
     mockProjectsDataService = jasmine.createSpyObj('ProjectsDataService', ['getProjects', 'getAssociations']);
 
     projectSelectedSignal = signal<Project | undefined>(undefined);
     projectCollaboratorsSelectedSignal = signal<Project | undefined>(undefined);
-    mockProjectSignalService = jasmine.createSpyObj('ProjectsSignalsService', ['selectProject', 'selectProjectCollaborators'], {
+    isCreatingProjectFormSignal = signal<boolean>(false);
+    isEditingProjectFormSignal = signal<Project | undefined>(undefined);
+    projectCreatedSignal = signal<Project | undefined>(undefined);
+    projectUpdatedSignal = signal<Project | undefined>(undefined);
+    mockProjectSignalService = jasmine.createSpyObj('ProjectsSignalsService', ['selectProject', 'selectProjectCollaborators', 'startCreateProject', 'cancelCreateProject'], {
       projectSelected: projectSelectedSignal,
-      projectCollaboratorSelected: projectCollaboratorsSelectedSignal
+      projectCollaboratorSelected: projectCollaboratorsSelectedSignal,
+      isCreatingProjectForm: isCreatingProjectFormSignal,
+      isEditingProjectForm: isEditingProjectFormSignal,
+      projectCreated: projectCreatedSignal,
+      projectUpdated: projectUpdatedSignal
+
     })
 
     mockCollaboratorDataService = jasmine.createSpyObj('CollaboratorDataService', ['getAssociations']);
@@ -125,5 +137,25 @@ describe('ProjectsComponent', () => {
     fixture.detectChanges();
     const associations = fixture.nativeElement.querySelector('app-associations-project-collaborator');
     expect(associations).not.toBeNull();
+  });
+
+  it('should update projects list when projectCreatedSignal changes', () => {
+    const project: Project = {
+      id: '3',
+      title: 'Test 3',
+      acronym: 'T3',
+      periodDate: {
+        initDate: new Date(2020, 1, 1),
+        finalDate: new Date(2021, 1, 1)
+      }
+    };
+
+    projectCreatedSignal.set(project);
+
+    fixture.detectChanges();
+
+    const projectList = [...projects, project];
+
+    expect(component.projects()).toEqual(projectList);
   });
 });

@@ -1,0 +1,36 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div>
+        @if (projectId()) {
+        <label>
+            Collaborator:
+            <input type="text" formControlName="collaboratorId" />
+        </label>
+        } @else if (collaboratorId()) {
+        <label>
+            Project:
+            <input type="text" formControlName="projectId" />
+        </label>
+        }
+    </div>
+    <fieldset formGroupName="periodDate">
+        @if (collaboratorId()) {
+        <legend>Collaborator Period</legend>
+        } @else if(projectId()) {
+        <legend>Project Period</legend>
+        }
+        <div>
+            <label>
+                Init Date:
+                <input type="date" formControlName="initDate" />
+            </label>
+        </div>
+        <div>
+            <label>
+                Final Date:
+                <input type="date" formControlName="finalDate" />
+            </label>
+        </div>
+    </fieldset>
+    <button type="submit">Create Association</button>
+    <button type="button" [disabled]="form.invalid" (click)="onCancel()">Cancel</button>
+</form>

@@ -5,6 +5,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
 import { CollaboratorDataService } from '../collaborator-data.service';
 import { of, throwError } from 'rxjs';
+import { Collaborator } from '../collaborator';
+import { CollaboratorViewModel } from '../collaborator-details/collaborator.viewmodel';
 
 describe('CollaboratorCreateComponent', () => {
   let component: CollaboratorCreateComponent;
@@ -16,7 +18,7 @@ describe('CollaboratorCreateComponent', () => {
   beforeEach(async () => {
     // Criação de versões "falsas" (spies) dos serviços com os métodos necessários espiados
     mockDataService = jasmine.createSpyObj('CollaboratorDataService', ['createCollaborator']);
-    mockSignalService = jasmine.createSpyObj('CollaboratorSignalService', ['cancelCreateCollaborator']);
+    mockSignalService = jasmine.createSpyObj('CollaboratorSignalService', ['createCollaborator', 'cancelCreateCollaborator']);
 
     // Configuração do ambiente de teste com o componente e suas dependências
     await TestBed.configureTestingModule({
@@ -51,12 +53,17 @@ describe('CollaboratorCreateComponent', () => {
   // Testa o envio do formulário com valores válidos
   it('should call createCollaborator with correct data on submit', fakeAsync(() => {
     const today = new Date();
-    const mockResponse = {
+    const mockResponse : CollaboratorViewModel  = {
+      collabId: '1',
+      userId: '1',
       names: 'John',
       surnames: 'Doe',
       email: 'john.doe@example.com',
-      deactivationDate: today,
-      periodDateTime: {
+      collaboratorPeriod: {
+        _initDate: today,
+        _finalDate: today
+      },
+      userPeriod: {
         _initDate: today,
         _finalDate: today
       }
@@ -107,7 +114,7 @@ describe('CollaboratorCreateComponent', () => {
     // Simula erro da API
     mockDataService.createCollaborator.and.returnValue(throwError(() => new Error('API error')));
 
-    // Espiona o console para verificar se o erro é logado
+    // Espia o consola para verificar se o erro é logado
     spyOn(console, 'error');
     component.onSubmit();
     tick();
@@ -117,7 +124,7 @@ describe('CollaboratorCreateComponent', () => {
 
   // Testa se o formulário é resetado e o cancelamento emitido ao cancelar
   it('should reset form and call cancel on cancel', () => {
-    spyOn(component.form, 'reset'); // Espiona o método reset do formulário
+    spyOn(component.form, 'reset'); // Espia o método reset do formulário
     component.onCancel();
 
     expect(component.form.reset).toHaveBeenCalled();

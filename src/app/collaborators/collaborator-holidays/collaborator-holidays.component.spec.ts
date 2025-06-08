@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CollaboratorHolidaysComponent } from './collaborator-holidays.component';
-import { signal, WritableSignal } from '@angular/core';
+import { DebugElement, signal, WritableSignal } from '@angular/core';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
 import { CollaboratorDataService } from '../collaborator-data.service';
 import { HolidayPeriod } from './holiday-period';
@@ -23,7 +23,11 @@ describe('CollaboratorHolidaysComponent', () => {
     mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', [], {
       selectedCollaboratorHoliday: selectedCollaboratorHolidaysSignal
     });
-    mockCollabotadorDataService = jasmine.createSpyObj('CollaboratorDataService', ['getCollaboratorHolidays']);
+    mockCollabotadorDataService = jasmine.createSpyObj('CollaboratorDataService', [
+      'getCollaboratorHolidays',
+      'editHoliday',
+      'addHoliday'
+    ]);
     await TestBed.configureTestingModule({
       imports: [CollaboratorHolidaysComponent],
       providers: [
@@ -34,21 +38,21 @@ describe('CollaboratorHolidaysComponent', () => {
       .compileComponents();
 
     collaboratorHolidays = [
-        {
-          id: "1",
-          periodDate: {
-            initDate: "2020-01-01",
-            finalDate: "2020-01-10"
-          }
-        },
-        {
-          id: "2",
-          periodDate: {
-            initDate:"2020-12-01",
-            finalDate: "2020-12-10"
-          }
+      {
+        id: "1",
+        periodDate: {
+          initDate: "2020-01-01",
+          finalDate: "2020-01-10"
         }
-      ];
+      },
+      {
+        id: "2",
+        periodDate: {
+          initDate: "2020-12-01",
+          finalDate: "2020-12-10"
+        }
+      }
+    ];
 
     mockCollabotadorDataService.getCollaboratorHolidays.and.returnValue(of(collaboratorHolidays));
 
@@ -72,12 +76,14 @@ describe('CollaboratorHolidaysComponent', () => {
 
     fixture = TestBed.createComponent(CollaboratorHolidaysComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();  });
+    fixture.detectChanges();
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
+  //ui changes and actions
   it('should display the name and surname of selected collaborator', () => {
     const title = fixture.nativeElement.querySelector("h1").textContent;
 
@@ -112,4 +118,78 @@ describe('CollaboratorHolidaysComponent', () => {
 
     expect(fixture.debugElement.queryAll(By.css('tr')).length).toBe(prevCount + 1);
   });
+
+  it('added elements have a \'save\' button', () => {
+    const button: HTMLElement = fixture.nativeElement.querySelector('[data-testid="add-btn"]');
+    button.click();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelectorAll('button')[2].textContent).toBe(' Save ');
+  });
+
+  it('should call window.alert when edit button is pressed and form wasnt changed', () => {
+    spyOn(window, 'alert');
+    const button: HTMLElement = fixture.debugElement.query(By.css('button')).nativeElement;
+    button.click();
+    fixture.detectChanges();
+
+    expect(window.alert).toHaveBeenCalledOnceWith("No changes made to this holiday. ");
+  });
+
+  it('should call window.alert when edit button is pressed and init date is after final date', () => {
+    spyOn(window, 'alert');
+
+    // Set invalid data in the form DOM element
+    const inputs = fixture.debugElement.queryAll(By.css('input'));
+
+    const initDateInput: HTMLInputElement = inputs[0].nativeElement;
+
+    initDateInput.value = '2022-12-31';
+    initDateInput.dispatchEvent(new Event('input'));
+
+    fixture.detectChanges();
+
+    // Click the Edit button
+    const button: HTMLElement = fixture.debugElement.query(By.css('button')).nativeElement;
+    button.click();
+
+    expect(window.alert).toHaveBeenCalledOnceWith("Final Date must be after Innit Date");
+  });
+
+  //service calls
+  it('should call dataService.editHoliday when edit button is pressed and form was altered', () => {
+    component.form.markAsDirty();
+    const button: HTMLElement = fixture.debugElement.query(By.css('button')).nativeElement;
+    button.click();
+    fixture.detectChanges();
+
+    expect(mockCollabotadorDataService.editHoliday).toHaveBeenCalled();
+  });
+
+  it('should call dataService.addHoliday when save button is pressed and form was altered', () => {
+    component.form.markAsDirty();
+    const button: HTMLElement = fixture.debugElement.queryAll(By.css('button'))[2].nativeElement;
+    button.click();
+    fixture.detectChanges();
+
+    const inputs = fixture.debugElement.queryAll(By.css('input'));
+
+    const initDateInput: HTMLInputElement = inputs[collaboratorHolidays.length * 2 - 1].nativeElement;
+    const finalDateInput: HTMLInputElement = inputs[collaboratorHolidays.length * 2].nativeElement;
+
+    initDateInput.value = '2022-12-31';
+    initDateInput.dispatchEvent(new Event('input'));
+
+    finalDateInput.value = '2023-12-31';
+    finalDateInput.dispatchEvent(new Event('input'));
+
+    fixture.detectChanges();
+
+    // Click the Edit button
+    const saveButton: HTMLElement = fixture.debugElement.queryAll(By.css('button'))[2].nativeElement;
+    saveButton.click();
+
+    expect(mockCollabotadorDataService.addHoliday).toHaveBeenCalled();
+  });
+
 });

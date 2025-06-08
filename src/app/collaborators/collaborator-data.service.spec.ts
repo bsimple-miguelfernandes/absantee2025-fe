@@ -1,4 +1,4 @@
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { CollaboratorDataService } from './collaborator-data.service';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
@@ -23,13 +23,11 @@ describe('CollaboratorDataService', () => {
     });
     service = TestBed.inject(CollaboratorDataService);
     httpMock = TestBed.inject(HttpTestingController);
-
-    httpMock.expectOne(`${baseUrl}/collaborators/details`).flush([]);
   });
 
   afterEach(() => httpMock.verify());
 
-  it('should fetch all collaborators', fakeAsync(() => {
+  it('should fetch all collaborators', (() => {
     const mockCollaborators: Collaborator[] = [
       {
         collabId: '1',
@@ -52,14 +50,16 @@ describe('CollaboratorDataService', () => {
     let result: Collaborator[] = [];
     
     service.getCollabs().subscribe(r => (result = r));
-    service['collaboratorSubject'].next(mockCollaborators);
+    
+    const req = httpMock.expectOne(`${baseUrl}/collaborators/details`);
+    expect(req.request.method).toBe('GET');
+    req.flush(mockCollaborators);
 
-
-    tick();
+    
     expect(result).toEqual(mockCollaborators);
   }));
 
-  it('should fetch collaborator by the id', fakeAsync(() => {
+  it('should fetch collaborator by the id', (() => {
     const collabId = '1';
     const mockCollaborator: Collaborator = {
       collabId: collabId,
@@ -85,11 +85,11 @@ describe('CollaboratorDataService', () => {
     expect(req.request.method).toBe('GET');
     req.flush(mockCollaborator);
 
-    tick();
+    
     expect(result).toEqual(mockCollaborator);
   }));
 
-  it('should create collaborator given a request object', fakeAsync(() => {
+    it('should create collaborator given a request object', (() => {
     const mockCollaboratorCreateRequest: CollaboratorCreateRequest = {
       names: "John",
       surnames: "Doe",
@@ -101,22 +101,31 @@ describe('CollaboratorDataService', () => {
       }
     };
 
-    let result: CollaboratorCreateRequest | undefined;
+    const createdCollaborator: Collaborator = {
+      collabId: '1',
+      userId: '1',
+      names: mockCollaboratorCreateRequest.names,
+      surnames: mockCollaboratorCreateRequest.surnames,
+      email: mockCollaboratorCreateRequest.email,
+      collaboratorPeriod: mockCollaboratorCreateRequest.periodDateTime,
+      userPeriod: mockCollaboratorCreateRequest.periodDateTime
+    }
+
+    let result: Collaborator | undefined;
     service.createCollaborator(mockCollaboratorCreateRequest).subscribe(p => (result = p));
 
     const req = httpMock.expectOne(`${baseUrl}/collaborators`);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(mockCollaboratorCreateRequest);
 
-    req.flush(mockCollaboratorCreateRequest);
+    req.flush(createdCollaborator);
 
-    httpMock.expectOne(`${baseUrl}/collaborators/details`).flush([]);
-
-    tick();
-    expect(result).toEqual(mockCollaboratorCreateRequest);
+    
+    expect(result).toEqual(createdCollaborator);
   }));
 
-  it('should update a collaborator when passing a collaborator with existing id', fakeAsync(() => {
+
+  it('should update a collaborator when passing a collaborator with existing id', (() => {
     const mockCollaborator: Collaborator = {
       collabId: '1',
       userId: '1',
@@ -142,13 +151,10 @@ describe('CollaboratorDataService', () => {
 
     req.flush(mockCollaborator);
 
-    httpMock.expectOne(`${baseUrl}/collaborators/details`).flush([]);
-
-    tick();
     expect(result).toEqual(mockCollaborator);
   }));
 
-  it("should fetch collaborator's holiday periods", fakeAsync(() => {
+  it("should fetch collaborator's holiday periods", (() => {
     const collab = '1';
     const mockHolidayPeriods: HolidayPeriod[] = [
       {
@@ -175,11 +181,11 @@ describe('CollaboratorDataService', () => {
 
     req.flush(mockHolidayPeriods);
 
-    tick();
+    
     expect(result).toEqual(mockHolidayPeriods);
   }));
 
-  it("should add a new holiday period to a user's holiday plan", fakeAsync(() => {
+  it("should add a new holiday period to a user's holiday plan", (() => {
     const collabId = '1';
     const initDate = '2025-09-09';
     const finalDate = '2025-10-10';
@@ -199,11 +205,11 @@ describe('CollaboratorDataService', () => {
 
     req.flush(mockHolidayPeriod);
 
-    tick();
+    
     expect(result!.periodDate).toEqual(mockHolidayPeriod.periodDate);
   }));
 
-  it("should update the edited holiday period", fakeAsync(() => {
+  it("should update the edited holiday period", (() => {
     const collabId = '1';
     const initDate = '2025-09-09';
     const finalDate = '2025-10-10';
@@ -223,11 +229,11 @@ describe('CollaboratorDataService', () => {
 
     req.flush(mockHolidayPeriod);
 
-    tick();
+    
     expect(result).toEqual(mockHolidayPeriod);
   }));
 
-  it('should fetch associations by id', fakeAsync(() => {
+  it('should fetch associations by id', (() => {
     const collabId = '1';
     const mockAssociations: AssociationProjectCollaborators[] = [
       {
@@ -250,7 +256,7 @@ describe('CollaboratorDataService', () => {
     expect(req.request.method).toBe('GET');
     req.flush(mockAssociations);
 
-    tick();
+    
     expect(result).toEqual(mockAssociations);
   }));
 });

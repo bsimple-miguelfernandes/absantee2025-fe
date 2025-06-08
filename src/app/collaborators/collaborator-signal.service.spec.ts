@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { CollaboratorSignalService } from './collaborator-signal.service';
 import { HttpClient } from '@angular/common/http';
 import { Collaborator } from './collaborator';
+import { CollaboratorViewModel } from './collaborator-details/collaborator.viewmodel';
 
 describe('CollaboratorService', () => {
   let service: CollaboratorSignalService;
@@ -25,7 +26,7 @@ describe('CollaboratorService', () => {
   });
 
   it('should set selectedCollaborator when selectCollaborator is called', () => {
-    const collaborator : Collaborator =
+    const collaborator : CollaboratorViewModel  =
     {
       collabId: "1",
       userId: "1",
@@ -48,7 +49,7 @@ describe('CollaboratorService', () => {
 
   
   it('should set updatedCollaborator when updateCollaborator is called', () => {
-    const collaboratorUpdated : Collaborator =
+    const collaboratorUpdated : CollaboratorViewModel  =
     {
       collabId: "1",
       userId: "1",
@@ -67,5 +68,61 @@ describe('CollaboratorService', () => {
     service.updateCollaborator(collaboratorUpdated)
 
     expect(service.updatedCollaborator()).toEqual(collaboratorUpdated);
+  });
+
+  it('should set isCreatingCollaborator to true when startCreateCollaborator is called', () => {
+    service.startCreateCollaborator();
+
+    expect(service.isCreatingCollaborator()).toBe(true);
+  });
+
+  it('should set isCreatingCollaborator to false when cancelCreateCollaborator is called', () => {
+    service.cancelCreateCollaborator();
+
+    expect(service.isCreatingCollaborator()).toBe(false);
+  });
+
+  it('should set selectedCollaboratorHoliday when selectCollaboratorHolidays is called', () => {
+    const collaborator : CollaboratorViewModel  =
+    {
+      collabId: "1",
+      userId: "1",
+      names: "Alice",
+      surnames: "Johnson",
+      email: "alice.johnson@example.com",
+      userPeriod: {
+        _initDate: new Date('2019-06-10'),
+        _finalDate: new Date('2025-11-31')
+      },
+      collaboratorPeriod: {
+        _initDate: new Date('2019-06-10'),
+        _finalDate: new Date('2025-11-31')
+      }
+    };
+    service.selectCollaboratorHolidays(collaborator)
+
+    expect(service.selectedCollaboratorHoliday()).toEqual(collaborator);
+  });
+
+  it('should set selectedCollaboratorProjects when selectCollaboratorProjects is called', () => {
+    const collaborator : CollaboratorViewModel  =
+    {
+      collabId: "1",
+      userId: "1",
+      names: "Alice",
+      surnames: "Johnson",
+      email: "alice.johnson@example.com",
+      userPeriod: {
+        _initDate: new Date('2019-06-10'),
+        _finalDate: new Date('2025-11-31')
+      },
+      collaboratorPeriod: {
+        _initDate: new Date('2019-06-10'),
+        _finalDate: new Date('2025-11-31')
+      }
+    };
+    service.selectCollaboratorProjects(collaborator)
+
+    expect(service.selectedCollaboratorProjects()).toEqual(collaborator);
   });
 });
