@@ -3,10 +3,11 @@ import { TrainingSubjectsListComponent } from "./training-subjects-list/training
 import { TrainingSubject } from './training-subject';
 import { TrainingSubjectDataService } from './training-subjects-data.service';
 import { toTrainingSubjectViewModel } from '../collaborators/mappers/trainingSubject.mapper';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-training-subjects',
-  imports: [TrainingSubjectsListComponent],
+  imports: [TrainingSubjectsListComponent, RouterOutlet],
   templateUrl: './training-subjects.component.html',
   styleUrl: './training-subjects.component.css'
 })
