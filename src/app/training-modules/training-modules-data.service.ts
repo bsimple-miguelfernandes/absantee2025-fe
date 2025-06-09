@@ -3,7 +3,7 @@ import { inject, Injectable } from "@angular/core";
 import { environment } from "../../environments/environment";
 import { BehaviorSubject, Observable, tap } from "rxjs";
 import { TrainingModule } from "./training-module";
-import { TrainingSubject } from "./training-subjects-list/training-subject";
+import { TrainingSubject } from "../training-subjects/training-subject";
 import { AssociationTrainingModuleCollaborator } from "./association-training-module-collaborator";
 
 @Injectable({

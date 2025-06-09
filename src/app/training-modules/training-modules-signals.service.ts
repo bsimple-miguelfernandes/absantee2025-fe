@@ -1,5 +1,5 @@
 import { Injectable, signal } from "@angular/core";
-import { TrainingSubject } from "./training-subjects-list/training-subject";
+import { TrainingSubject } from "../training-subjects/training-subject";
 
 @Injectable({
   providedIn: 'root'
@@ -45,7 +45,7 @@ export class TrainingModuleSignalService {
     this.isEditingSubjectSignal.set(undefined);
   }
 
-  clearUpdatedSubject()  { this.updatedTrainingSubjectSignal.set(undefined); }
+  clearUpdatedSubject() { this.updatedTrainingSubjectSignal.set(undefined); }
 
-  clearCreatedSubject()  { this.createdSubjectSignal.set(undefined); }
+  clearCreatedSubject() { this.createdSubjectSignal.set(undefined); }
 }

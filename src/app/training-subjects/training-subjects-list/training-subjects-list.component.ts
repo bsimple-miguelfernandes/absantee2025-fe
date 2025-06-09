@@ -1,6 +1,6 @@
 import { Component, inject, input } from '@angular/core';
-import { TrainingSubject } from './training-subject';
-import { TrainingModuleSignalService } from '../training-modules-signals.service';
+import { TrainingSubject } from '../training-subject';
+import { TrainingModuleSignalService } from '../../training-modules/training-modules-signals.service';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -17,7 +17,7 @@ export class TrainingSubjectsListComponent {
   trainingSubjects = input.required<TrainingSubject[]>();
 
 
-  addTrainingSubject(){
+  addTrainingSubject() {
     this.trainingModulesSignalsService.cancelEditSubject();
     this.trainingModulesSignalsService.addTrainingSubject();
   }

@@ -2,9 +2,9 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TrainingModuleDataService } from '../training-modules-data.service';
-import { TrainingModuleSignalService } from '../training-modules-signals.service';
-import { TrainingSubject } from '../training-subjects-list/training-subject';
+import { TrainingModuleDataService } from '../../training-modules/training-modules-data.service';
+import { TrainingModuleSignalService } from '../../training-modules/training-modules-signals.service';
+import { TrainingSubject } from '../training-subject';
 
 @Component({
   selector: 'app-training-subject-form',

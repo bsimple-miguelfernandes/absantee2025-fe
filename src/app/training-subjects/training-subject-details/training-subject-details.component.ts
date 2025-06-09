@@ -1,9 +1,9 @@
 import { Component, inject } from '@angular/core';
-import { TrainingModuleSignalService } from '../training-modules-signals.service';
+import { TrainingModuleSignalService } from '../../training-modules/training-modules-signals.service';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { TrainingSubject } from '../training-subjects-list/training-subject';
-import { TrainingModuleDataService } from '../training-modules-data.service';
+import { TrainingSubject } from '../training-subject';
+import { TrainingModuleDataService } from '../../training-modules/training-modules-data.service';
 import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, RouterLink, RouterStateSnapshot } from '@angular/router';
 
 @Component({
