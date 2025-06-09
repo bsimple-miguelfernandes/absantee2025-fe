@@ -55,22 +55,14 @@ export class TrainingModuleDataService {
     }
 
     updateTrainingSubject(subject: TrainingSubject) {
-        if (!subject.id) throw new Error('TrainingSubject id obrigatório');
-
         return this.httpClient.put<TrainingSubject>(`${this.baseUrl}/trainingSubjects`, subject).pipe(tap(() => this.loadTrainingSubjects()));
     }
-
-
-
-
-
 
     addTrainingSubject(trainingSubject: TrainingSubject) {
         return this.httpClient.post<TrainingSubject>(`${this.baseUrl}/trainingSubjects`, trainingSubject).pipe(
             tap(() => this.loadTrainingSubjects())
         );
     }
-
 
     getAssociations(id: string): Observable<AssociationTrainingModuleCollaborator[]> {
         return this.httpClient.get<AssociationTrainingModuleCollaborator[]>(`${this.baseUrl}/trainingModules/${id}/associations`);
