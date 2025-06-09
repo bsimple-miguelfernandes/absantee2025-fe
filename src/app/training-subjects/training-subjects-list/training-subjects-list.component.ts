@@ -1,7 +1,7 @@
 import { Component, inject, input } from '@angular/core';
 import { TrainingSubject } from '../training-subject';
-import { TrainingModuleSignalService } from '../../training-modules/training-modules-signals.service';
 import { RouterLink } from '@angular/router';
+import { TrainingSubjectSignalsService } from '../training-subjects-signals.service';
 
 @Component({
   selector: 'app-training-subjects-list',
@@ -10,15 +10,12 @@ import { RouterLink } from '@angular/router';
   styleUrl: './training-subjects-list.component.css'
 })
 export class TrainingSubjectsListComponent {
-  trainingModulesSignalsService = inject(TrainingModuleSignalService);
-
-  isCreatingSubject = this.trainingModulesSignalsService.isCreatingSubject;
+  signalsService = inject(TrainingSubjectSignalsService);
 
   trainingSubjects = input.required<TrainingSubject[]>();
 
 
   addTrainingSubject() {
-    this.trainingModulesSignalsService.cancelEditSubject();
-    this.trainingModulesSignalsService.addTrainingSubject();
+    this.signalsService.addTrainingSubject();
   }
 }

@@ -16,8 +16,6 @@ import { RouterOutlet } from '@angular/router';
 export class TrainingModulesComponent {
   trainingModuleDataService = inject(TrainingModuleDataService);
   trainingModuleSignalService = inject(TrainingModuleSignalService)
-  subjectUpdated = this.trainingModuleSignalService.updatedTrainingSubject;
-  subjectCreated = this.trainingModuleSignalService.createdSubject;
 
   trainingModules: TrainingModule[] = [];
   trainingSubjects: TrainingSubject[] = [];
@@ -42,26 +40,5 @@ export class TrainingModulesComponent {
         console.error('Error loading training subjects', err);
       }
     });
-
-    effect(() => {
-      const updated = this.subjectUpdated();
-      if (updated) {
-        this.trainingSubjects = this.trainingSubjects.map(s =>
-          s.id === updated.id ? updated : s
-        );
-        this.trainingModuleSignalService.clearUpdatedSubject();
-      }
-
-      const created = this.subjectCreated();
-      if (created) {
-        this.trainingSubjects = [...this.trainingSubjects, created];
-        this.trainingModuleSignalService.clearCreatedSubject();
-      }
-    });
-
-
-
-
-
   }
 }

@@ -2,9 +2,9 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TrainingModuleDataService } from '../../training-modules/training-modules-data.service';
-import { TrainingModuleSignalService } from '../../training-modules/training-modules-signals.service';
 import { TrainingSubject } from '../training-subject';
+import { TrainingSubjectDataService } from '../training-subjects-data.service';
+import { TrainingSubjectSignalsService } from '../training-subjects-signals.service';
 
 @Component({
   selector: 'app-training-subject-form',
@@ -16,18 +16,16 @@ export class TrainingSubjectFormComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private fb = inject(FormBuilder);
-  private dataService = inject(TrainingModuleDataService);
-  private signalService = inject(TrainingModuleSignalService)
+  private dataService = inject(TrainingSubjectDataService);
+  private signalService = inject(TrainingSubjectSignalsService)
 
   trainingSubjectForm!: FormGroup;
   isEditMode = false;
   trainingSubjectId?: string;
 
   ngOnInit() {
-    console.log('TrainingSubjectFormComponent ngOnInit called');
 
     const resolved = this.route.snapshot.data['trainingSubject'];
-    console.log('Resolved subject:', resolved);
 
     this.isEditMode = !!resolved;
     this.trainingSubjectId = this.route.snapshot.params['trainingSubjectId'];
@@ -39,7 +37,7 @@ export class TrainingSubjectFormComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigate(['/training-modules']);
+    this.router.navigate(['/training-subjects']);
   }
 
   save() {

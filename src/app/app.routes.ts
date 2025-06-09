@@ -41,16 +41,6 @@ export const routes: Routes = [
         component: TrainingSubjectFormComponent
       },
       {
-        path: 'subjects/:trainingSubjectId/edit',
-        component: TrainingSubjectFormComponent,
-        resolve: { trainingSubject: resolverTrainingSubject }
-      },
-      {
-        path: 'subjects/:trainingSubjectId',
-        component: TrainingSubjectDetailsComponent,
-        resolve: { trainingSubject: resolverTrainingSubject }
-      },
-      {
         path: ':trainingModuleId',
         component: TrainingModuleDetailsComponent,
         resolve: { trainingModule: resolverTrainingModule }
@@ -64,6 +54,11 @@ export const routes: Routes = [
       {
         path: ':trainingSubjectId',
         component: TrainingSubjectDetailsComponent,
+        resolve: { trainingSubject: resolverTrainingSubject }
+      },
+      {
+        path: ':trainingSubjectId/edit',
+        component: TrainingSubjectFormComponent,
         resolve: { trainingSubject: resolverTrainingSubject }
       }
     ]

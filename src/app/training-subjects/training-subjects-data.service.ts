@@ -23,7 +23,7 @@ export class TrainingSubjectDataService {
         return this.httpClient.put<TrainingSubject>(`${this.baseUrl}/trainingSubjects`, subject);
     }
 
-    addTrainingSubjet(trainingSubject: TrainingSubject) {
+    addTrainingSubject(trainingSubject: TrainingSubject) {
         return this.httpClient.post<TrainingSubject>(`${this.baseUrl}/trainingSubjects`, trainingSubject);
     }
 
