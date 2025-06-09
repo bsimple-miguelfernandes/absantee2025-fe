@@ -24,63 +24,53 @@ export class TrainingSubjectFormComponent implements OnInit {
   trainingSubjectId?: string;
 
   ngOnInit() {
-  console.log('TrainingSubjectFormComponent ngOnInit called');
+    console.log('TrainingSubjectFormComponent ngOnInit called');
 
-  const resolved = this.route.snapshot.data['trainingSubject'];
-  console.log('Resolved subject:', resolved);
+    const resolved = this.route.snapshot.data['trainingSubject'];
+    console.log('Resolved subject:', resolved);
 
-  this.isEditMode = !!resolved;
-  this.trainingSubjectId = this.route.snapshot.params['trainingSubjectId'];
+    this.isEditMode = !!resolved;
+    this.trainingSubjectId = this.route.snapshot.params['trainingSubjectId'];
 
-  this.trainingSubjectForm = this.fb.group({
-    subject: [resolved?.subject ?? '', Validators.required],
-    description: [resolved?.description ?? '', Validators.required]
-  });
-}
+    this.trainingSubjectForm = this.fb.group({
+      subject: [resolved?.subject ?? '', Validators.required],
+      description: [resolved?.description ?? '', Validators.required]
+    });
+  }
 
   cancel() {
     this.router.navigate(['/training-modules']);
   }
 
-save() {
+  save() {
 
-  console.log(
-  'isEditMode:', this.isEditMode,
-  'trainingSubjectId:', this.trainingSubjectId,
-  'formValue:', this.trainingSubjectForm.value
-);
+    if (this.trainingSubjectForm.invalid) return;
 
-  if (this.trainingSubjectForm.invalid) return;
+    const formValue = this.trainingSubjectForm.value;
 
-  const formValue = this.trainingSubjectForm.value;
+    if (this.isEditMode && this.trainingSubjectId) {
+      const updatedSubject: TrainingSubject = {
+        id: this.trainingSubjectId,
+        ...formValue
+      };
 
-  if (this.isEditMode && this.trainingSubjectId) {
-    const updatedSubject: TrainingSubject = {
-      id: this.trainingSubjectId,
-      ...formValue
-    };
+      this.dataService.updateTrainingSubject(updatedSubject).subscribe({
+        next: (res) => {
+          this.signalService.updateTrainingSubject(res);
+          this.cancel()
+        },
+        error: (err) => console.error('Update failed:', err)
+      });
 
-    console.log('Calling updateTrainingSubject with:', updatedSubject);
-
-    this.dataService.updateTrainingSubject(updatedSubject).subscribe({
-      next: (res) => {
-        console.log('Update successful, navigating...');
-        this.signalService.updateTrainingSubject(res);
-        this.router.navigate(['/training-modules']);
-      },
-      error: (err) => console.error('Update failed:', err)
-    });
-
-  } else {
-    this.dataService.addTrainingSubject(formValue).subscribe({
-      next: () => {
-        console.log('Add successful, navigating...');
-        this.router.navigate(['/training-modules']);
-      },
-      error: (err) => console.error('Add failed:', err)
-    });
+    } else {
+      this.dataService.addTrainingSubject(formValue).subscribe({
+        next: () => {
+          this.cancel()
+        },
+        error: (err) => console.error('Add failed:', err)
+      });
+    }
   }
-}
 
 
 }

@@ -20,17 +20,17 @@ export class TrainingSubjectDetailsComponent {
 
   trainingSubject!: TrainingSubject;
 
-  ngOnInit(){
+  ngOnInit() {
     this.route.data.subscribe(data => {
       this.trainingSubject = data['trainingSubject'];
     });
   }
 
-  close(){
+  close() {
     history.back();
   }
 
-  edit(){
+  edit() {
     this.trainingModuleSignalService.openEditForm(this.trainingSubject);
     this.trainingModuleSignalService.cancelCreateSubject();
   }
