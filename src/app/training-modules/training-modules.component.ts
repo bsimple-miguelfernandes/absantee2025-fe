@@ -44,17 +44,17 @@ export class TrainingModulesComponent {
     });
 
     effect(() => {
-      const upd = this.subjectUpdated();
-      if (upd) {
+      const updated = this.subjectUpdated();
+      if (updated) {
         this.trainingSubjects = this.trainingSubjects.map(s =>
-          s.id === upd.id ? upd : s
+          s.id === updated.id ? updated : s
         );
         this.trainingModuleSignalService.clearUpdatedSubject();
       }
 
-      const crt = this.subjectCreated();
-      if (crt) {
-        this.trainingSubjects = [...this.trainingSubjects, crt];
+      const created = this.subjectCreated();
+      if (created) {
+        this.trainingSubjects = [...this.trainingSubjects, created];
         this.trainingModuleSignalService.clearCreatedSubject();
       }
     });
