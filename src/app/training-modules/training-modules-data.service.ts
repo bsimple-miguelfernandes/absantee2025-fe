@@ -19,19 +19,19 @@ export class TrainingModuleDataService {
     private trainingSubjectSubject = new BehaviorSubject<TrainingSubject[]>([]);
     trainingSubject$ = this.trainingSubjectSubject.asObservable();
 
-    constructor(private http:HttpClient){
+    constructor(private http: HttpClient) {
         this.loadTrainingModules();
         this.loadTrainingSubjects();
     }
 
-    loadTrainingModules(){
+    loadTrainingModules() {
         this.httpClient.get<TrainingModule[]>(`${this.baseUrl}/trainingModules`).subscribe({
             next: (trainingModules) => this.trainingModuleSubject.next(trainingModules),
             error: (err) => console.error('Error trying to load training modules:', err)
         })
     }
 
-    getTrainingModules(): Observable<TrainingModule[]>{
+    getTrainingModules(): Observable<TrainingModule[]> {
         return this.trainingModule$;
     }
 
@@ -39,32 +39,26 @@ export class TrainingModuleDataService {
         return this.httpClient.get<TrainingModule>(`${this.baseUrl}/trainingModules/${id}`)
     }
 
-    loadTrainingSubjects(){
+    loadTrainingSubjects() {
         this.httpClient.get<TrainingSubject[]>(`${this.baseUrl}/trainingSubjects`).subscribe({
             next: (trainingSubjects) => this.trainingSubjectSubject.next(trainingSubjects),
-            error: (err) => console.error('Error trying to load training subjects:' , err)
+            error: (err) => console.error('Error trying to load training subjects:', err)
         })
     }
 
-    getTrainingSubjects(): Observable<TrainingSubject[]>{
+    getTrainingSubjects(): Observable<TrainingSubject[]> {
         return this.trainingSubject$;
     }
 
-    getTrainingSubjectById(id: string): Observable<TrainingSubject>{
+    getTrainingSubjectById(id: string): Observable<TrainingSubject> {
         return this.httpClient.get<TrainingSubject>(`${this.baseUrl}/trainingSubjects/${id}`)
     }
 
     updateTrainingSubject(subject: TrainingSubject) {
-  if (!subject.id) throw new Error('TrainingSubject id obrigatório');
+        if (!subject.id) throw new Error('TrainingSubject id obrigatório');
 
-  //  ←  URL SEM id
-  return this.httpClient.put<TrainingSubject>(
-    `${this.baseUrl}/trainingSubjects`,
-    subject
-  ).pipe(
-    tap(() => this.loadTrainingSubjects())
-  );
-}
+        return this.httpClient.put<TrainingSubject>(`${this.baseUrl}/trainingSubjects`, subject).pipe(tap(() => this.loadTrainingSubjects()));
+    }
 
 
 
@@ -73,12 +67,12 @@ export class TrainingModuleDataService {
 
     addTrainingSubject(trainingSubject: TrainingSubject) {
         return this.httpClient.post<TrainingSubject>(`${this.baseUrl}/trainingSubjects`, trainingSubject).pipe(
-        tap(() => this.loadTrainingSubjects())
-  );
-}
+            tap(() => this.loadTrainingSubjects())
+        );
+    }
 
 
-    getAssociations(id: string): Observable<AssociationTrainingModuleCollaborator[]>{
+    getAssociations(id: string): Observable<AssociationTrainingModuleCollaborator[]> {
         return this.httpClient.get<AssociationTrainingModuleCollaborator[]>(`${this.baseUrl}/trainingModules/${id}/associations`);
     }
 }

@@ -4,14 +4,12 @@ import { TrainingModuleDataService } from './training-modules-data.service';
 import { TrainingModule } from './training-module';
 import { TrainingSubjectsListComponent } from './training-subjects-list/training-subjects-list.component';
 import { TrainingSubject } from './training-subjects-list/training-subject';
-import { TrainingSubjectDetailsComponent } from "./training-subject-details/training-subject-details.component";
 import { TrainingModuleSignalService } from './training-modules-signals.service';
 //import { CollaboratorCreateComponent } from "../collaborators/collaborators-create/collaborator-create.component";
-import { TrainingSubjectFormComponent } from "./training-subject-form/training-subject-form.component";
 import { RouterOutlet } from '@angular/router';
 @Component({
   selector: 'app-training-modules',
-  imports: [TrainingModulesListComponent, TrainingSubjectsListComponent, TrainingSubjectDetailsComponent, TrainingSubjectDetailsComponent, TrainingSubjectFormComponent, RouterOutlet],
+  imports: [TrainingModulesListComponent, TrainingSubjectsListComponent, RouterOutlet],
   templateUrl: './training-modules.component.html',
   styleUrl: './training-modules.component.css'
 })
@@ -46,23 +44,20 @@ export class TrainingModulesComponent {
     });
 
     effect(() => {
-  /* ---------- UPDATE ---------- */
-  const upd = this.subjectUpdated();
-  if (upd) {
-    // actualiza imediatamente a lista no UI
-    this.trainingSubjects = this.trainingSubjects.map(s =>
-      s.id === upd.id ? upd : s
-    );
-    this.trainingModuleSignalService.clearUpdatedSubject();   // <- evita novo ciclo
-  }
+      const upd = this.subjectUpdated();
+      if (upd) {
+        this.trainingSubjects = this.trainingSubjects.map(s =>
+          s.id === upd.id ? upd : s
+        );
+        this.trainingModuleSignalService.clearUpdatedSubject();
+      }
 
-  /* ---------- CREATE ---------- */
-  const crt = this.subjectCreated();
-  if (crt) {
-    this.trainingSubjects = [...this.trainingSubjects, crt];
-    this.trainingModuleSignalService.clearCreatedSubject();    // <- idem
-  }
-});
+      const crt = this.subjectCreated();
+      if (crt) {
+        this.trainingSubjects = [...this.trainingSubjects, crt];
+        this.trainingModuleSignalService.clearCreatedSubject();
+      }
+    });
 
 
 

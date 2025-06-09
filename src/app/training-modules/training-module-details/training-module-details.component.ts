@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { TrainingModuleSignalService } from '../training-modules-signals.service';
 import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from '@angular/router';
 import { TrainingModule } from '../training-module';
 import { TrainingModuleDataService } from '../training-modules-data.service';
@@ -15,7 +14,7 @@ export class TrainingModuleDetailsComponent {
 
   trainingModule!: TrainingModule;
 
-  ngOnInit(){
+  ngOnInit() {
     this.route.data.subscribe(data => {
       this.trainingModule = data['trainingModule'];
     })
@@ -25,10 +24,10 @@ export class TrainingModuleDetailsComponent {
 }
 
 export const resolverTrainingModule: ResolveFn<TrainingModule> = (
-    activatedRoute: ActivatedRouteSnapshot,
-    routerState: RouterStateSnapshot
-  ) => {
-    const trainingModuleService = inject(TrainingModuleDataService);
-    const trainingModule = trainingModuleService.getTrainingModuleById(activatedRoute.params['trainingModuleId'])
-    return trainingModule;
-  }
+  activatedRoute: ActivatedRouteSnapshot,
+  routerState: RouterStateSnapshot
+) => {
+  const trainingModuleService = inject(TrainingModuleDataService);
+  const trainingModule = trainingModuleService.getTrainingModuleById(activatedRoute.params['trainingModuleId'])
+  return trainingModule;
+}
