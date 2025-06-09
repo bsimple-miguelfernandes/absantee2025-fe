@@ -18,7 +18,7 @@
 
       <div class="actions">
         <button (click)="close()">Close</button>
-        <button (click)="edit()">Edit</button>
+        <button [routerLink]="['/training-modules', 'subjects', trainingSubject.id, 'edit']">Edit</button>
       </div>
     </div>
 

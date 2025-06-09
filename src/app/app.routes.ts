@@ -7,6 +7,7 @@ import { TrainingModulesComponent } from './training-modules/training-modules.co
 import { CollaboratorDetailsComponent, resolverCollaborator } from './collaborators/collaborator-details/collaborator-details.component';
 import { resolverTrainingModule, TrainingModuleDetailsComponent } from './training-modules/training-module-details/training-module-details.component';
 import { resolverTrainingSubject, TrainingSubjectDetailsComponent } from './training-modules/training-subject-details/training-subject-details.component';
+import { TrainingSubjectFormComponent } from './training-modules/training-subject-form/training-subject-form.component';
 
 export const routes: Routes = [
     {
@@ -31,23 +32,28 @@ export const routes: Routes = [
         ]
     },
     {
-        path: 'training-modules',
-        component: TrainingModulesComponent,
-        children: [
-            {
-                path: ':trainingModuleId',
-                component: TrainingModuleDetailsComponent,
-                resolve: {
-                    trainingModule: resolverTrainingModule
-                }
-            },
-            {
-                path: 'subjects/:trainingSubjectId',
-                component: TrainingSubjectDetailsComponent,
-                resolve: {
-                    trainingSubject: resolverTrainingSubject
-                }
-            }
-        ]
+  path: 'training-modules',
+  component: TrainingModulesComponent,
+  children: [
+    {
+      path: 'subjects/create',
+      component: TrainingSubjectFormComponent
+    },
+    {
+      path: 'subjects/:trainingSubjectId/edit',
+      component: TrainingSubjectFormComponent,
+      resolve: { trainingSubject: resolverTrainingSubject }
+    },
+    {
+      path: 'subjects/:trainingSubjectId',
+      component: TrainingSubjectDetailsComponent,
+      resolve: { trainingSubject: resolverTrainingSubject }
+    },
+    {
+      path: ':trainingModuleId',
+      component: TrainingModuleDetailsComponent,
+      resolve: { trainingModule: resolverTrainingModule }
     }
+  ]
+}
 ];

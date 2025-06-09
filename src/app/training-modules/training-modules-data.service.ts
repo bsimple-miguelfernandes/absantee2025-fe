@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { environment } from "../../environments/environment";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, tap } from "rxjs";
 import { TrainingModule } from "./training-module";
 import { TrainingSubject } from "./training-subjects-list/training-subject";
 import { AssociationTrainingModuleCollaborator } from "./association-training-module-collaborator";
@@ -54,13 +54,29 @@ export class TrainingModuleDataService {
         return this.httpClient.get<TrainingSubject>(`${this.baseUrl}/trainingSubjects/${id}`)
     }
 
-    updateTrainingSubject(trainingSubject: TrainingSubject){
-        return this.httpClient.put<TrainingSubject>(`${this.baseUrl}/trainingSubjects`, trainingSubject)
-    }
+    updateTrainingSubject(subject: TrainingSubject) {
+  if (!subject.id) throw new Error('TrainingSubject id obrigatório');
 
-    addTrainingSubject(trainingSubject: TrainingSubject){
-        return this.httpClient.post<TrainingSubject>(`${this.baseUrl}/trainingSubjects`, trainingSubject);
-    }
+  //  ←  URL SEM id
+  return this.httpClient.put<TrainingSubject>(
+    `${this.baseUrl}/trainingSubjects`,
+    subject
+  ).pipe(
+    tap(() => this.loadTrainingSubjects())
+  );
+}
+
+
+
+
+
+
+    addTrainingSubject(trainingSubject: TrainingSubject) {
+        return this.httpClient.post<TrainingSubject>(`${this.baseUrl}/trainingSubjects`, trainingSubject).pipe(
+        tap(() => this.loadTrainingSubjects())
+  );
+}
+
 
     getAssociations(id: string): Observable<AssociationTrainingModuleCollaborator[]>{
         return this.httpClient.get<AssociationTrainingModuleCollaborator[]>(`${this.baseUrl}/trainingModules/${id}/associations`);

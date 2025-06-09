@@ -1,7 +1,10 @@
-import { Component, inject, effect } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TrainingModuleDataService } from '../training-modules-data.service';
 import { TrainingModuleSignalService } from '../training-modules-signals.service';
+import { TrainingSubject } from '../training-subjects-list/training-subject';
 
 @Component({
   selector: 'app-training-subject-form',
@@ -9,50 +12,75 @@ import { TrainingModuleSignalService } from '../training-modules-signals.service
   templateUrl: './training-subject-form.component.html',
   styleUrl: './training-subject-form.component.css'
 })
-export class TrainingSubjectFormComponent {
-  trainingModuleSignalsService = inject(TrainingModuleSignalService)
-  isEditingTrainingSubjectForm = this.trainingModuleSignalsService.isEditingSubject;
-  isCreatingForm = this.trainingModuleSignalsService.isCreatingSubject;
+export class TrainingSubjectFormComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private fb = inject(FormBuilder);
+  private dataService = inject(TrainingModuleDataService);
+  private signalService = inject(TrainingModuleSignalService)
 
-  trainingSubjectForm: FormGroup;
+  trainingSubjectForm!: FormGroup;
+  isEditMode = false;
+  trainingSubjectId?: string;
 
-  constructor(private fb: FormBuilder){
-    this.trainingSubjectForm = this.fb.group({
-      subject:['', Validators.required],
-      description: [''],
+  ngOnInit() {
+  console.log('TrainingSubjectFormComponent ngOnInit called');
+
+  const resolved = this.route.snapshot.data['trainingSubject'];
+  console.log('Resolved subject:', resolved);
+
+  this.isEditMode = !!resolved;
+  this.trainingSubjectId = this.route.snapshot.params['trainingSubjectId'];
+
+  this.trainingSubjectForm = this.fb.group({
+    subject: [resolved?.subject ?? '', Validators.required],
+    description: [resolved?.description ?? '', Validators.required]
+  });
+}
+
+  cancel() {
+    this.router.navigate(['/training-modules']);
+  }
+
+save() {
+
+  console.log(
+  'isEditMode:', this.isEditMode,
+  'trainingSubjectId:', this.trainingSubjectId,
+  'formValue:', this.trainingSubjectForm.value
+);
+
+  if (this.trainingSubjectForm.invalid) return;
+
+  const formValue = this.trainingSubjectForm.value;
+
+  if (this.isEditMode && this.trainingSubjectId) {
+    const updatedSubject: TrainingSubject = {
+      id: this.trainingSubjectId,
+      ...formValue
+    };
+
+    console.log('Calling updateTrainingSubject with:', updatedSubject);
+
+    this.dataService.updateTrainingSubject(updatedSubject).subscribe({
+      next: (res) => {
+        console.log('Update successful, navigating...');
+        this.signalService.updateTrainingSubject(res);
+        this.router.navigate(['/training-modules']);
+      },
+      error: (err) => console.error('Update failed:', err)
     });
 
-    effect(() => {
-  const subject = this.isEditingTrainingSubjectForm();
-  if (subject) {
-    this.trainingSubjectForm.patchValue(subject);
   } else {
-    this.trainingSubjectForm.reset();
-  }
-});
-
-  }
-
-    cancel(){
-      this.trainingModuleSignalsService.cancelCreateSubject();
-      this.trainingModuleSignalsService.cancelEditSubject();
-    }
-
-    save() {
-      if (this.trainingSubjectForm.valid) {
-        const formValue = this.trainingSubjectForm.value;
-
-        const trainingSubject = this.isEditingTrainingSubjectForm()
-          ? { ...this.isEditingTrainingSubjectForm(), ...formValue }
-          : formValue;
-
-      if (this.isCreatingForm()) {
-      this.trainingModuleSignalsService.saveTrainingSubject(trainingSubject);
-      } else if (this.isEditingTrainingSubjectForm()) {
-      this.trainingModuleSignalsService.updateTrainingSubject(trainingSubject);
-      }
-
-    this.trainingSubjectForm.reset();
+    this.dataService.addTrainingSubject(formValue).subscribe({
+      next: () => {
+        console.log('Add successful, navigating...');
+        this.router.navigate(['/training-modules']);
+      },
+      error: (err) => console.error('Add failed:', err)
+    });
   }
 }
+
+
 }

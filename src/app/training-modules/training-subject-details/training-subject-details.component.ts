@@ -4,11 +4,11 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TrainingSubject } from '../training-subjects-list/training-subject';
 import { TrainingModuleDataService } from '../training-modules-data.service';
-import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, RouterLink, RouterStateSnapshot } from '@angular/router';
 
 @Component({
   selector: 'app-training-subject-details',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './training-subject-details.component.html',
   styleUrl: './training-subject-details.component.css'
 })

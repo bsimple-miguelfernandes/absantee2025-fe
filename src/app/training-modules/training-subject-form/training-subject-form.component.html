@@ -1,6 +1,5 @@
-@if (isCreatingForm() || isEditingTrainingSubjectForm()) {
 <form [formGroup]="trainingSubjectForm" (ngSubmit)="save()" class="form-card">
-  <h2>{{ isEditingTrainingSubjectForm() ? 'Edit Training Subject' : 'Add Training Subject' }}</h2>
+  <h2>{{ isEditMode ? 'Edit Training Subject' : 'Add Training Subject' }}</h2>
 
   <div>
     <label class="form-label">Subject</label>
@@ -15,9 +14,7 @@
   <div class="actions">
     <button type="button" (click)="cancel()">Cancel</button>
     <button type="submit" [disabled]="trainingSubjectForm.invalid">
-      {{ isEditingTrainingSubjectForm() ? 'Save' : 'Add' }}
+      {{ isEditMode ? 'Save' : 'Add' }}
     </button>
   </div>
 </form>
-
-}

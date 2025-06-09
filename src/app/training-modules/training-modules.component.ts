@@ -46,28 +46,26 @@ export class TrainingModulesComponent {
     });
 
     effect(() => {
-      const updatedSubject = this.subjectUpdated();
-      if (updatedSubject) {
-        this.trainingModuleDataService.updateTrainingSubject(updatedSubject).subscribe({
-          next: (updatedSubject) => {
-            this.trainingSubjects = this.trainingSubjects.map(subject =>
-              subject.id === updatedSubject.id ? updatedSubject : subject
-            );
-          },
-          error: (err) => console.error('Errors updating training subject', err)
-        });
-      }
+  /* ---------- UPDATE ---------- */
+  const upd = this.subjectUpdated();
+  if (upd) {
+    // actualiza imediatamente a lista no UI
+    this.trainingSubjects = this.trainingSubjects.map(s =>
+      s.id === upd.id ? upd : s
+    );
+    this.trainingModuleSignalService.clearUpdatedSubject();   // <- evita novo ciclo
+  }
 
-      const createdSubject = this.subjectCreated();
-      if (createdSubject) {
-        this.trainingModuleDataService.addTrainingSubject(createdSubject).subscribe({
-          next: (createdSubject) => {
-            this.trainingSubjects = [...this.trainingSubjects, createdSubject];
-          },
-          error: (err) => console.error('Error adding training subject', err)
-        });
-      }
-    });
+  /* ---------- CREATE ---------- */
+  const crt = this.subjectCreated();
+  if (crt) {
+    this.trainingSubjects = [...this.trainingSubjects, crt];
+    this.trainingModuleSignalService.clearCreatedSubject();    // <- idem
+  }
+});
+
+
+
 
 
   }
