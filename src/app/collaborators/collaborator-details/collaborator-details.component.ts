@@ -1,12 +1,12 @@
-import { Component, effect, inject, input, OnChanges, OnInit } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
-import { Collaborator, CollaboratorDetailsForm } from '../collaborator';
+import { CollaboratorDetailsForm } from '../collaborator';
 import { PeriodDateTimeForm } from '../../PeriodDate';
 import { CollaboratorDataService } from '../collaborator-data.service';
 import { CollaboratorViewModel } from './collaborator.viewmodel';
 import { fromCollaboratorViewModel } from '../mappers/collaborator.mapper';
-import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-collaborator-details',
@@ -14,44 +14,45 @@ import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from '@angular
   templateUrl: './collaborator-details.component.html',
   styleUrl: './collaborator-details.component.css'
 })
-export class CollaboratorDetailsComponent implements OnChanges {
+export class CollaboratorDetailsComponent {
   collabId = input.required<string>();
   collaborator = input.required<CollaboratorViewModel>();
   collaboratorService = inject(CollaboratorSignalService);
   collaboratorDataService = inject(CollaboratorDataService);
-  //collaborator = this.collaboratorService.selectedCollaborator;
+
   form!: FormGroup;
 
+  constructor(private route: ActivatedRoute) {}
+
   ngOnChanges() {
-    const collaboratorObj = this.collaborator();
-    if (!collaboratorObj) return;
+    const collab = this.route.snapshot.data['DetailsData'];
 
     if (!this.form) {
       this.form = new FormGroup<CollaboratorDetailsForm>({
-        names: new FormControl(collaboratorObj.names),
-        surnames: new FormControl(collaboratorObj.surnames),
-        email: new FormControl(collaboratorObj.email),
+        names: new FormControl(collab.names),
+        surnames: new FormControl(collab.surnames),
+        email: new FormControl(collab.email),
         userPeriodDateTime: new FormGroup<PeriodDateTimeForm>({
-          _initDate: new FormControl(this.formatDate(collaboratorObj.userPeriod._initDate)),
-          _finalDate: new FormControl(this.formatDate(collaboratorObj.userPeriod._finalDate)),
+          _initDate: new FormControl(this.formatDate(collab.userPeriod._initDate)),
+          _finalDate: new FormControl(this.formatDate(collab.userPeriod._finalDate)),
         }),
         collaboratorPeriodDateTime: new FormGroup<PeriodDateTimeForm>({
-          _initDate: new FormControl(this.formatDate(collaboratorObj.collaboratorPeriod._initDate)),
-          _finalDate: new FormControl(this.formatDate(collaboratorObj.collaboratorPeriod._finalDate)),
+          _initDate: new FormControl(this.formatDate(collab.collaboratorPeriod._initDate)),
+          _finalDate: new FormControl(this.formatDate(collab.collaboratorPeriod._finalDate)),
         })
       });
     } else {
       this.form.patchValue({
-        names: collaboratorObj.names,
-        surnames: collaboratorObj.surnames,
-        email: collaboratorObj.email,
+        names: collab.names,
+        surnames: collab.surnames,
+        email: collab.email,
         userPeriodDateTime: {
-          _initDate: this.formatDate(collaboratorObj.userPeriod._initDate),
-          _finalDate: this.formatDate(collaboratorObj.userPeriod._finalDate)
+          _initDate: this.formatDate(collab.userPeriod._initDate),
+          _finalDate: this.formatDate(collab.userPeriod._finalDate)
         },
         collaboratorPeriodDateTime: {
-          _initDate: this.formatDate(collaboratorObj.collaboratorPeriod._initDate),
-          _finalDate: this.formatDate(collaboratorObj.collaboratorPeriod._finalDate)
+          _initDate: this.formatDate(collab.collaboratorPeriod._initDate),
+          _finalDate: this.formatDate(collab.collaboratorPeriod._finalDate)
         }
       });
     }
@@ -82,10 +83,7 @@ export class CollaboratorDetailsComponent implements OnChanges {
       }
     };
 
-
-
     const updatedCollaborator = fromCollaboratorViewModel(updatedCollaboratorVM);
-
 
     this.collaboratorDataService.updateCollaborator(updatedCollaborator).subscribe({
       next: (updated) => {
@@ -99,13 +97,3 @@ export class CollaboratorDetailsComponent implements OnChanges {
     });
   }
 }
-
-export const resolverCollaborator: ResolveFn<CollaboratorViewModel> = (
-  activatedRoute: ActivatedRouteSnapshot,
-  routerState: RouterStateSnapshot
-) => {
-  const collabService = inject(CollaboratorDataService);
-  const collab =
-    collabService.getCollabById(activatedRoute.params['collabId'])
-  return collab;
-};

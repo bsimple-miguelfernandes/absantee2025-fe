@@ -3,7 +3,8 @@ import { AppComponent } from './app.component';
 import { ProjectsComponent } from './projects/projects.component';
 import { HomeComponent } from './home/home.component';
 import { CollaboratorsComponent } from './collaborators/collaborators.component';
-import { CollaboratorDetailsComponent, resolverCollaborator } from './collaborators/collaborator-details/collaborator-details.component';
+import { CollaboratorDetailsComponent } from './collaborators/collaborator-details/collaborator-details.component';
+import { CollaboratorDetailsResolver } from './collaborator-details.resolver';
 
 export const routes: Routes = [
     {
@@ -22,7 +23,7 @@ export const routes: Routes = [
                 path: 'details/:collabId',
                 component: CollaboratorDetailsComponent,
                 resolve: {
-                    collaborator: resolverCollaborator
+                    DetailsData: CollaboratorDetailsResolver
                 }
             }
         ]
