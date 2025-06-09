@@ -64,7 +64,8 @@ export class TrainingSubjectFormComponent implements OnInit {
 
     } else {
       this.dataService.addTrainingSubject(formValue).subscribe({
-        next: () => {
+        next: (res) => {
+          this.signalService.saveTrainingSubject(res);
           this.cancel()
         },
         error: (err) => console.error('Add failed:', err)
