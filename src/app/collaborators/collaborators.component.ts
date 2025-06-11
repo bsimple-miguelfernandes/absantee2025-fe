@@ -5,7 +5,6 @@ import { AssociationsProjectCollaboratorComponent } from "../associations-projec
 import { CollaboratorDataService } from './collaborator-data.service';
 import { CollaboratorCreateComponent } from './collaborators-create/collaborator-create.component';
 import { CommonModule } from '@angular/common';
-import { AssociationsTrainingModuleCollaboratorComponent } from '../associations-training-module-collaborator/associations-training-module-collaborator.component';
 import { CollaboratorViewModel } from './collaborator-details/collaborator.viewmodel';
 import { toCollaboratorViewModel } from './mappers/collaborator.mapper';
 import { RouterOutlet } from '@angular/router';
@@ -15,6 +14,8 @@ import { RouterOutlet } from '@angular/router';
   standalone: true,
   imports: [
     CommonModule,
+    CollaboratorListComponent,
+    CollaboratorCreateComponent,
     RouterOutlet
   ],
   templateUrl: './collaborators.component.html',

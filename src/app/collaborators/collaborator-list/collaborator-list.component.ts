@@ -23,19 +23,19 @@ export class CollaboratorListComponent {
     email: new FormControl('')
   });
 
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog) { }
 
   ngOnChanges(changes: SimpleChanges) {
-    if(changes['inputCollabs'] && this.inputCollabs) {
+    if (changes['inputCollabs'] && this.inputCollabs) {
       this.collaborators = this.inputCollabs;
     }
   }
 
-  ngOnInit() { 
+  ngOnInit() {
     this.searchForm.valueChanges.subscribe(values => {
       const { name, email } = values;
       this.collaborators = this.inputCollabs.filter(c =>
-        (!name || c.names.toLowerCase().includes(name.toLowerCase()) 
+        (!name || c.names.toLowerCase().includes(name.toLowerCase())
           || c.surnames.toLowerCase().includes(name.toLowerCase())) &&
         (!email || c.email.toLowerCase().includes(email.toLowerCase()))
       );
@@ -44,7 +44,7 @@ export class CollaboratorListComponent {
 
   toggleFilters() {
     this.showFilters = !this.showFilters
-    if(!this.showFilters) {
+    if (!this.showFilters) {
       this.collaborators = this.inputCollabs;
     }
   }
