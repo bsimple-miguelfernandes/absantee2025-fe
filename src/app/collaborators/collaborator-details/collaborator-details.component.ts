@@ -1,12 +1,11 @@
-import { Component, effect, inject, input, OnChanges, OnInit } from '@angular/core';
+import { Component, inject, input, OnChanges, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
-import { Collaborator, CollaboratorDetailsForm } from '../collaborator';
+import { CollaboratorDetailsForm } from '../collaborator.model';
 import { PeriodDateTimeForm } from '../../PeriodDate';
 import { CollaboratorDataService } from '../collaborator-data.service';
 import { CollaboratorViewModel } from './collaborator.viewmodel';
 import { fromCollaboratorViewModel } from '../mappers/collaborator.mapper';
-import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from '@angular/router';
 
 @Component({
   selector: 'app-collaborator-details',
@@ -19,7 +18,7 @@ export class CollaboratorDetailsComponent implements OnChanges {
   collaborator = input.required<CollaboratorViewModel>();
   collaboratorService = inject(CollaboratorSignalService);
   collaboratorDataService = inject(CollaboratorDataService);
-  //collaborator = this.collaboratorService.selectedCollaborator;
+
   form!: FormGroup;
 
   ngOnChanges() {
@@ -82,10 +81,7 @@ export class CollaboratorDetailsComponent implements OnChanges {
       }
     };
 
-
-
     const updatedCollaborator = fromCollaboratorViewModel(updatedCollaboratorVM);
-
 
     this.collaboratorDataService.updateCollaborator(updatedCollaborator).subscribe({
       next: (updated) => {
@@ -99,13 +95,3 @@ export class CollaboratorDetailsComponent implements OnChanges {
     });
   }
 }
-
-export const resolverCollaborator: ResolveFn<CollaboratorViewModel> = (
-  activatedRoute: ActivatedRouteSnapshot,
-  routerState: RouterStateSnapshot
-) => {
-  const collabService = inject(CollaboratorDataService);
-  const collab =
-    collabService.getCollabById(activatedRoute.params['collabId'])
-  return collab;
-};

@@ -1,8 +1,5 @@
-<app-collaborator-list [collaborators]="collaborators()">
-</app-collaborator-list>
-
 @if (!collaboratorSignalService.isCreatingCollaborator()) {
-<button data-test-id="create-collab-button" (click)="collaboratorSignalService.startCreateCollaborator()">
+<button data-test-id="create-collab-button" type="button" (click)="collaboratorSignalService.startCreateCollaborator()">
     Criar Colaborador
 </button>
 }
@@ -10,18 +7,8 @@
 <app-collaborator-create />
 }
 
+<app-collaborator-list [collaborators]="collaborators()" />
 
 <p></p>
 
-@if (selectedCollaborator()) {
 <router-outlet></router-outlet>
-}
-
-@else if (selectedCollaboratorHolidays()) {
-<app-collaborator-holidays>
-</app-collaborator-holidays>
-}
-
-@else if (selectedCollaboratorProject()) {
-<app-associations-project-collaborator [collaboratorId]="selectedCollaboratorProject()!.collabId" />
-}

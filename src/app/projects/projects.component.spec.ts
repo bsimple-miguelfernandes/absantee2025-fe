@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProjectsComponent } from './projects.component';
-import { Project } from './project/project';
+import { Project } from './project/project.model';
 import { of } from 'rxjs';
 import { RouterModule } from '@angular/router';
 import { routes } from '../app.routes';

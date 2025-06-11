@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { CollaboratorSignalService } from './collaborator-signal.service';
 import { HttpClient } from '@angular/common/http';
-import { Collaborator } from './collaborator';
+import { Collaborator } from './collaborator.model';
 import { CollaboratorViewModel } from './collaborator-details/collaborator.viewmodel';
 
 describe('CollaboratorService', () => {
@@ -26,7 +26,7 @@ describe('CollaboratorService', () => {
   });
 
   it('should set selectedCollaborator when selectCollaborator is called', () => {
-    const collaborator : CollaboratorViewModel  =
+    const collaborator: CollaboratorViewModel =
     {
       collabId: "1",
       userId: "1",
@@ -47,9 +47,9 @@ describe('CollaboratorService', () => {
     expect(service.selectedCollaborator()).toEqual(collaborator);
   });
 
-  
+
   it('should set updatedCollaborator when updateCollaborator is called', () => {
-    const collaboratorUpdated : CollaboratorViewModel  =
+    const collaboratorUpdated: CollaboratorViewModel =
     {
       collabId: "1",
       userId: "1",
@@ -83,7 +83,7 @@ describe('CollaboratorService', () => {
   });
 
   it('should set selectedCollaboratorHoliday when selectCollaboratorHolidays is called', () => {
-    const collaborator : CollaboratorViewModel  =
+    const collaborator: CollaboratorViewModel =
     {
       collabId: "1",
       userId: "1",
@@ -105,7 +105,7 @@ describe('CollaboratorService', () => {
   });
 
   it('should set selectedCollaboratorProjects when selectCollaboratorProjects is called', () => {
-    const collaborator : CollaboratorViewModel  =
+    const collaborator: CollaboratorViewModel =
     {
       collabId: "1",
       userId: "1",

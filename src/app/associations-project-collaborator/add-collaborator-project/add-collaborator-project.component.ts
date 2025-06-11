@@ -2,7 +2,7 @@ import { Component, inject, input } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ProjectsDataService } from '../../projects/projects-data.service';
 import { CollaboratorDataService } from '../../collaborators/collaborator-data.service';
-import { AssociationCollaboratorProjectCreateRequest, AssociationProjectCollaboratorCreateRequest } from './add-association';
+import { AssociationCollaboratorProjectCreateRequest, AssociationProjectCollaboratorCreateRequest } from './add-association.model';
 import { ProjectsSignalsService } from '../../projects/projects-signals.service';
 import { CollaboratorSignalService } from '../../collaborators/collaborator-signal.service';
 

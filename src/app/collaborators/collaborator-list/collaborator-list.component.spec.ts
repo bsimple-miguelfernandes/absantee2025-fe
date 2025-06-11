@@ -2,54 +2,54 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CollaboratorListComponent } from './collaborator-list.component';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
-import { Collaborator } from '../collaborator';
+import { Collaborator } from '../collaborator.model';
 import { CollaboratorViewModel } from '../collaborator-details/collaborator.viewmodel';
 
 describe('CollaboratorListComponent', () => {
   let component: CollaboratorListComponent;
   let fixture: ComponentFixture<CollaboratorListComponent>;
-  let collaborators: CollaboratorViewModel [];
+  let collaborators: CollaboratorViewModel[];
   let mockCollaboratorSignalService: jasmine.SpyObj<CollaboratorSignalService>;
 
   beforeEach(async () => {
     mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', [
       'selectCollaborator',
-      'selectCollaboratorHolidays', 
+      'selectCollaboratorHolidays',
       'selectCollaboratorProjects'
     ]);
 
     collaborators = [
-      { 
-       collabId: "0196b4ee-a7fc-750f-a698-6a5dfd27ce71",
-       userId: "37726a9c-7246-4074-bd06-f2a58b494230",
-       names: "John",
-       surnames: "Doe",
-       email: "john.doe@example.com",
-       userPeriod: {
-         _initDate: new Date("2022-05-28T13:07:27.358Z"),
-         _finalDate: new Date("2027-05-28T13:07:27.358Z")
-       },
-       collaboratorPeriod: {
-         _initDate: new Date("2023-05-28T13:07:27.358Z"),
-         _finalDate: new Date("2026-05-28T13:07:27.358Z")
-       }
-     },
-     { 
-       collabId: "b2c7e5d1-8f3a-4c2e-9a1b-2e5d7f8c9b10",
-       userId: "a1b2c3d4-5678-90ab-cdef-1234567890ab",
-       names: "Jane",
-       surnames: "Smith",
-       email: "jane.smith@example.com",
-       userPeriod: {
-         _initDate: new Date("2021-03-15T09:00:00.000Z"),
-         _finalDate: new Date("2026-03-15T09:00:00.000Z")
-       },
-       collaboratorPeriod: {
-         _initDate: new Date("2022-04-01T08:30:00.000Z"),
-         _finalDate: new Date("2025-04-01T08:30:00.000Z")
-       }
-     }
-   ];
+      {
+        collabId: "0196b4ee-a7fc-750f-a698-6a5dfd27ce71",
+        userId: "37726a9c-7246-4074-bd06-f2a58b494230",
+        names: "John",
+        surnames: "Doe",
+        email: "john.doe@example.com",
+        userPeriod: {
+          _initDate: new Date("2022-05-28T13:07:27.358Z"),
+          _finalDate: new Date("2027-05-28T13:07:27.358Z")
+        },
+        collaboratorPeriod: {
+          _initDate: new Date("2023-05-28T13:07:27.358Z"),
+          _finalDate: new Date("2026-05-28T13:07:27.358Z")
+        }
+      },
+      {
+        collabId: "b2c7e5d1-8f3a-4c2e-9a1b-2e5d7f8c9b10",
+        userId: "a1b2c3d4-5678-90ab-cdef-1234567890ab",
+        names: "Jane",
+        surnames: "Smith",
+        email: "jane.smith@example.com",
+        userPeriod: {
+          _initDate: new Date("2021-03-15T09:00:00.000Z"),
+          _finalDate: new Date("2026-03-15T09:00:00.000Z")
+        },
+        collaboratorPeriod: {
+          _initDate: new Date("2022-04-01T08:30:00.000Z"),
+          _finalDate: new Date("2025-04-01T08:30:00.000Z")
+        }
+      }
+    ];
 
     await TestBed.configureTestingModule({
       imports: [CollaboratorListComponent],
@@ -109,7 +109,7 @@ describe('CollaboratorListComponent', () => {
   });
 
   it('should change the table content if new input arrived', () => {
-    const newCollaborators : CollaboratorViewModel [] = [
+    const newCollaborators: CollaboratorViewModel[] = [
       {
         collabId: "4",
         userId: "4",

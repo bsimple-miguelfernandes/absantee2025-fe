@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CollaboratorDetailsComponent } from './collaborator-details.component';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
 import { signal, WritableSignal } from '@angular/core';
-import { Collaborator } from '../collaborator';
+import { Collaborator } from '../collaborator.model';
 import { CollaboratorDataService } from '../collaborator-data.service';
 import { of } from 'rxjs';
 import { CollaboratorViewModel } from './collaborator.viewmodel';
@@ -10,17 +10,17 @@ import { CollaboratorViewModel } from './collaborator.viewmodel';
 describe('CollaboratorDetailsComponent', () => {
   let component: CollaboratorDetailsComponent;
   let fixture: ComponentFixture<CollaboratorDetailsComponent>;
-  let collaborator: CollaboratorViewModel ;
+  let collaborator: CollaboratorViewModel;
   let mockCollaboratorSignalService: jasmine.SpyObj<CollaboratorSignalService>;
   let mockCollaboratorDataService: jasmine.SpyObj<CollaboratorDataService>;
   let selectedSignal: WritableSignal<CollaboratorViewModel | undefined>;
 
   beforeEach(async () => {
-    selectedSignal = signal<CollaboratorViewModel  | undefined>(undefined);
+    selectedSignal = signal<CollaboratorViewModel | undefined>(undefined);
     mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', ['updateCollaborator', 'cancelCreateCollaborator'], {
       selectedCollaborator: selectedSignal
     });
-    mockCollaboratorDataService = jasmine.createSpyObj('CollaboratorDataService',  ['updateCollaborator']);
+    mockCollaboratorDataService = jasmine.createSpyObj('CollaboratorDataService', ['updateCollaborator']);
 
     await TestBed.configureTestingModule({
       imports: [CollaboratorDetailsComponent],
@@ -78,13 +78,13 @@ describe('CollaboratorDetailsComponent', () => {
   });
 
   it('should update form inputs when collaborator input changes', async () => {
-    const newCollaborator : CollaboratorViewModel  = {
+    const newCollaborator: CollaboratorViewModel = {
       collabId: "2",
       userId: '2',
       names: "Bob",
       surnames: "Martinez",
       email: "bob.martinez@example.com",
-      userPeriod:{
+      userPeriod: {
         _initDate: new Date(2021, 1, 1),
         _finalDate: new Date(2024, 6, 30)
       },
@@ -131,13 +131,13 @@ describe('CollaboratorDetailsComponent', () => {
   });
 
   it('should call updateCollaborator with form data', async () => {
-    const newCollaborator : CollaboratorViewModel  = {
+    const newCollaborator: CollaboratorViewModel = {
       collabId: "1",
       userId: '1',
       names: "Bob",
       surnames: "Martinez",
       email: "bob.martinez@example.com",
-      userPeriod:{
+      userPeriod: {
         _initDate: new Date(2021, 1, 1),
         _finalDate: new Date(2024, 6, 30)
       },

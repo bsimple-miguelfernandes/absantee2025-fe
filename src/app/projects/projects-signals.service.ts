@@ -1,19 +1,15 @@
 import { Injectable, signal } from '@angular/core';
-import { Project } from './project/project';
+import { Project } from './project/project.model';
 import { AssociationProjectCollaborators } from '../associations-project-collaborator/association-project-collaborator.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectsSignalsService {
-  private projectSelectedSignal = signal<Project | undefined>(undefined);
-  readonly projectSelected = this.projectSelectedSignal.asReadonly();
-
-  private projectCollaboratorsSelectedSignal = signal<Project | undefined>(undefined);
-  readonly projectCollaboratorSelected = this.projectCollaboratorsSelectedSignal.asReadonly();
 
   private isCreatingProjectFormSignal = signal(false);
   readonly isCreatingProjectForm = this.isCreatingProjectFormSignal.asReadonly();
+
   private isEditingProjectFormSignal = signal<Project | undefined>(undefined);
   readonly isEditingProjectForm = this.isEditingProjectFormSignal.asReadonly();
 
@@ -55,20 +51,8 @@ export class ProjectsSignalsService {
     this.isCreatingProjectFormSignal.set(false);
   }
 
-
   cancelEditProject() {
     this.isEditingProjectFormSignal.set(undefined);
-  }
-
-
-  selectProject(selected: Project | undefined) {
-    this.projectCollaboratorsSelectedSignal.set(undefined);
-    this.projectSelectedSignal.set(selected);
-  }
-
-  selectProjectCollaborators(selected: Project | undefined) {
-    this.projectSelectedSignal.set(undefined);
-    this.projectCollaboratorsSelectedSignal.set(selected);
   }
 
   createProject(projectCreated: Project) {

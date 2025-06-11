@@ -3,7 +3,8 @@ import { CollaboratorSignalService } from '../collaborator-signal.service';
 import { CollaboratorDataService } from '../collaborator-data.service';
 import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
 import { HolidayPeriod, mapHolidayPeriodDtoToHolidayPeriod } from './holiday-period';
-
+import { ActivatedRoute } from '@angular/router';
+import { CollaboratorViewModel } from '../collaborator-details/collaborator.viewmodel';
 
 function dateRangeValidator(group: AbstractControl): ValidationErrors | null {
   const initDate = group.get('initDate')?.value;
@@ -30,35 +31,38 @@ export enum ButtonType {
 export class CollaboratorHolidaysComponent {
   collaboratorSignalService = inject(CollaboratorSignalService);
   collaboratorDataService = inject(CollaboratorDataService);
+  route = inject(ActivatedRoute);
 
-  collaboratorHolidaysSelected = this.collaboratorSignalService.selectedCollaboratorHoliday;
-
+  collaboratorHolidaysSelected!: CollaboratorViewModel;
   collaboratorHolidays!: HolidayPeriod[];
 
   form = new FormGroup({
     holidays: new FormArray<FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string>, buttonText: FormControl<ButtonType> }>>([])
   });
 
-  constructor() {
-    effect(() => {
+  ngOnInit() {
+    this.route.data.subscribe((data) => {
+      this.collaboratorHolidaysSelected = data['collaborator'];
+
       this.collaboratorDataService
-      .getCollaboratorHolidays(this.collaboratorHolidaysSelected()!.collabId)
-      .subscribe((holidays) => {
-        this.collaboratorHolidays = holidays.map(mapHolidayPeriodDtoToHolidayPeriod);
+        .getCollaboratorHolidays(this.collaboratorHolidaysSelected!.collabId)
+        .subscribe((holidays) => {
+          this.collaboratorHolidays = holidays.map(mapHolidayPeriodDtoToHolidayPeriod);
 
-        const holidayControls = this.collaboratorHolidays.map(holiday =>
-          new FormGroup({
-            initDate: new FormControl(holiday.periodDate.initDate),
-            finalDate: new FormControl(holiday.periodDate.finalDate),
-            buttonText: new FormControl(ButtonType.Edit)
-          },
-            { validators: dateRangeValidator }) as FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string>, buttonText: FormControl<ButtonType> }>
-        );
+          const holidayControls = this.collaboratorHolidays.map(holiday =>
+            new FormGroup({
+              initDate: new FormControl(holiday.periodDate.initDate),
+              finalDate: new FormControl(holiday.periodDate.finalDate),
+              buttonText: new FormControl(ButtonType.Edit)
+            },
+              { validators: dateRangeValidator }) as FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string>, buttonText: FormControl<ButtonType> }>
+          );
 
-        this.form.setControl('holidays', new FormArray(holidayControls));
-      });
-    })    
+          this.form.setControl('holidays', new FormArray(holidayControls));
+        });
+    })
   }
+
 
   get holidaysForm(): FormArray<FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string>, buttonText: FormControl<ButtonType> }>> {
     return this.form.get('holidays') as FormArray;
@@ -76,17 +80,17 @@ export class CollaboratorHolidaysComponent {
     if (!this.form.dirty) {
       window.alert("No changes made to this holiday. ");
     }
-    if(this.holidaysForm.length > 0) {
+    if (this.holidaysForm.length > 0) {
       const holidayGroup = this.holidaysForm.at(index);
       if (holidayGroup.valid) {
         if (holidayGroup.value.buttonText == ButtonType.Save) {
-          this.collaboratorDataService.addHoliday(this.collaboratorHolidaysSelected()!.collabId,
+          this.collaboratorDataService.addHoliday(this.collaboratorHolidaysSelected!.collabId,
             holidayGroup.value.initDate!,
             holidayGroup.value.finalDate!)
             .subscribe({
               next: h => {
                 holidayGroup.get('buttonText')?.setValue(ButtonType.Edit),
-                console.log(h);
+                  console.log(h);
                 this.collaboratorHolidays.push(h);
               },
               error: e => {
@@ -103,7 +107,7 @@ export class CollaboratorHolidaysComponent {
             }
           }
 
-          this.collaboratorDataService.editHoliday(this.collaboratorHolidaysSelected()!.collabId, updatedHoliday).subscribe(h => console.log(h));
+          this.collaboratorDataService.editHoliday(this.collaboratorHolidaysSelected!.collabId, updatedHoliday).subscribe(h => console.log(h));
           this.form.markAsPristine();
         }
       } else {

@@ -1,24 +1,20 @@
-import { Component, effect, inject, OnDestroy, OnInit, signal } from '@angular/core';
-import { ProjectComponent } from "./project/project.component";
+import { Component, effect, inject, signal } from '@angular/core';
 import { ProjectsTableComponent } from "./projects-table/projects-table.component";
 import { ProjectsSignalsService } from './projects-signals.service';
-import { AssociationsProjectCollaboratorComponent } from "../associations-project-collaborator/associations-project-collaborator.component";
 import { ProjectsDataService } from './projects-data.service';
-import { Project } from './project/project';
-import { ProjectCreateComponent } from "./create-project/create-project.component";
+import { Project } from './project/project.model';
 import { ProjectFormComponent } from "./project-form/project-form.component";
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-projects',
-  imports: [ProjectsTableComponent, ProjectComponent, AssociationsProjectCollaboratorComponent, ProjectFormComponent],
+  imports: [ProjectsTableComponent, RouterOutlet, ProjectFormComponent],
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.css'
 })
 
 export class ProjectsComponent {
   projectSignalService = inject(ProjectsSignalsService);
-  projectSelected = this.projectSignalService.projectSelected;
-  projectCollaboratorsSelected = this.projectSignalService.projectCollaboratorSelected;
   isCreatingProjectSignal = this.projectSignalService.isCreatingProjectForm;
   isEditingProjectSignal = this.projectSignalService.isEditingProjectForm;
   projectCreatedSignal = this.projectSignalService.projectCreated;
@@ -38,9 +34,6 @@ export class ProjectsComponent {
       }
     })
 
-    this.projectSignalService.selectProject(undefined);
-    this.projectSignalService.selectProjectCollaborators(undefined);
-
     effect(() => {
       const projectCreated = this.projectCreatedSignal();
       const projectEdited = this.projectUpdatedSignal();
@@ -51,7 +44,7 @@ export class ProjectsComponent {
 
       if (projectEdited) {
         this.projects.update(projects =>
-        projects.map(p => p.id === projectEdited.id ? projectEdited : p)
+          projects.map(p => p.id === projectEdited.id ? projectEdited : p)
         );
       }
     })

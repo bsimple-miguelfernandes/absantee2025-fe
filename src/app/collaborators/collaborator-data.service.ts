@@ -1,12 +1,12 @@
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { AssociationProjectCollaborators, AssociationProjectCollaboratorsDTO, mapToAssociationProjectCollaborators } from '../associations-project-collaborator/association-project-collaborator.model';
+import { AssociationProjectCollaborators } from '../associations-project-collaborator/association-project-collaborator.model';
 import { HolidayPeriod, HolidayPeriodDTO } from './collaborator-holidays/holiday-period';
-import { Collaborator } from './collaborator';
+import { Collaborator } from './collaborator.model';
 import { CollaboratorCreateRequest } from './collaborators-create/create-collaborator';
 import { environment } from '../../environments/environment';
-import { AssociationCollaboratorProjectCreateRequest } from '../associations-project-collaborator/add-collaborator-project/add-association';
+import { AssociationCollaboratorProjectCreateRequest } from '../associations-project-collaborator/add-collaborator-project/add-association.model';
 
 @Injectable({
   providedIn: 'root'
@@ -49,15 +49,15 @@ export class CollaboratorDataService {
   }
 
   getAssociations(id: string): Observable<AssociationProjectCollaborators[]> {
-    return this.httpClient.get<AssociationProjectCollaboratorsDTO[]>(`${this.baseUrl}/collaborators/${id}/associations`).pipe(
-      map(dtoList => dtoList.map(dto => mapToAssociationProjectCollaborators(dto)))
-    );
+    return this.httpClient.get<AssociationProjectCollaborators[]>(`${this.baseUrl}/collaborators/${id}/associations`);
   }
 
   createAssociation(id: string, newAssoc: AssociationCollaboratorProjectCreateRequest): Observable<AssociationProjectCollaborators> {
-    return this.httpClient.post<AssociationProjectCollaboratorsDTO>(`${this.baseUrl}/collaborators/${id}/projects`, newAssoc).pipe(
-      map(dto => mapToAssociationProjectCollaborators(dto))
-    );
+    return this.httpClient.post<AssociationProjectCollaborators>(`${this.baseUrl}/collaborators/${id}/projects`, newAssoc);
+  }
+
+  filterByNames(name: string, surname: string): Observable<string[]> {
+    return this.httpClient.get<string[]>(`${this.baseUrl}/collaborators/search?name=${name}&surname=${surname}`);
   }
 
 }

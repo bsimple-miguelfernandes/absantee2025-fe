@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProjectsTableComponent } from './projects-table.component';
-import { Project } from '../project/project';
+import { Project } from '../project/project.model';
 import { ProjectsSignalsService } from '../projects-signals.service';
 
 describe('ProjectsTableComponent', () => {
@@ -80,8 +80,8 @@ describe('ProjectsTableComponent', () => {
   });
 
   it('should change the table content if new input arrived', () => {
-    const newProjects : Project[]= [
-    {
+    const newProjects: Project[] = [
+      {
         id: '3',
         title: "Project3",
         acronym: "P3",
@@ -93,7 +93,7 @@ describe('ProjectsTableComponent', () => {
     ]
     fixture.componentRef.setInput('projects', newProjects);
     fixture.detectChanges();
-    
+
     const rows: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll('table tr');
 
     const cells1 = rows[1].querySelectorAll('td');

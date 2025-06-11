@@ -1,7 +1,8 @@
 import { Component, inject, input } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ProjectsSignalsService } from '../projects-signals.service';
-import { Project } from './project';
+import { Project } from './project.model';
+import { ProjectViewModel } from './project.viewmodel';
 
 @Component({
   selector: 'app-project',
@@ -10,10 +11,10 @@ import { Project } from './project';
   styleUrl: './project.component.css'
 })
 export class ProjectComponent {
+  project = input.required<ProjectViewModel>();
   projectSignalService = inject(ProjectsSignalsService);
-  projectSelected = this.projectSignalService.projectSelected;
 
-  editProject(project: Project){
+  editProject(project: Project) {
     this.projectSignalService.startEditProject(project);
   }
 }

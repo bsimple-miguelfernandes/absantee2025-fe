@@ -3,7 +3,7 @@ import { CollaboratorDataService } from './collaborator-data.service';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { Collaborator } from './collaborator';
+import { Collaborator } from './collaborator.model';
 import { CollaboratorCreateRequest } from './collaborators-create/create-collaborator';
 import { HolidayPeriod } from './collaborator-holidays/holiday-period';
 import { AssociationProjectCollaborators } from '../associations-project-collaborator/association-project-collaborator.model';
@@ -48,14 +48,14 @@ describe('CollaboratorDataService', () => {
     ];
 
     let result: Collaborator[] = [];
-    
+
     service.getCollabs().subscribe(r => (result = r));
-    
+
     const req = httpMock.expectOne(`${baseUrl}/collaborators/details`);
     expect(req.request.method).toBe('GET');
     req.flush(mockCollaborators);
 
-    
+
     expect(result).toEqual(mockCollaborators);
   }));
 
@@ -85,11 +85,11 @@ describe('CollaboratorDataService', () => {
     expect(req.request.method).toBe('GET');
     req.flush(mockCollaborator);
 
-    
+
     expect(result).toEqual(mockCollaborator);
   }));
 
-    it('should create collaborator given a request object', (() => {
+  it('should create collaborator given a request object', (() => {
     const mockCollaboratorCreateRequest: CollaboratorCreateRequest = {
       names: "John",
       surnames: "Doe",
@@ -120,7 +120,7 @@ describe('CollaboratorDataService', () => {
 
     req.flush(createdCollaborator);
 
-    
+
     expect(result).toEqual(createdCollaborator);
   }));
 
@@ -181,7 +181,7 @@ describe('CollaboratorDataService', () => {
 
     req.flush(mockHolidayPeriods);
 
-    
+
     expect(result).toEqual(mockHolidayPeriods);
   }));
 
@@ -205,7 +205,7 @@ describe('CollaboratorDataService', () => {
 
     req.flush(mockHolidayPeriod);
 
-    
+
     expect(result!.periodDate).toEqual(mockHolidayPeriod.periodDate);
   }));
 
@@ -229,7 +229,7 @@ describe('CollaboratorDataService', () => {
 
     req.flush(mockHolidayPeriod);
 
-    
+
     expect(result).toEqual(mockHolidayPeriod);
   }));
 
@@ -256,7 +256,7 @@ describe('CollaboratorDataService', () => {
     expect(req.request.method).toBe('GET');
     req.flush(mockAssociations);
 
-    
+
     expect(result).toEqual(mockAssociations);
   }));
 });

@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
 import { CollaboratorDataService } from '../collaborator-data.service';
 import { of, throwError } from 'rxjs';
-import { Collaborator } from '../collaborator';
+import { Collaborator } from '../collaborator.model';
 import { CollaboratorViewModel } from '../collaborator-details/collaborator.viewmodel';
 
 describe('CollaboratorCreateComponent', () => {
@@ -53,7 +53,7 @@ describe('CollaboratorCreateComponent', () => {
   // Testa o envio do formulário com valores válidos
   it('should call createCollaborator with correct data on submit', fakeAsync(() => {
     const today = new Date();
-    const mockResponse : CollaboratorViewModel  = {
+    const mockResponse: CollaboratorViewModel = {
       collabId: '1',
       userId: '1',
       names: 'John',
@@ -131,13 +131,13 @@ describe('CollaboratorCreateComponent', () => {
     expect(mockSignalService.cancelCreateCollaborator).toHaveBeenCalled();
   });
 
-  it('should emit alert if required fields of collaborator are not filled in and dont request' , fakeAsync(() => {
+  it('should emit alert if required fields of collaborator are not filled in and dont request', fakeAsync(() => {
 
-     spyOn(window, 'alert');
-      
-     const today = new Date();
-     
-     component.form.setValue({
+    spyOn(window, 'alert');
+
+    const today = new Date();
+
+    component.form.setValue({
       names: '', //invalid input
       surnames: 'Doe',
       email: 'john.doe@example.com',

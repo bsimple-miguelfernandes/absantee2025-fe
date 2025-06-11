@@ -1,11 +1,11 @@
-import { BehaviorSubject, map, Observable, tap } from "rxjs";
+import { Observable } from "rxjs";
 import { environment } from "../../environments/environment";
-import { Project } from "./project/project";
+import { Project } from "./project/project.model";
 import { HttpClient } from "@angular/common/http";
-import { AssociationProjectCollaborators, AssociationProjectCollaboratorsDTO, mapToAssociationProjectCollaborators } from "../associations-project-collaborator/association-project-collaborator.model";
+import { AssociationProjectCollaborators } from "../associations-project-collaborator/association-project-collaborator.model";
 import { ProjectCreateRequest } from "./create-project/create-project";
 import { Injectable } from "@angular/core";
-import { AssociationProjectCollaboratorCreateRequest } from "../associations-project-collaborator/add-collaborator-project/add-association";
+import { AssociationProjectCollaboratorCreateRequest } from "../associations-project-collaborator/add-collaborator-project/add-association.model";
 
 @Injectable({ providedIn: 'root' })
 
@@ -24,9 +24,7 @@ export class ProjectsDataService {
   }
 
   getAssociations(id: string): Observable<AssociationProjectCollaborators[]> {
-    return this.http.get<AssociationProjectCollaboratorsDTO[]>(`${this.baseUrl}/Project/${id}/associations`).pipe(
-      map(dtoList => dtoList.map(dto => mapToAssociationProjectCollaborators(dto)))
-    );
+    return this.http.get<AssociationProjectCollaborators[]>(`${this.baseUrl}/Project/${id}/associations`);
   }
 
   createProject(newProject: ProjectCreateRequest): Observable<Project> {
@@ -38,8 +36,6 @@ export class ProjectsDataService {
   }
 
   createAssociation(id: string, newAssoc: AssociationProjectCollaboratorCreateRequest): Observable<AssociationProjectCollaborators> {
-    return this.http.post<AssociationProjectCollaboratorsDTO>(`${this.baseUrl}/Project/${id}/collaborators`, newAssoc).pipe(
-      map(dto => mapToAssociationProjectCollaborators(dto))
-    );;
+    return this.http.post<AssociationProjectCollaborators>(`${this.baseUrl}/Project/${id}/collaborators`, newAssoc);
   }
 }

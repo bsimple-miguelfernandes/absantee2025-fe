@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ProjectsSignalsService } from './projects-signals.service';
-import { Project } from './project/project';
+import { Project } from './project/project.model';
 
 describe('ProjectsSignalsService', () => {
   let service: ProjectsSignalsService;

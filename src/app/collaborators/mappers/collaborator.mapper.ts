@@ -1,5 +1,5 @@
 // collaborator-mapper.ts
-import { Collaborator } from "../collaborator";
+import { Collaborator } from "../collaborator.model";
 import { CollaboratorViewModel } from "../collaborator-details/collaborator.viewmodel";
 
 export function toCollaboratorViewModel(c: Collaborator): CollaboratorViewModel {

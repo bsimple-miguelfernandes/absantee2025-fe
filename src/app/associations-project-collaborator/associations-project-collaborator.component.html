@@ -1,29 +1,30 @@
-@if (projectId()){
+@if (projectSelected){
 @if(!isCreatingAssocProjCollabSignal()) {
 <button data-test-id="create-assocCollabProj-button" (click)="projectSignalService.startCreateAssociation()">
     Add collaborator
 </button>
 } @else {
-<app-add-collaborator-project [projectId]="projectCollaboratorsSelected()!.id" />
+<app-add-collaborator-project [projectId]="projectSelected.id" />
 }
-<h1>{{projectCollaboratorsSelected()?.title}}</h1>
+<h1>{{projectSelected.title}}</h1>
 }
-@if(collaboratorId()) {
+@if(collaboratorSelected) {
 @if(!isCreatingAssocCollabProjSignal()) {
-<button data-test-id="create-assocProjCollab-button" (click)="collaboratorSignalService.startCreateAssociation()">
+<button [routerLink]="['collaborator/', collaboratorSelected.collabId]" data-test-id="create-assocProjCollab-button"
+    (click)="collaboratorSignalService.startCreateAssociation()">
     Add project
 </button>
 }@else {
-<app-add-collaborator-project [collaboratorId]="collaboratorProjectsSelected()!.collabId" />
+<app-add-collaborator-project [collaboratorId]="collaboratorSelected.collabId" />
 }
-<h1>{{collaboratorProjectsSelected()?.names}} {{collaboratorProjectsSelected()?.surnames}}</h1>
+<h1>{{collaboratorSelected.names}} {{collaboratorSelected.surnames}}</h1>
 }
 <table>
     <tr>
-        @if (projectId()) {
+        @if (projectSelected) {
         <th>Email</th>
         }
-        @if(collaboratorId()) {
+        @if(collaboratorSelected) {
         <th>Acronym</th>
         }
         <th>Init Date</th>
@@ -32,28 +33,24 @@
     </tr>
     @for (assoc of associations; track $index) {
     <tr>
-        @if (projectId()) {
+        @if (projectSelected) {
         <td>{{assoc.collaboratorEmail}}</td>
         }
-        @if(collaboratorId()) {
+        @if(collaboratorSelected) {
         <td>{{assoc.projectAcronym}}</td>
         }
         <td>{{assoc.periodDate.initDate | date:'yyyy-MM-dd'}} </td>
         <td>{{assoc.periodDate.finalDate | date:'yyyy-MM-dd'}} </td>
-        @if (projectId()) {
-        <td><button (click)="onSelectCollaboratorDetails(assoc)">Collaborator Details</button> </td>
+        @if (projectSelected) {
+        <td><button [routerLink]="['collaborators/details', assoc.collaboratorId]">Collaborator Details</button> </td>
         }
-        @if(collaboratorId()) {
-        <td><button (click)="onSelectProjectDetails(assoc)">Project Details</button> </td>
+        @if(collaboratorSelected) {
+        <td><button [routerLink]="['projects/details', assoc.projectId]">Project Details</button> </td>
         }
     </tr>
     }
 </table>
 
-@if (projectId() && collaboratorSelected()) {
+@if (projectSelected && collaboratorSelected || collaboratorSelected && projectSelected) {
 <router-outlet></router-outlet>
-}
-
-@if (collaboratorId() && projectSelected()) {
-<app-project />
 }

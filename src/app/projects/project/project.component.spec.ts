@@ -4,7 +4,7 @@ import { ProjectComponent } from './project.component';
 import { routes } from '../../app.routes';
 import { RouterModule } from '@angular/router';
 import { DatePipe } from '@angular/common';
-import { Project } from './project';
+import { Project } from './project.model';
 import { ProjectsSignalsService } from '../projects-signals.service';
 import { signal, WritableSignal } from '@angular/core';
 

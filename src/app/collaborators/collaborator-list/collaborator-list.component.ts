@@ -1,29 +1,31 @@
-import { Component, inject, input } from '@angular/core';
-import { CollaboratorSignalService } from '../collaborator-signal.service';
-import { Collaborator } from '../collaborator';
+import { Component, effect, input } from '@angular/core';
+import { Collaborator } from '../collaborator.model';
 import { CommonModule } from '@angular/common';
-import { CollaboratorViewModel } from '../collaborator-details/collaborator.viewmodel';
 import { RouterLink } from '@angular/router';
+import { SearchCollaboratorsComponent } from "./search-collaborators/search-collaborators.component";
 
 @Component({
   selector: 'app-collaborator-list',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, SearchCollaboratorsComponent],
   templateUrl: './collaborator-list.component.html',
   styleUrl: './collaborator-list.component.css'
 })
 export class CollaboratorListComponent {
-  collaboratorSignalService = inject(CollaboratorSignalService);
   collaborators = input.required<Collaborator[]>();
+  filter: boolean = false;
+  filteredCollaborators: Collaborator[] = [];
 
-  onSelectCollaborator(collaborator: CollaboratorViewModel ){
-    this.collaboratorSignalService.selectCollaborator(collaborator);
+  constructor() {
+    effect(() => {
+      this.filteredCollaborators = this.collaborators();
+    })
   }
 
-  onSelectCollaboratorHolidays(collaborator: CollaboratorViewModel ){
-    this.collaboratorSignalService.selectCollaboratorHolidays(collaborator);
+  startFilter() {
+    this.filter = !this.filter;
   }
 
-  onSelectCollaboratorProjects(collaborator: CollaboratorViewModel ){
-    this.collaboratorSignalService.selectCollaboratorProjects(collaborator);
+  onFilter(newCollabs: string[]) {
+    this.filteredCollaborators = this.filteredCollaborators.filter(c => newCollabs.includes(c.collabId));
   }
 }

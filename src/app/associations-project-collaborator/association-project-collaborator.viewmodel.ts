@@ -1,6 +1,6 @@
 import { PeriodDate } from "../PeriodDate";
 
-export interface AssociationProjectCollaborators {
+export interface AssociationProjectCollaboratorsViewModel {
     id: string,
     projectId: string,
     projectAcronym: string,

@@ -1,10 +1,9 @@
-
-
 <div class="project-card">
-    <h1>{{ projectSelected()!.title }}</h1>
-    <h2>{{ projectSelected()!.acronym }}</h2>
-    <p class="dates">
-      {{ projectSelected()!.periodDate.initDate| date: 'longDate' }} – {{ projectSelected()!.periodDate.finalDate| date: 'longDate' }}
-    </p>
-    <button (click)="editProject(projectSelected()!)">Manage Project</button>
-  </div>
+  <h1>{{ project().title }}</h1>
+  <h2>{{ project().acronym }}</h2>
+  <p class="dates">
+    {{ project().periodDate.initDate| date: 'longDate' }} – {{ project().periodDate.finalDate| date:
+    'longDate' }}
+  </p>
+  <button (click)="editProject(project())">Manage Project</button>
+</div>

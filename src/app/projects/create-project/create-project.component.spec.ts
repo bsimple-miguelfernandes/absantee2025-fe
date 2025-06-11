@@ -3,7 +3,7 @@ import { ProjectCreateComponent } from "./create-project.component";
 import { ReactiveFormsModule } from "@angular/forms";
 import { ProjectsSignalsService } from "../projects-signals.service";
 import { ProjectsDataService } from "../projects-data.service";
-import { Project } from "../project/project";
+import { Project } from "../project/project.model";
 import { ProjectCreateRequest } from "./create-project";
 import { of } from "rxjs";
 import { By } from "@angular/platform-browser";
@@ -83,7 +83,7 @@ describe('ProjectCreateComponent', () => {
         let initDate = new Date("2025-10-01");
         let finalDate = new Date("2025-12-01");
 
-        
+
 
         component.form.setValue({
             title: 'qwertyuiopasdfghjklçzxcvbnmqwertyuiopasdfghjklçzxcvbnm',
@@ -110,7 +110,7 @@ describe('ProjectCreateComponent', () => {
         component.form.setValue({
             title: 'test',
             acronym: '',
-             periodDate: {
+            periodDate: {
                 initDate: initDate.toISOString().split('T')[0],
                 finalDate: finalDate.toISOString().split('T')[0],
             }
@@ -133,20 +133,20 @@ describe('ProjectCreateComponent', () => {
         component.form.setValue({
             title: 'test',
             acronym: 'a',
-             periodDate: {
+            periodDate: {
                 initDate: initDate.toISOString().split('T')[0],
                 finalDate: finalDate.toISOString().split('T')[0],
             }
         })
 
-         component.onSubmit();
+        component.onSubmit();
 
         expect(component.form.invalid).toBeTrue();
         expect(component.acronym.errors?.['pattern']).toBeTruthy();
         expect(component.projectDataService.createProject).not.toHaveBeenCalled();
     });
 
-    
+
 
     it('should mark as invalid if acronym has size bigger than 10', () => {
 
@@ -177,7 +177,7 @@ describe('ProjectCreateComponent', () => {
 
         component.form.setValue({
             title: 'test',
-            acronym:'T',
+            acronym: 'T',
             periodDate: {
                 initDate: initDate.toISOString().split('T')[0],
                 finalDate: finalDate.toISOString().split('T')[0],

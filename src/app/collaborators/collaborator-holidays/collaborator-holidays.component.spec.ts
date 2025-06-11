@@ -6,7 +6,7 @@ import { CollaboratorSignalService } from '../collaborator-signal.service';
 import { CollaboratorDataService } from '../collaborator-data.service';
 import { HolidayPeriod } from './holiday-period';
 import { of } from 'rxjs';
-import { Collaborator } from '../collaborator';
+import { Collaborator } from '../collaborator.model';
 import { By } from '@angular/platform-browser';
 
 describe('CollaboratorHolidaysComponent', () => {

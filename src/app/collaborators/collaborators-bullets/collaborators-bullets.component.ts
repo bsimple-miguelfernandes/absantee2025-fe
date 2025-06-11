@@ -1,6 +1,6 @@
 import { Component, inject, input } from '@angular/core';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
-import { Collaborator } from '../collaborator';
+import { Collaborator } from '../collaborator.model';
 
 @Component({
   selector: 'app-collaborators-bullets',
@@ -13,7 +13,7 @@ export class CollaboratorsBulletsComponent {
 
   collaboratorSignalService = inject(CollaboratorSignalService);
 
-  onSelectCollaborator(collaborator: Collaborator){
+  onSelectCollaborator(collaborator: Collaborator) {
     this.collaboratorSignalService.selectCollaborator(collaborator);
   }
 }
