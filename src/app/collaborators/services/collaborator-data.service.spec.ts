@@ -2,11 +2,11 @@ import { TestBed } from '@angular/core/testing';
 import { CollaboratorDataService } from './collaborator-data.service';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
-import { Collaborator } from './collaborator.model';
-import { CollaboratorCreateRequest } from './collaborators-create/create-collaborator';
-import { HolidayPeriod } from './collaborator-holidays/holiday-period';
-import { AssociationProjectCollaborators } from '../associations-project-collaborator/association-project-collaborator.model';
+import { environment } from '../../../environments/environment';
+import { Collaborator } from '../collaborator.model';
+import { CollaboratorCreateRequest } from '../collaborators-create/create-collaborator';
+import { HolidayPeriod } from '../collaborator-holidays/holiday-period';
+import { AssociationProjectCollaborators } from '../../associations-project-collaborator/association-project-collaborator.model';
 
 describe('CollaboratorDataService', () => {
   let service: CollaboratorDataService;

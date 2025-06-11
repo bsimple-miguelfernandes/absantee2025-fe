@@ -1,12 +1,12 @@
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { AssociationProjectCollaborators } from '../associations-project-collaborator/association-project-collaborator.model';
-import { HolidayPeriod, HolidayPeriodDTO } from './collaborator-holidays/holiday-period';
-import { Collaborator } from './collaborator.model';
-import { CollaboratorCreateRequest } from './collaborators-create/create-collaborator';
-import { environment } from '../../environments/environment';
-import { AssociationCollaboratorProjectCreateRequest } from '../associations-project-collaborator/add-collaborator-project/add-association.model';
+import { AssociationProjectCollaborators } from '../../associations-project-collaborator/association-project-collaborator.model';
+import { HolidayPeriod, HolidayPeriodDTO } from '../collaborator-holidays/holiday-period';
+import { Collaborator } from '../collaborator.model';
+import { CollaboratorCreateRequest } from '../collaborators-create/create-collaborator';
+import { environment } from '../../../environments/environment';
+import { AssociationCollaboratorProjectCreateRequest } from '../../associations-project-collaborator/add-collaborator-project/add-association.model';
 
 @Injectable({
   providedIn: 'root'

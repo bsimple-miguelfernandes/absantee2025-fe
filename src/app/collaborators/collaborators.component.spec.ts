@@ -1,8 +1,8 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { CollaboratorsComponent } from './collaborators.component';
-import { CollaboratorSignalService } from './collaborator-signal.service';
+import { CollaboratorSignalService } from './services/collaborator-signal.service';
 import { signal, WritableSignal } from '@angular/core';
-import { CollaboratorDataService } from './collaborator-data.service';
+import { CollaboratorDataService } from './services/collaborator-data.service';
 import { of, throwError } from 'rxjs';
 import { Collaborator } from './collaborator.model';
 import { HolidayPeriod } from './collaborator-holidays/holiday-period';

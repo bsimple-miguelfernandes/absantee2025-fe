@@ -1,11 +1,11 @@
 import { Observable } from "rxjs";
-import { environment } from "../../environments/environment";
-import { Project } from "./project/project.model";
+import { environment } from "../../../environments/environment";
+import { Project } from "../project/project.model";
 import { HttpClient } from "@angular/common/http";
-import { AssociationProjectCollaborators } from "../associations-project-collaborator/association-project-collaborator.model";
-import { ProjectCreateRequest } from "./create-project/create-project";
+import { AssociationProjectCollaborators } from "../../associations-project-collaborator/association-project-collaborator.model";
+import { ProjectCreateRequest } from "../create-project/create-project";
 import { Injectable } from "@angular/core";
-import { AssociationProjectCollaboratorCreateRequest } from "../associations-project-collaborator/add-collaborator-project/add-association.model";
+import { AssociationProjectCollaboratorCreateRequest } from "../../associations-project-collaborator/add-collaborator-project/add-association.model";
 
 @Injectable({ providedIn: 'root' })
 

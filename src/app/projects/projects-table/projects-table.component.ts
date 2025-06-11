@@ -1,5 +1,5 @@
 import { Component, inject, input } from '@angular/core';
-import { ProjectsSignalsService } from '../projects-signals.service';
+import { ProjectsSignalsService } from '../services/projects-signals.service';
 import { Project } from '../project/project.model';
 import { RouterLink } from '@angular/router';
 

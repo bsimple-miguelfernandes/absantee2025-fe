@@ -1,10 +1,12 @@
 import { Component, inject, input } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { ProjectsDataService } from '../../projects/projects-data.service';
-import { CollaboratorDataService } from '../../collaborators/collaborator-data.service';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { ProjectsDataService } from '../../projects/services/projects-data.service';
+import { CollaboratorDataService } from '../../collaborators/services/collaborator-data.service';
 import { AssociationCollaboratorProjectCreateRequest, AssociationProjectCollaboratorCreateRequest } from './add-association.model';
-import { ProjectsSignalsService } from '../../projects/projects-signals.service';
-import { CollaboratorSignalService } from '../../collaborators/collaborator-signal.service';
+import { ProjectsSignalsService } from '../../projects/services/projects-signals.service';
+import { CollaboratorSignalService } from '../../collaborators/services/collaborator-signal.service';
+import { formatDate } from '../../utils/date';
+import { dateRangeValidator } from '../../utils/validators';
 
 @Component({
   selector: 'app-add-collaborator-project',
@@ -33,34 +35,16 @@ export class AddCollaboratorProjectComponent {
   initForm() {
     this.form = new FormGroup({
       periodDate: new FormGroup({
-        initDate: new FormControl<string>(this.formatDate(new Date()), Validators.required),
-        finalDate: new FormControl<string>(this.formatDate(new Date()), Validators.required)
+        initDate: new FormControl<string>(formatDate(new Date()), Validators.required),
+        finalDate: new FormControl<string>(formatDate(new Date()), Validators.required)
       })
-    }, { validators: this.dateRangeValidator() });
+    }, { validators: dateRangeValidator() });
 
     if (this.collaboratorId()) {
       this.form.addControl('projectId', this.fb.control('', Validators.required)); // <-- INPUT
     } else if (this.projectId()) {
       this.form.addControl('collaboratorId', this.fb.control('', Validators.required)); // <-- INPUT
     }
-  }
-
-  private formatDate(date: Date): string {
-    return date.toISOString().split('T')[0];
-  }
-
-  dateRangeValidator(): ValidatorFn {
-    return (group: AbstractControl): ValidationErrors | null => {
-      const init = group.get('initDate')?.value;
-      const final = group.get('finalDate')?.value;
-
-      if (!init || !final) return null; // Don't validate if either date is missing
-
-      const initDate = new Date(init);
-      const finalDate = new Date(final);
-
-      return initDate < finalDate ? null : { dateRangeInvalid: true };
-    };
   }
 
   onSubmit() {
@@ -125,11 +109,4 @@ export class AddCollaboratorProjectComponent {
     }
   }
 
-  get collabId() {
-    return this.form.get('collaboratorId') as FormControl;
-  }
-
-  get projId() {
-    return this.form.get('projectId') as FormControl;
-  }
 }

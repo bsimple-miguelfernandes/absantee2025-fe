@@ -5,10 +5,10 @@ import { Project } from './project/project.model';
 import { of } from 'rxjs';
 import { RouterModule } from '@angular/router';
 import { routes } from '../app.routes';
-import { ProjectsDataService } from './projects-data.service';
+import { ProjectsDataService } from './services/projects-data.service';
 import { signal, WritableSignal } from '@angular/core';
-import { ProjectsSignalsService } from './projects-signals.service';
-import { CollaboratorDataService } from '../collaborators/collaborator-data.service';
+import { ProjectsSignalsService } from './services/projects-signals.service';
+import { CollaboratorDataService } from '../collaborators/services/collaborator-data.service';
 
 describe('ProjectsComponent', () => {
   let component: ProjectsComponent;

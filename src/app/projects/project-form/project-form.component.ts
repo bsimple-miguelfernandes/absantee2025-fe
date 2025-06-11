@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, effect } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ProjectsSignalsService } from '../projects-signals.service';
+import { ProjectsSignalsService } from '../services/projects-signals.service';
 import { ProjectForm } from '../project/project.model';
 import { PeriodDateForm } from '../../PeriodDate';
-import { ProjectsDataService } from '../projects-data.service';
+import { ProjectsDataService } from '../services/projects-data.service';
 
 @Component({
   selector: 'app-project-form',

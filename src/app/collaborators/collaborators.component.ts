@@ -1,7 +1,7 @@
 import { Component, effect, inject, signal } from '@angular/core';
-import { CollaboratorSignalService } from './collaborator-signal.service';
+import { CollaboratorSignalService } from './services/collaborator-signal.service';
 import { CollaboratorListComponent } from "./collaborator-list/collaborator-list.component";
-import { CollaboratorDataService } from './collaborator-data.service';
+import { CollaboratorDataService } from './services/collaborator-data.service';
 import { CollaboratorCreateComponent } from './collaborators-create/collaborator-create.component';
 import { CommonModule } from '@angular/common';
 import { CollaboratorViewModel } from './collaborator-details/collaborator.viewmodel';

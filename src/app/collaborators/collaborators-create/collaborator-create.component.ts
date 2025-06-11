@@ -1,9 +1,10 @@
 import { Component, inject } from "@angular/core";
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { CollaboratorSignalService } from "../collaborator-signal.service";
-import { CollaboratorDataService } from "../collaborator-data.service";
+import { CollaboratorSignalService } from "../services/collaborator-signal.service";
+import { CollaboratorDataService } from "../services/collaborator-data.service";
 import { CollaboratorCreateRequest } from "./create-collaborator";
 import { Validators } from "@angular/forms";
+import { formatDate } from "../../utils/date";
 
 @Component({
   selector: 'app-collaborator-create',
@@ -19,16 +20,12 @@ export class CollaboratorCreateComponent {
     names: new FormControl('', Validators.required),
     surnames: new FormControl('', Validators.required),
     email: new FormControl('', Validators.required),
-    deactivationDate: new FormControl(this.formatDate(new Date()), Validators.required),
+    deactivationDate: new FormControl(formatDate(new Date()), Validators.required),
     collaboratorPeriod: new FormGroup({
-      initDate: new FormControl(this.formatDate(new Date()), Validators.required),
-      finalDate: new FormControl(this.formatDate(new Date()), Validators.required)
+      initDate: new FormControl(formatDate(new Date()), Validators.required),
+      finalDate: new FormControl(formatDate(new Date()), Validators.required)
     }),
   });
-
-  private formatDate(date: Date): string {
-    return date.toISOString().split('T')[0];
-  }
 
   onSubmit() {
     if (this.form.invalid) {
@@ -51,8 +48,6 @@ export class CollaboratorCreateComponent {
       }
     };
 
-
-    // O subscribe é necessario porque ao fazeres um pedido http ele retorna um Observable que tem de ser subscrito
     this.collaboratorDataService.createCollaborator(newCollaborator).subscribe({
       next: (createdCollaborator) => {
         console.log('Created collaborator:', createdCollaborator);

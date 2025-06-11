@@ -2,8 +2,8 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { CollaboratorCreateComponent } from './collaborator-create.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { CollaboratorSignalService } from '../collaborator-signal.service';
-import { CollaboratorDataService } from '../collaborator-data.service';
+import { CollaboratorSignalService } from '../services/collaborator-signal.service';
+import { CollaboratorDataService } from '../services/collaborator-data.service';
 import { of, throwError } from 'rxjs';
 import { Collaborator } from '../collaborator.model';
 import { CollaboratorViewModel } from '../collaborator-details/collaborator.viewmodel';

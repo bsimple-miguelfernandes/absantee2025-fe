@@ -1,6 +1,6 @@
 import { Component, inject, output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CollaboratorDataService } from '../collaborator-data.service';
+import { CollaboratorDataService } from '../services/collaborator-data.service';
 import { Collaborator } from '../collaborator.model';
 
 @Component({

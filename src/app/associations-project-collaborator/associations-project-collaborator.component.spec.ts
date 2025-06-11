@@ -1,9 +1,9 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { AssociationsProjectCollaboratorComponent } from './associations-project-collaborator.component';
-import { ProjectsDataService } from '../projects/projects-data.service';
-import { ProjectsSignalsService } from '../projects/projects-signals.service';
-import { CollaboratorDataService } from '../collaborators/collaborator-data.service';
-import { CollaboratorSignalService } from '../collaborators/collaborator-signal.service';
+import { ProjectsDataService } from '../projects/services/projects-data.service';
+import { ProjectsSignalsService } from '../projects/services/projects-signals.service';
+import { CollaboratorDataService } from '../collaborators/services/collaborator-data.service';
+import { CollaboratorSignalService } from '../collaborators/services/collaborator-signal.service';
 import { AssociationProjectCollaborators } from './association-project-collaborator.model';
 import { of, throwError } from 'rxjs';
 import { signal, WritableSignal } from '@angular/core';

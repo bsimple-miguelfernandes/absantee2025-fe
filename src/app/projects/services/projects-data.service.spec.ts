@@ -3,7 +3,7 @@ import { HttpTestingController } from '@angular/common/http/testing';
 import { ProjectsDataService } from './projects-data.service';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Project } from './project/project.model';
+import { Project } from '../project/project.model';
 
 describe('ProjectsDataService', () => {
   let service: ProjectsDataService;

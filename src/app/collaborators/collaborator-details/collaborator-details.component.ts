@@ -1,11 +1,12 @@
-import { Component, inject, input, OnChanges, OnInit } from '@angular/core';
+import { Component, inject, input, OnChanges } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CollaboratorSignalService } from '../collaborator-signal.service';
+import { CollaboratorSignalService } from '../services/collaborator-signal.service';
 import { CollaboratorDetailsForm } from '../collaborator.model';
 import { PeriodDateTimeForm } from '../../PeriodDate';
-import { CollaboratorDataService } from '../collaborator-data.service';
+import { CollaboratorDataService } from '../services/collaborator-data.service';
 import { CollaboratorViewModel } from './collaborator.viewmodel';
 import { fromCollaboratorViewModel } from '../mappers/collaborator.mapper';
+import { formatDate } from '../../utils/date';
 
 @Component({
   selector: 'app-collaborator-details',
@@ -31,12 +32,12 @@ export class CollaboratorDetailsComponent implements OnChanges {
         surnames: new FormControl(collaboratorObj.surnames),
         email: new FormControl(collaboratorObj.email),
         userPeriodDateTime: new FormGroup<PeriodDateTimeForm>({
-          _initDate: new FormControl(this.formatDate(collaboratorObj.userPeriod._initDate)),
-          _finalDate: new FormControl(this.formatDate(collaboratorObj.userPeriod._finalDate)),
+          _initDate: new FormControl(formatDate(collaboratorObj.userPeriod._initDate)),
+          _finalDate: new FormControl(formatDate(collaboratorObj.userPeriod._finalDate)),
         }),
         collaboratorPeriodDateTime: new FormGroup<PeriodDateTimeForm>({
-          _initDate: new FormControl(this.formatDate(collaboratorObj.collaboratorPeriod._initDate)),
-          _finalDate: new FormControl(this.formatDate(collaboratorObj.collaboratorPeriod._finalDate)),
+          _initDate: new FormControl(formatDate(collaboratorObj.collaboratorPeriod._initDate)),
+          _finalDate: new FormControl(formatDate(collaboratorObj.collaboratorPeriod._finalDate)),
         })
       });
     } else {
@@ -45,19 +46,15 @@ export class CollaboratorDetailsComponent implements OnChanges {
         surnames: collaboratorObj.surnames,
         email: collaboratorObj.email,
         userPeriodDateTime: {
-          _initDate: this.formatDate(collaboratorObj.userPeriod._initDate),
-          _finalDate: this.formatDate(collaboratorObj.userPeriod._finalDate)
+          _initDate: formatDate(collaboratorObj.userPeriod._initDate),
+          _finalDate: formatDate(collaboratorObj.userPeriod._finalDate)
         },
         collaboratorPeriodDateTime: {
-          _initDate: this.formatDate(collaboratorObj.collaboratorPeriod._initDate),
-          _finalDate: this.formatDate(collaboratorObj.collaboratorPeriod._finalDate)
+          _initDate: formatDate(collaboratorObj.collaboratorPeriod._initDate),
+          _finalDate: formatDate(collaboratorObj.collaboratorPeriod._finalDate)
         }
       });
     }
-  }
-
-  private formatDate(date: Date): string {
-    return new Date(date).toISOString().split('T')[0];
   }
 
   onSubmit() {

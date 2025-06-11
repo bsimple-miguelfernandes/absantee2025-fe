@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProjectsTableComponent } from './projects-table.component';
 import { Project } from '../project/project.model';
-import { ProjectsSignalsService } from '../projects-signals.service';
+import { ProjectsSignalsService } from '../services/projects-signals.service';
 
 describe('ProjectsTableComponent', () => {
   let component: ProjectsTableComponent;

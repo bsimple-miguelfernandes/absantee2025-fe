@@ -1,7 +1,7 @@
 import { ResolveFn } from '@angular/router';
 import { CollaboratorViewModel } from '../collaborator-details/collaborator.viewmodel';
 import { inject } from '@angular/core';
-import { CollaboratorDataService } from '../collaborator-data.service';
+import { CollaboratorDataService } from '../services/collaborator-data.service';
 import { map } from 'rxjs';
 import { toCollaboratorViewModel } from '../mappers/collaborator.mapper';
 

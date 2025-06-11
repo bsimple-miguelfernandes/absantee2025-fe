@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ProjectCreateComponent } from "./create-project.component";
 import { ReactiveFormsModule } from "@angular/forms";
-import { ProjectsSignalsService } from "../projects-signals.service";
-import { ProjectsDataService } from "../projects-data.service";
+import { ProjectsSignalsService } from "../services/projects-signals.service";
+import { ProjectsDataService } from "../services/projects-data.service";
 import { Project } from "../project/project.model";
 import { ProjectCreateRequest } from "./create-project";
 import { of } from "rxjs";

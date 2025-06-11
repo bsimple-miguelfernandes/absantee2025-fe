@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CollaboratorDetailsComponent } from './collaborator-details.component';
-import { CollaboratorSignalService } from '../collaborator-signal.service';
+import { CollaboratorSignalService } from '../services/collaborator-signal.service';
 import { signal, WritableSignal } from '@angular/core';
 import { Collaborator } from '../collaborator.model';
-import { CollaboratorDataService } from '../collaborator-data.service';
+import { CollaboratorDataService } from '../services/collaborator-data.service';
 import { of } from 'rxjs';
 import { CollaboratorViewModel } from './collaborator.viewmodel';
 

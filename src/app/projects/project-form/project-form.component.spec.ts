@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProjectFormComponent } from './project-form.component';
-import { ProjectsSignalsService } from '../projects-signals.service';
-import { ProjectsDataService } from '../projects-data.service';
+import { ProjectsSignalsService } from '../services/projects-signals.service';
+import { ProjectsDataService } from '../services/projects-data.service';
 
 describe('ProjectFormComponent', () => {
   let component: ProjectFormComponent;
@@ -10,15 +10,15 @@ describe('ProjectFormComponent', () => {
   let mockProjectSignalService: jasmine.SpyObj<ProjectsSignalsService>;
   let mockProjectDataService: jasmine.SpyObj<ProjectsDataService>;
   beforeEach(async () => {
-        
-    mockProjectDataService = jasmine.createSpyObj('ProjectDataService',  ['']);
+
+    mockProjectDataService = jasmine.createSpyObj('ProjectDataService', ['']);
     await TestBed.configureTestingModule({
       imports: [ProjectFormComponent],
       providers: [
-        { provide: ProjectsDataService, useValue: mockProjectDataService}
+        { provide: ProjectsDataService, useValue: mockProjectDataService }
       ]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ProjectFormComponent);
     component = fixture.componentInstance;

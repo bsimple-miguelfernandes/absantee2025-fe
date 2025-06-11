@@ -2,8 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { CollaboratorSignalService } from './collaborator-signal.service';
 import { HttpClient } from '@angular/common/http';
-import { Collaborator } from './collaborator.model';
-import { CollaboratorViewModel } from './collaborator-details/collaborator.viewmodel';
+import { CollaboratorViewModel } from '../collaborator-details/collaborator.viewmodel';
 
 describe('CollaboratorService', () => {
   let service: CollaboratorSignalService;
@@ -44,7 +43,7 @@ describe('CollaboratorService', () => {
     };
     service.selectCollaborator(collaborator)
 
-    expect(service.selectedCollaborator()).toEqual(collaborator);
+    expect(service.selectCollaborator()).toEqual(collaborator);
   });
 
 

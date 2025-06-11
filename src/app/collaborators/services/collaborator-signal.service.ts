@@ -1,11 +1,14 @@
 import { Injectable, signal } from '@angular/core';
-import { AssociationProjectCollaborators } from '../associations-project-collaborator/association-project-collaborator.model';
-import { CollaboratorViewModel } from './collaborator-details/collaborator.viewmodel';
+import { AssociationProjectCollaborators } from '../../associations-project-collaborator/association-project-collaborator.model';
+import { CollaboratorViewModel } from '../collaborator-details/collaborator.viewmodel';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CollaboratorSignalService {
+  selectCollaborator(collaborator: CollaboratorViewModel) {
+    throw new Error('Method not implemented.');
+  }
 
   private updateCollaboratorSignal = signal<CollaboratorViewModel | undefined>(undefined);
   readonly updatedCollaborator = this.updateCollaboratorSignal.asReadonly();

@@ -1,8 +1,8 @@
 import { Component, effect, inject, input } from '@angular/core';
-import { ProjectsSignalsService } from '../projects/projects-signals.service';
-import { ProjectsDataService } from '../projects/projects-data.service';
-import { CollaboratorDataService } from '../collaborators/collaborator-data.service';
-import { CollaboratorSignalService } from '../collaborators/collaborator-signal.service';
+import { ProjectsSignalsService } from '../projects/services/projects-signals.service';
+import { ProjectsDataService } from '../projects/services/projects-data.service';
+import { CollaboratorDataService } from '../collaborators/services/collaborator-data.service';
+import { CollaboratorSignalService } from '../collaborators/services/collaborator-signal.service';
 import { DatePipe } from '@angular/common';
 import { AddCollaboratorProjectComponent } from "./add-collaborator-project/add-collaborator-project.component";
 import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';

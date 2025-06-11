@@ -1,8 +1,10 @@
 import { Component, inject } from "@angular/core";
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
-import { ProjectsSignalsService } from "../projects-signals.service";
-import { ProjectsDataService } from "../projects-data.service";
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { ProjectsSignalsService } from "../services/projects-signals.service";
+import { ProjectsDataService } from "../services/projects-data.service";
 import { ProjectCreateRequest } from "./create-project";
+import { formatDate } from "../../utils/date";
+import { dateRangeValidator } from "../../utils/validators";
 
 @Component({
     selector: 'app-project-create',
@@ -26,28 +28,10 @@ export class ProjectCreateComponent {
             Validators.pattern(/^[A-Z0-9]{1,10}$/)
         ]),
         periodDate: new FormGroup({
-            initDate: new FormControl<string>(this.formatDate(new Date()), Validators.required),
-            finalDate: new FormControl<string>(this.formatDate(new Date()), Validators.required),
-        }, { validators: this.dateRangeValidator() }),
+            initDate: new FormControl<string>(formatDate(new Date()), Validators.required),
+            finalDate: new FormControl<string>(formatDate(new Date()), Validators.required),
+        }, { validators: dateRangeValidator() }),
     });
-
-    private formatDate(date: Date): string {
-        return date.toISOString().split('T')[0];
-    }
-
-    dateRangeValidator(): ValidatorFn {
-        return (group: AbstractControl): ValidationErrors | null => {
-            const init = group.get('initDate')?.value;
-            const final = group.get('finalDate')?.value;
-
-            if (!init || !final) return null; // Don't validate if either date is missing
-
-            const initDate = new Date(init);
-            const finalDate = new Date(final);
-
-            return initDate < finalDate ? null : { dateRangeInvalid: true };
-        };
-    }
 
     onSubmit() {
         if (this.form.invalid) {

@@ -1,21 +1,12 @@
-import { Component, effect, inject } from '@angular/core';
-import { CollaboratorSignalService } from '../collaborator-signal.service';
-import { CollaboratorDataService } from '../collaborator-data.service';
-import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import { CollaboratorSignalService } from '../services/collaborator-signal.service';
+import { CollaboratorDataService } from '../services/collaborator-data.service';
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
 import { HolidayPeriod, mapHolidayPeriodDtoToHolidayPeriod } from './holiday-period';
 import { ActivatedRoute } from '@angular/router';
 import { CollaboratorViewModel } from '../collaborator-details/collaborator.viewmodel';
-
-function dateRangeValidator(group: AbstractControl): ValidationErrors | null {
-  const initDate = group.get('initDate')?.value;
-  const finalDate = group.get('finalDate')?.value;
-
-  if (!initDate || !finalDate) return null;
-
-  return new Date(initDate) <= new Date(finalDate)
-    ? null
-    : { dateRangeInvalid: true };
-}
+import { dateRangeValidator } from '../../utils/validators';
+import { formatDateString } from '../../utils/date';
 
 export enum ButtonType {
   Edit,
@@ -63,19 +54,6 @@ export class CollaboratorHolidaysComponent {
     })
   }
 
-
-  get holidaysForm(): FormArray<FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string>, buttonText: FormControl<ButtonType> }>> {
-    return this.form.get('holidays') as FormArray;
-  }
-
-  getButtonText(value: ButtonType): string {
-    return ButtonType[value];
-  }
-
-  private formatDate(date: string): string {
-    return new Date(date).toISOString().split('T')[0];
-  }
-
   editHoliday(index: number) {
     if (!this.form.dirty) {
       window.alert("No changes made to this holiday. ");
@@ -102,8 +80,8 @@ export class CollaboratorHolidaysComponent {
           const updatedHoliday: HolidayPeriod = {
             id: this.collaboratorHolidays[index].id,
             periodDate: {
-              initDate: this.formatDate(holidayGroup.get('initDate')!.value),
-              finalDate: this.formatDate(holidayGroup.get('finalDate')!.value)
+              initDate: formatDateString(holidayGroup.get('initDate')!.value),
+              finalDate: formatDateString(holidayGroup.get('finalDate')!.value)
             }
           }
 
@@ -119,10 +97,18 @@ export class CollaboratorHolidaysComponent {
   createEmptyHoliday() {
     this.holidaysForm.push(
       new FormGroup({
-        initDate: new FormControl(this.formatDate(new Date().toDateString())),
-        finalDate: new FormControl(this.formatDate(new Date().toDateString())),
+        initDate: new FormControl(formatDateString(new Date().toDateString())),
+        finalDate: new FormControl(formatDateString(new Date().toDateString())),
         buttonText: new FormControl(ButtonType.Save)
       }, { validators: dateRangeValidator }) as FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string>, buttonText: FormControl<ButtonType> }>
     );
+  }
+
+  get holidaysForm(): FormArray<FormGroup<{ initDate: FormControl<string>, finalDate: FormControl<string>, buttonText: FormControl<ButtonType> }>> {
+    return this.form.get('holidays') as FormArray;
+  }
+
+  getButtonText(value: ButtonType): string {
+    return ButtonType[value];
   }
 }

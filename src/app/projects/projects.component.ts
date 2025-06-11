@@ -1,7 +1,7 @@
 import { Component, effect, inject, signal } from '@angular/core';
 import { ProjectsTableComponent } from "./projects-table/projects-table.component";
-import { ProjectsSignalsService } from './projects-signals.service';
-import { ProjectsDataService } from './projects-data.service';
+import { ProjectsSignalsService } from './services/projects-signals.service';
+import { ProjectsDataService } from './services/projects-data.service';
 import { Project } from './project/project.model';
 import { ProjectFormComponent } from "./project-form/project-form.component";
 import { RouterOutlet } from '@angular/router';

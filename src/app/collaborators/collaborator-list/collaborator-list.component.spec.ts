@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CollaboratorListComponent } from './collaborator-list.component';
-import { CollaboratorSignalService } from '../collaborator-signal.service';
+import { CollaboratorSignalService } from '../services/collaborator-signal.service';
 import { Collaborator } from '../collaborator.model';
 import { CollaboratorViewModel } from '../collaborator-details/collaborator.viewmodel';
 

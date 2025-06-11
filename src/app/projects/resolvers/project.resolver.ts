@@ -1,5 +1,5 @@
 import { ResolveFn } from '@angular/router';
-import { ProjectsDataService } from '../projects-data.service';
+import { ProjectsDataService } from '../services/projects-data.service';
 import { inject } from '@angular/core';
 import { ProjectViewModel } from '../project/project.viewmodel';
 import { map } from 'rxjs';

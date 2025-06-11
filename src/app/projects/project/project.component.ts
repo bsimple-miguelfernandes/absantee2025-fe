@@ -1,6 +1,6 @@
 import { Component, inject, input } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { ProjectsSignalsService } from '../projects-signals.service';
+import { ProjectsSignalsService } from '../services/projects-signals.service';
 import { Project } from './project.model';
 import { ProjectViewModel } from './project.viewmodel';
 
