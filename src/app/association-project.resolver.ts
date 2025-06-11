@@ -9,6 +9,6 @@ export class AssociationProjectResolver implements Resolve<AssociationProjectCol
   constructor(private service: ProjectsDataService) {}
   
   resolve(route: ActivatedRouteSnapshot): Observable<AssociationProjectCollaborators[]> {
-    return this.service.getAssociations(route.paramMap.get('id')!);
+    return this.service.getAssociations(route.paramMap.get('selectedId')!);
   }
 }

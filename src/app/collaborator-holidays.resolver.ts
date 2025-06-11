@@ -9,6 +9,6 @@ export class CollaboratorHolidaysResolver implements Resolve<HolidayPeriod[]> {
   constructor(private service: CollaboratorDataService) {}
   
   resolve(route: ActivatedRouteSnapshot): Observable<HolidayPeriod[]> {
-    return this.service.getCollaboratorHolidays(route.paramMap.get('id')!);
+    return this.service.getCollaboratorHolidays(route.paramMap.get('collabId')!);
   }
 }

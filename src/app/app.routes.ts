@@ -1,10 +1,16 @@
 import { Routes } from '@angular/router';
-import { AppComponent } from './app.component';
 import { ProjectsComponent } from './projects/projects.component';
 import { HomeComponent } from './home/home.component';
 import { CollaboratorsComponent } from './collaborators/collaborators.component';
 import { CollaboratorDetailsComponent } from './collaborators/collaborator-details/collaborator-details.component';
 import { CollaboratorDetailsResolver } from './collaborator-details.resolver';
+import { CollaboratorHolidaysResolver } from './collaborator-holidays.resolver';
+import { CollaboratorHolidaysComponent } from './collaborators/collaborator-holidays/collaborator-holidays.component';
+import { AssociationsProjectCollaboratorComponent } from './associations-project-collaborator/associations-project-collaborator.component';
+import { AssociationCollaboratorResolver } from './association-collaborator.resolver';
+import { ProjectComponent } from './projects/project/project.component';
+import { ProjectDetailsResolver } from './project-details.resolver';
+import { AssociationProjectResolver } from './association-project.resolver';
 
 export const routes: Routes = [
     {
@@ -13,7 +19,23 @@ export const routes: Routes = [
     },
     {
         path: 'projects',
-        component: ProjectsComponent
+        component: ProjectsComponent,
+        children: [
+            {
+                path: 'details/:projectId',
+                component: ProjectComponent,
+                resolve: {
+                    ProjectData: ProjectDetailsResolver
+                }
+            },
+            {
+                path: 'associations/:selectedId',
+                component: AssociationsProjectCollaboratorComponent,
+                resolve: {
+                    AssociationData: AssociationProjectResolver
+                }
+            }
+        ]
     },
     {
         path: 'collaborators',
@@ -24,6 +46,20 @@ export const routes: Routes = [
                 component: CollaboratorDetailsComponent,
                 resolve: {
                     DetailsData: CollaboratorDetailsResolver
+                }
+            },
+            {
+                path: 'holidays/:collabId',
+                component: CollaboratorHolidaysComponent,
+                resolve: {
+                    HolidaysData: CollaboratorHolidaysResolver
+                }
+            },
+            {
+                path: 'associations/:selectedId',
+                component: AssociationsProjectCollaboratorComponent,
+                resolve: {
+                    AssociationData: AssociationCollaboratorResolver
                 }
             }
         ]

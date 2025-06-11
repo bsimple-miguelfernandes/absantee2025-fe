@@ -15,8 +15,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './collaborator-details.component.css'
 })
 export class CollaboratorDetailsComponent {
-  collabId = input.required<string>();
-  collaborator = input.required<CollaboratorViewModel>();
+  collaborator!: CollaboratorViewModel;
   collaboratorService = inject(CollaboratorSignalService);
   collaboratorDataService = inject(CollaboratorDataService);
 
@@ -24,38 +23,40 @@ export class CollaboratorDetailsComponent {
 
   constructor(private route: ActivatedRoute) {}
 
-  ngOnChanges() {
-    const collab = this.route.snapshot.data['DetailsData'];
+  ngOnInit() {
+    this.route.data.subscribe(data => {
+      this.collaborator = data['DetailsData'];
 
-    if (!this.form) {
-      this.form = new FormGroup<CollaboratorDetailsForm>({
-        names: new FormControl(collab.names),
-        surnames: new FormControl(collab.surnames),
-        email: new FormControl(collab.email),
-        userPeriodDateTime: new FormGroup<PeriodDateTimeForm>({
-          _initDate: new FormControl(this.formatDate(collab.userPeriod._initDate)),
-          _finalDate: new FormControl(this.formatDate(collab.userPeriod._finalDate)),
-        }),
-        collaboratorPeriodDateTime: new FormGroup<PeriodDateTimeForm>({
-          _initDate: new FormControl(this.formatDate(collab.collaboratorPeriod._initDate)),
-          _finalDate: new FormControl(this.formatDate(collab.collaboratorPeriod._finalDate)),
-        })
-      });
-    } else {
-      this.form.patchValue({
-        names: collab.names,
-        surnames: collab.surnames,
-        email: collab.email,
-        userPeriodDateTime: {
-          _initDate: this.formatDate(collab.userPeriod._initDate),
-          _finalDate: this.formatDate(collab.userPeriod._finalDate)
-        },
-        collaboratorPeriodDateTime: {
-          _initDate: this.formatDate(collab.collaboratorPeriod._initDate),
-          _finalDate: this.formatDate(collab.collaboratorPeriod._finalDate)
-        }
-      });
-    }
+      if (!this.form) {
+        this.form = new FormGroup<CollaboratorDetailsForm>({
+          names: new FormControl(this.collaborator.names),
+          surnames: new FormControl(this.collaborator.surnames),
+          email: new FormControl(this.collaborator.email),
+          userPeriodDateTime: new FormGroup<PeriodDateTimeForm>({
+            _initDate: new FormControl(this.formatDate(this.collaborator.userPeriod._initDate)),
+            _finalDate: new FormControl(this.formatDate(this.collaborator.userPeriod._finalDate)),
+          }),
+          collaboratorPeriodDateTime: new FormGroup<PeriodDateTimeForm>({
+            _initDate: new FormControl(this.formatDate(this.collaborator.collaboratorPeriod._initDate)),
+            _finalDate: new FormControl(this.formatDate(this.collaborator.collaboratorPeriod._finalDate)),
+          })
+        });
+      } else {
+        this.form.patchValue({
+          names: this.collaborator.names,
+          surnames: this.collaborator.surnames,
+          email: this.collaborator.email,
+          userPeriodDateTime: {
+            _initDate: this.formatDate(this.collaborator.userPeriod._initDate),
+            _finalDate: this.formatDate(this.collaborator.userPeriod._finalDate)
+          },
+          collaboratorPeriodDateTime: {
+            _initDate: this.formatDate(this.collaborator.collaboratorPeriod._initDate),
+            _finalDate: this.formatDate(this.collaborator.collaboratorPeriod._finalDate)
+          }
+        });
+      }
+    });
   }
 
   private formatDate(date: Date): string {
@@ -68,8 +69,8 @@ export class CollaboratorDetailsComponent {
     const formValue = this.form.value;
 
     const updatedCollaboratorVM: CollaboratorViewModel = {
-      collabId: this.collaborator()!.collabId,
-      userId: this.collaborator()!.userId,
+      collabId: this.collaborator.collabId,
+      userId: this.collaborator.userId,
       names: formValue.names,
       surnames: formValue.surnames,
       email: formValue.email,
