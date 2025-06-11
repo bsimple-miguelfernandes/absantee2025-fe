@@ -1,12 +1,13 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, Inject, inject, input } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CollaboratorSignalService } from '../collaborator-signal.service';
-import { CollaboratorDetailsForm } from '../collaborator';
+import { Collaborator, CollaboratorDetailsForm } from '../collaborator';
 import { PeriodDateTimeForm } from '../../PeriodDate';
 import { CollaboratorDataService } from '../collaborator-data.service';
 import { CollaboratorViewModel } from './collaborator.viewmodel';
 import { fromCollaboratorViewModel } from '../mappers/collaborator.mapper';
 import { ActivatedRoute } from '@angular/router';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-collaborator-details',
@@ -21,11 +22,13 @@ export class CollaboratorDetailsComponent {
 
   form!: FormGroup;
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute, @Inject(MAT_DIALOG_DATA) private data: { collab: Collaborator }) {}
 
   ngOnInit() {
-    this.route.data.subscribe(data => {
-      this.collaborator = data['DetailsData'];
+    /*this.route.data.subscribe(data => {
+      this.collaborator = data['DetailsData'];*/
+
+      this.collaborator = this.data.collab;
 
       if (!this.form) {
         this.form = new FormGroup<CollaboratorDetailsForm>({
@@ -56,7 +59,7 @@ export class CollaboratorDetailsComponent {
           }
         });
       }
-    });
+    //});
   }
 
   private formatDate(date: Date): string {

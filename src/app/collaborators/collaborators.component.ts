@@ -1,12 +1,8 @@
-import { Component, effect, inject, signal } from '@angular/core';
-import { CollaboratorDetailsComponent } from "./collaborator-details/collaborator-details.component";
-import { CollaboratorSignalService } from './collaborator-signal.service';
+import { Component, inject, signal } from '@angular/core';
 import { CollaboratorListComponent } from "./collaborator-list/collaborator-list.component";
-import { CollaboratorsBulletsComponent } from "./collaborators-bullets/collaborators-bullets.component";
 import { CollaboratorHolidaysComponent } from "./collaborator-holidays/collaborator-holidays.component";
 import { AssociationsProjectCollaboratorComponent } from "../associations-project-collaborator/associations-project-collaborator.component";
 import { CollaboratorDataService } from './collaborator-data.service';
-import { Collaborator } from './collaborator';
 import { CollaboratorCreateComponent } from './collaborators-create/collaborator-create.component';
 import { CommonModule } from '@angular/common';
 import { AssociationsTrainingModuleCollaboratorComponent } from '../associations-training-module-collaborator/associations-training-module-collaborator.component';
@@ -19,7 +15,6 @@ import { RouterOutlet } from '@angular/router';
   standalone: true,
   imports: [
     CommonModule,
-    CollaboratorListComponent,
     RouterOutlet
   ],
   templateUrl: './collaborators.component.html',
