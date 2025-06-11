@@ -15,12 +15,16 @@
       <tr>
         <td>{{trainingSubject.subject}}</td>
         <td>
-        <button [routerLink]="['/training-subjects', trainingSubject.id]">
+        <button (click)="selectRoute('/training-subjects', trainingSubject.id)">
            Details
         </button>
         </td>
       </tr>
-    }
+    
+      @if(selectedTrainingSubject === trainingSubject.id){
+        <router-outlet></router-outlet>
+      }
+}
   </tbody>
 </table>
 
