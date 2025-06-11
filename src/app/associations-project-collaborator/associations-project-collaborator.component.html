@@ -20,9 +20,9 @@
         <td>{{assoc.periodDate.finalDate | date:'yyyy-MM-dd'}} </td>
 
         @if (isInProject) {
-        <td><button>Collaborator Details</button> </td>
+        <td><button [routerLink]="['/collaborators/details', assoc.collaboratorId]">Collaborator Details</button> </td>
         } @else {
-        <td><button>Project Details</button> </td>
+        <td><button [routerLink]="['/projects/details', assoc.projectId]">Project Details</button> </td>
         }
     </tr>
     }
