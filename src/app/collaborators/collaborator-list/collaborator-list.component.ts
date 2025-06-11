@@ -1,8 +1,10 @@
-import { Component, Input, input, SimpleChanges } from '@angular/core';
+import { Component, Input, SimpleChanges } from '@angular/core';
 import { Collaborator } from '../collaborator';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { CollaboratorDetailsComponent } from '../collaborator-details/collaborator-details.component';
 
 @Component({
   selector: 'app-collaborator-list',
@@ -20,6 +22,8 @@ export class CollaboratorListComponent {
     name: new FormControl(''),
     email: new FormControl('')
   });
+
+  constructor(private dialog: MatDialog) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if(changes['inputCollabs'] && this.inputCollabs) {
@@ -43,5 +47,13 @@ export class CollaboratorListComponent {
     if(!this.showFilters) {
       this.collaborators = this.inputCollabs;
     }
+  }
+
+  openDetails(collab: Collaborator) {
+    this.dialog.open(CollaboratorDetailsComponent, {
+      data: {
+        collab: collab
+      }
+    })
   }
 }

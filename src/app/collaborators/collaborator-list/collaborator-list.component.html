@@ -23,7 +23,7 @@
     <tr>
         <td>{{collab.names}}</td>
         <td>{{collab.email}}</td>
-        <td><button [routerLink]='["details", collab.collabId]' data-testid="details-btn">
+        <td><button (click)="openDetails(collab)" data-testid="details-btn">
                 Collaborator Details
             </button>
             <button [routerLink]='["holidays", collab.collabId]' data-testid="holidays-btn">
