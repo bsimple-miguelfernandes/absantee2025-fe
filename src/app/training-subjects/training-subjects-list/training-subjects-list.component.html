@@ -1,5 +1,6 @@
 <app-filters [fields]="[
   {name: 'title', label: 'Title'},
+  {name: 'description' , label: 'Description'}
 ]"
 (filtersChanged)="applyFilters($event)">
 
@@ -8,12 +9,14 @@
 <table>
     <tr>
       <th>Name</th>
+      <th>Description</th>
       <th>Actions</th>
     </tr>
   <tbody>
     @for (trainingSubject of filteredSubjects; track trainingSubject.id) {
       <tr>
         <td>{{trainingSubject.subject}}</td>
+        <td>{{trainingSubject.description}}</td>
         <td>
         <button (click)="selectRoute('/training-subjects', trainingSubject.id)">
            Details

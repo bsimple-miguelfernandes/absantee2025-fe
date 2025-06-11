@@ -5,7 +5,7 @@ export function toTrainingSubjectViewModel(s: TrainingSubject): TrainingSubjectV
     return {
         id: s.id,
         subject: s.subject,
-        description: s.subject
+        description: s.description
     }
 }
 

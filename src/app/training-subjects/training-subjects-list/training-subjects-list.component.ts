@@ -37,9 +37,12 @@ export class TrainingSubjectsListComponent {
 
   applyFilters(filters: Record<string, string>) {
     const title = filters['title']?.toLowerCase() ?? '';
+    const description = filters['description']?.toLowerCase() ?? '';
 
     this.filteredSubjects = this.trainingSubjects().filter(subject =>
-      (!title || subject.subject.toLowerCase().includes(title))
-    )
+      (!title || subject.subject.toLowerCase().includes(title)) &&
+      (!description || subject.description.toLowerCase().includes(description))
+    );
   }
+
 }
