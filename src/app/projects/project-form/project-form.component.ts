@@ -5,6 +5,7 @@ import { ProjectsSignalsService } from '../services/projects-signals.service';
 import { ProjectForm } from '../project/project.model';
 import { PeriodDateForm } from '../../PeriodDate';
 import { ProjectsDataService } from '../services/projects-data.service';
+import { formatDate } from '../../utils/date';
 
 @Component({
   selector: 'app-project-form',
@@ -27,8 +28,8 @@ export class ProjectFormComponent {
       title: new FormControl('', Validators.required),
       acronym: new FormControl('', Validators.required),
       periodDate: new FormGroup<PeriodDateForm>({
-        initDate: new FormControl(this.formatDate(new Date()), Validators.required),
-        finalDate: new FormControl(this.formatDate(new Date()), Validators.required),
+        initDate: new FormControl(formatDate(new Date()), Validators.required),
+        finalDate: new FormControl(formatDate(new Date()), Validators.required),
       })
     });
 
@@ -41,10 +42,6 @@ export class ProjectFormComponent {
       }
     });
   };
-
-  private formatDate(date: Date): string {
-    return date.toISOString().split('T')[0];
-  }
 
   cancel() {
     this.projectSignalsService.cancelCreateProject();

@@ -1,7 +1,4 @@
-<app-projects-table [projects]="projects()"></app-projects-table>
-
-<br>
-
+<br />
 @if(!isCreatingProjectSignal()) {
 <button data-test-id="create-project-button" (click)="projectSignalService.startCreateProject()">
     Criar projeto
@@ -12,8 +9,7 @@
 }
 
 @if(isEditingProjectSignal()){
-<app-project-form></app-project-form>
+<app-project-form />
 }
 
-
-<router-outlet></router-outlet>
+<app-projects-table [projects]="projects()" />

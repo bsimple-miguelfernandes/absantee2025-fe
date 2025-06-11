@@ -24,29 +24,6 @@ describe('CollaboratorService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should set selectedCollaborator when selectCollaborator is called', () => {
-    const collaborator: CollaboratorViewModel =
-    {
-      collabId: "1",
-      userId: "1",
-      names: "Alice",
-      surnames: "Johnson",
-      email: "alice.johnson@example.com",
-      userPeriod: {
-        _initDate: new Date('2019-06-10'),
-        _finalDate: new Date('2025-11-31')
-      },
-      collaboratorPeriod: {
-        _initDate: new Date('2019-06-10'),
-        _finalDate: new Date('2025-11-31')
-      }
-    };
-    service.selectCollaborator(collaborator)
-
-    expect(service.selectCollaborator()).toEqual(collaborator);
-  });
-
-
   it('should set updatedCollaborator when updateCollaborator is called', () => {
     const collaboratorUpdated: CollaboratorViewModel =
     {
@@ -81,47 +58,4 @@ describe('CollaboratorService', () => {
     expect(service.isCreatingCollaborator()).toBe(false);
   });
 
-  it('should set selectedCollaboratorHoliday when selectCollaboratorHolidays is called', () => {
-    const collaborator: CollaboratorViewModel =
-    {
-      collabId: "1",
-      userId: "1",
-      names: "Alice",
-      surnames: "Johnson",
-      email: "alice.johnson@example.com",
-      userPeriod: {
-        _initDate: new Date('2019-06-10'),
-        _finalDate: new Date('2025-11-31')
-      },
-      collaboratorPeriod: {
-        _initDate: new Date('2019-06-10'),
-        _finalDate: new Date('2025-11-31')
-      }
-    };
-    service.selectCollaboratorHolidays(collaborator)
-
-    expect(service.selectedCollaboratorHoliday()).toEqual(collaborator);
-  });
-
-  it('should set selectedCollaboratorProjects when selectCollaboratorProjects is called', () => {
-    const collaborator: CollaboratorViewModel =
-    {
-      collabId: "1",
-      userId: "1",
-      names: "Alice",
-      surnames: "Johnson",
-      email: "alice.johnson@example.com",
-      userPeriod: {
-        _initDate: new Date('2019-06-10'),
-        _finalDate: new Date('2025-11-31')
-      },
-      collaboratorPeriod: {
-        _initDate: new Date('2019-06-10'),
-        _finalDate: new Date('2025-11-31')
-      }
-    };
-    service.selectCollaboratorProjects(collaborator)
-
-    expect(service.selectedCollaboratorProjects()).toEqual(collaborator);
-  });
 });

@@ -1,24 +1,20 @@
-<button (click)="startFilter()">Filter</button>
-@if (filter) {
-<app-search-collaborators (filteredList)="onFilter($event)" />
-}
 <table>
     <tr>
         <th>Names</th>
         <th>Email</th>
         <th>Actions</th>
     </tr>
-    @for (collab of filteredCollaborators; track collab.email) {
+    @for (collab of collaborators(); track collab.email) {
     <tr>
         <td>{{collab.names}}</td>
         <td>{{collab.email}}</td>
-        <td><button (click)="select('details', collab.collabId)" data-testid="details-btn">
+        <td><button (click)="selectRoute('details', collab.collabId)" data-testid="details-btn">
                 Details
             </button>
-            <button (click)="select('holidayPlan', collab.collabId)" data-testid="holidays-btn">
+            <button (click)="selectRoute('holidayPlan', collab.collabId)" data-testid="holidays-btn">
                 Hollidays
             </button>
-            <button (click)="select('associations', collab.collabId)" data-testid="projects-btn">
+            <button (click)="selectRoute('associations', collab.collabId)" data-testid="projects-btn">
                 Projects
             </button>
         </td>

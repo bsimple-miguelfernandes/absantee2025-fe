@@ -2,9 +2,10 @@ import { Component, effect, inject, signal } from '@angular/core';
 import { ProjectsTableComponent } from "./projects-table/projects-table.component";
 import { ProjectsSignalsService } from './services/projects-signals.service';
 import { ProjectsDataService } from './services/projects-data.service';
-import { Project } from './project/project.model';
 import { ProjectFormComponent } from "./project-form/project-form.component";
 import { RouterOutlet } from '@angular/router';
+import { ProjectViewModel } from './project/project.viewmodel';
+import { toProjectViewModel } from './mappers/project.mapper';
 
 @Component({
   selector: 'app-projects',
@@ -21,12 +22,12 @@ export class ProjectsComponent {
   projectUpdatedSignal = this.projectSignalService.projectUpdated;
 
   projectDataService = inject(ProjectsDataService);
-  projects = signal<Project[]>([]);
+  projects = signal<ProjectViewModel[]>([]);
 
   constructor() {
     this.projectDataService.getProjects().subscribe({
       next: (projects) => {
-        this.projects.set(projects);
+        this.projects.set(projects.map(toProjectViewModel));
       },
       error: (error) => {
         alert('Error loading projects');
@@ -49,7 +50,6 @@ export class ProjectsComponent {
       }
     })
   }
-
 
   startCreate() {
     this.projectSignalService.startCreateProject();

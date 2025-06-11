@@ -6,7 +6,7 @@ import { CollaboratorCreateComponent } from './collaborators-create/collaborator
 import { CommonModule } from '@angular/common';
 import { CollaboratorViewModel } from './collaborator-details/collaborator.viewmodel';
 import { toCollaboratorViewModel } from './mappers/collaborator.mapper';
-import { RouterOutlet } from '@angular/router';
+import { SearchCollaboratorsComponent } from "./search-collaborators/search-collaborators.component";
 
 @Component({
   selector: 'app-collaborators',
@@ -15,7 +15,7 @@ import { RouterOutlet } from '@angular/router';
     CommonModule,
     CollaboratorListComponent,
     CollaboratorCreateComponent,
-    RouterOutlet
+    SearchCollaboratorsComponent
   ],
   templateUrl: './collaborators.component.html',
   styleUrls: ['./collaborators.component.css']
@@ -28,6 +28,8 @@ export class CollaboratorsComponent {
   collaboratorUpdated = this.collaboratorSignalService.updatedCollaborator;
 
   collaborators = signal<CollaboratorViewModel[]>([]);
+  filter: boolean = false;
+  filteredCollaborators: CollaboratorViewModel[] = [];
 
   constructor() {
     this.collaboratorDataService.getCollabs().subscribe({
@@ -56,10 +58,22 @@ export class CollaboratorsComponent {
       if (created) {
         this.collaborators.update(collabs => [...collabs, created]);
       }
-    })
+    });
+
+    effect(() => {
+      this.filteredCollaborators = this.collaborators();
+    });
   }
 
   startCreate() {
     this.collaboratorSignalService.startCreateCollaborator();
+  }
+
+  startFilter() {
+    this.filter = !this.filter;
+  }
+
+  onFilter(newCollabs: string[]) {
+    this.filteredCollaborators = this.filteredCollaborators.filter(c => newCollabs.includes(c.collabId));
   }
 }
