@@ -1,10 +1,25 @@
+@if(this.showFilters) {
+    <form [formGroup]="searchForm" class="search-form">
+    <label>
+        Name:
+        <input formControlName="name" type="text" placeholder="Search by name">
+    </label>
+
+    <label>
+        Email:
+        <input formControlName="email" type="email" placeholder="Search by email">
+    </label>
+    </form>
+}
+<button (click)="this.toggleFilters()">Show Filters</button>
+
 <table>
     <tr>
         <th>Names</th>
         <th>Email</th>
         <th>Actions</th>
     </tr>
-    @for (collab of collaborators(); track collab.email) {
+    @for (collab of collaborators; track collab.email) {
     <tr>
         <td>{{collab.names}}</td>
         <td>{{collab.email}}</td>
