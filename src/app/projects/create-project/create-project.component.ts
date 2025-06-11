@@ -1,8 +1,8 @@
 import { Component, inject } from "@angular/core";
-import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
 import { ProjectsSignalsService } from "../projects-signals.service";
 import { ProjectsDataService } from "../projects-data.service";
-import { ProjectCreateRequest } from "./create-project";
+import { ProjectCreateRequest } from "../models/create-project.model";
 
 @Component({
     selector: 'app-project-create',

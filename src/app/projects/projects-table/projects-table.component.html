@@ -8,9 +8,12 @@
     <tr>
         <td>{{proj.title}}</td>
         <td>{{proj.acronym}}</td>
-        <td><button [routerLink]="['details', proj.id]" data-testid="details-btn">Project Details</button>
-            <button [routerLink]="['associations', proj.id]" data-testid="collabs-btn">Project Collaborators</button>
+        <td><button (click)="selectRoute('details', proj.id!)" data-testid="details-btn">Details</button>
+            <button (click)="selectRoute('associations', proj.id!)" data-testid="collabs-btn">Collaborators</button>
         </td>
     </tr>
+    @if (selectedProject === proj.id) {
+    <router-outlet />
+    }
     }
 </table>

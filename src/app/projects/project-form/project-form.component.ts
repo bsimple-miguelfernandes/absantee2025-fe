@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, effect } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ProjectsSignalsService } from '../projects-signals.service';
-import { ProjectForm } from '../project/project';
 import { PeriodDateForm } from '../../PeriodDate';
 import { ProjectsDataService } from '../projects-data.service';
+import { ProjectForm } from '../models/project.model';
 
 @Component({
   selector: 'app-project-form',
@@ -62,8 +62,8 @@ export class ProjectFormComponent {
         this.projectDataService.createProject(project).subscribe({
           next: (createdProject) => {
             console.log("Created project: ", createdProject);
-        this.projectSignalsService.saveProject(project);
-        this.projectSignalsService.cancelCreateProject();
+            this.projectSignalsService.saveProject(project);
+            this.projectSignalsService.cancelCreateProject();
           }
         })
       } else if (this.isEditingProjectForm()) {

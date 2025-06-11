@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProjectsComponent } from './projects.component';
-import { Project } from './project/project';
 import { of } from 'rxjs';
 import { RouterModule } from '@angular/router';
 import { routes } from '../app.routes';
@@ -9,6 +8,7 @@ import { ProjectsDataService } from './projects-data.service';
 import { signal, WritableSignal } from '@angular/core';
 import { ProjectsSignalsService } from './projects-signals.service';
 import { CollaboratorDataService } from '../collaborators/collaborator-data.service';
+import { Project } from './models/project.model';
 
 describe('ProjectsComponent', () => {
   let component: ProjectsComponent;

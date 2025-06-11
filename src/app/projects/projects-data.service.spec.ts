@@ -3,7 +3,7 @@ import { HttpTestingController } from '@angular/common/http/testing';
 import { ProjectsDataService } from './projects-data.service';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { Project } from './project/project';
+import { Project } from './models/project.model';
 
 describe('ProjectsDataService', () => {
   let service: ProjectsDataService;
@@ -32,7 +32,7 @@ describe('ProjectsDataService', () => {
         title: 'Project 1',
         acronym: 'P1',
         periodDate: {
-          initDate : new Date('2024-01-01'),
+          initDate: new Date('2024-01-01'),
           finalDate: new Date('2024-12-31')
         }
       }
@@ -49,7 +49,7 @@ describe('ProjectsDataService', () => {
     expect(result).toEqual(mockProjects);
   }));
 
-    it('should fetch project by id', (() => {
+  it('should fetch project by id', (() => {
     const mockProject: Project = {
       id: '1',
       title: 'Project 1',
@@ -60,16 +60,16 @@ describe('ProjectsDataService', () => {
       }
     };
 
-      let result!: Project;
-      service.getProjectById('1').subscribe(p => (result = p));
+    let result!: Project;
+    service.getProjectById('1').subscribe(p => (result = p));
 
-      const req = httpMock.expectOne('http://localhost:5073/api/Project/1');
-      expect(req.request.method).toBe('GET');
-      req.flush(mockProject);
+    const req = httpMock.expectOne('http://localhost:5073/api/Project/1');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockProject);
 
-      
-      expect(result).toEqual(mockProject);
-    }));
+
+    expect(result).toEqual(mockProject);
+  }));
 
 
   // it('should fetch associations by id', (() => {

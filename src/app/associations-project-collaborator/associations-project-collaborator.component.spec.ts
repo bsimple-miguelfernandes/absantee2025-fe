@@ -7,7 +7,7 @@ import { CollaboratorSignalService } from '../collaborators/collaborator-signal.
 import { AssociationProjectCollaborators } from './association-project-collaborator.model';
 import { of, throwError } from 'rxjs';
 import { signal, WritableSignal } from '@angular/core';
-import { Project } from '../projects/project/project';
+import { Project } from '../projects/models/project.model';
 import { Collaborator } from '../collaborators/collaborator';
 
 describe('AssociationsProjectCollaboratorComponent', () => {

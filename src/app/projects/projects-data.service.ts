@@ -1,11 +1,11 @@
-import { BehaviorSubject, map, Observable, tap } from "rxjs";
+import { map, Observable } from "rxjs";
 import { environment } from "../../environments/environment";
-import { Project } from "./project/project";
 import { HttpClient } from "@angular/common/http";
 import { AssociationProjectCollaborators, AssociationProjectCollaboratorsDTO, mapToAssociationProjectCollaborators } from "../associations-project-collaborator/association-project-collaborator.model";
-import { ProjectCreateRequest } from "./create-project/create-project";
+import { ProjectCreateRequest } from "./models/create-project.model";
 import { Injectable } from "@angular/core";
 import { AssociationProjectCollaboratorCreateRequest } from "../associations-project-collaborator/add-collaborator-project/add-association";
+import { Project } from "./models/project.model";
 
 @Injectable({ providedIn: 'root' })
 

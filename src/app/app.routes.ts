@@ -11,6 +11,7 @@ import { AssociationCollaboratorResolver } from './association-collaborator.reso
 import { ProjectComponent } from './projects/project/project.component';
 import { ProjectDetailsResolver } from './project-details.resolver';
 import { AssociationProjectResolver } from './association-project.resolver';
+import { ProjectFormComponent } from './projects/project-form/project-form.component';
 
 export const routes: Routes = [
     {
@@ -24,6 +25,13 @@ export const routes: Routes = [
             {
                 path: 'details/:projectId',
                 component: ProjectComponent,
+                resolve: {
+                    ProjectData: ProjectDetailsResolver
+                }
+            },
+            {
+                path: 'edit/:projectId',
+                component: ProjectFormComponent,
                 resolve: {
                     ProjectData: ProjectDetailsResolver
                 }

@@ -1,36 +1,36 @@
 import { Component, effect, inject, signal } from '@angular/core';
-import { ProjectComponent } from "./project/project.component";
 import { ProjectsTableComponent } from "./projects-table/projects-table.component";
 import { ProjectsSignalsService } from './projects-signals.service';
-import { AssociationsProjectCollaboratorComponent } from "../associations-project-collaborator/associations-project-collaborator.component";
 import { ProjectsDataService } from './projects-data.service';
-import { Project } from './project/project';
 import { ProjectFormComponent } from "./project-form/project-form.component";
 import { RouterModule } from '@angular/router';
+import { ProjectViewModel } from './models/project-view-model.model';
+import { SearchProjectsComponent } from "./search-projects/search-projects.component";
 
 @Component({
   selector: 'app-projects',
-  imports: [ProjectsTableComponent, ProjectComponent, AssociationsProjectCollaboratorComponent, ProjectFormComponent, RouterModule],
+  imports: [ProjectsTableComponent, ProjectFormComponent, RouterModule, SearchProjectsComponent],
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.css'
 })
 
 export class ProjectsComponent {
   projectSignalService = inject(ProjectsSignalsService);
-  projectSelected = this.projectSignalService.projectSelected;
-  projectCollaboratorsSelected = this.projectSignalService.projectCollaboratorSelected;
   isCreatingProjectSignal = this.projectSignalService.isCreatingProjectForm;
   isEditingProjectSignal = this.projectSignalService.isEditingProjectForm;
   projectCreatedSignal = this.projectSignalService.projectCreated;
   projectUpdatedSignal = this.projectSignalService.projectUpdated;
 
   projectDataService = inject(ProjectsDataService);
-  projects = signal<Project[]>([]);
+  projects = signal<ProjectViewModel[]>([]);
+
+  filteredList: ProjectViewModel[] = [];
 
   constructor() {
     this.projectDataService.getProjects().subscribe({
       next: (projects) => {
         this.projects.set(projects);
+        this.filteredList = projects;
       },
       error: (error) => {
         alert('Error loading projects');
@@ -48,7 +48,7 @@ export class ProjectsComponent {
 
       if (projectEdited) {
         this.projects.update(projects =>
-        projects.map(p => p.id === projectEdited.id ? projectEdited : p)
+          projects.map(p => p.id === projectEdited.id ? projectEdited : p)
         );
       }
     })
@@ -57,4 +57,9 @@ export class ProjectsComponent {
   startCreate() {
     this.projectSignalService.startCreateProject();
   }
+
+  onFilter(filtered: ProjectViewModel[]) {
+    this.filteredList = filtered;
+  }
+
 }

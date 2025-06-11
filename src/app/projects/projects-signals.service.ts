@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
-import { Project } from './project/project';
 import { AssociationProjectCollaborators } from '../associations-project-collaborator/association-project-collaborator.model';
+import { Project } from './models/project.model';
 
 @Injectable({
   providedIn: 'root'

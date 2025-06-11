@@ -1,8 +1,8 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ProjectsSignalsService } from '../projects-signals.service';
-import { Project } from './project';
 import { ActivatedRoute } from '@angular/router';
+import { ProjectViewModel } from '../models/project-view-model.model';
 
 @Component({
   selector: 'app-project',
@@ -12,10 +12,9 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ProjectComponent {
   projectSignalService = inject(ProjectsSignalsService);
+  route = inject(ActivatedRoute);
 
-  project!: Project;
-
-  constructor(private route: ActivatedRoute) {}
+  project!: ProjectViewModel;
 
   ngOnInit() {
     this.route.data.subscribe(data => {
@@ -23,7 +22,7 @@ export class ProjectComponent {
     });
   }
 
-  editProject(project: Project){
+  editProject(project: ProjectViewModel) {
     this.projectSignalService.startEditProject(project);
   }
 }
