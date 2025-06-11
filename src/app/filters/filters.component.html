@@ -1,0 +1,19 @@
+<button (click)="toggleFilters()">
+    @if(!showFilters){
+        Show Filters
+    } @else {
+        Hide Filters
+    }
+</button>
+
+
+@if(showFilters){
+<form [formGroup]="filterForm" class="search-form">
+  @for (field of fields; track field.name) {
+    <label>
+      {{ field.label }}:
+      <input [type]="field.type ?? 'text'" [formControlName]="field.name" />
+    </label>
+  }
+</form>
+}

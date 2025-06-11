@@ -1,10 +1,17 @@
+<app-filters [fields]="[
+  {name: 'title', label: 'Title'},
+]"
+(filtersChanged)="applyFilters($event)">
+
+</app-filters>
+
 <table>
     <tr>
       <th>Name</th>
       <th>Actions</th>
     </tr>
   <tbody>
-    @for (trainingSubject of trainingSubjects(); track trainingSubject.id) {
+    @for (trainingSubject of filteredSubjects; track trainingSubject.id) {
       <tr>
         <td>{{trainingSubject.subject}}</td>
         <td>
