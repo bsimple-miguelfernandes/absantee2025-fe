@@ -1,7 +1,7 @@
 import { Component, inject, output } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CollaboratorDataService } from '../../collaborator-data.service';
-import { Collaborator } from '../../collaborator.model';
+import { CollaboratorDataService } from '../collaborator-data.service';
+import { Collaborator } from '../collaborator.model';
 
 @Component({
   selector: 'app-search-collaborators',

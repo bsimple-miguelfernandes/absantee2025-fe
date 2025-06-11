@@ -12,16 +12,19 @@
     <tr>
         <td>{{collab.names}}</td>
         <td>{{collab.email}}</td>
-        <td><button [routerLink]='["details", collab.collabId]' data-testid="details-btn">
-                Collaborator Details
+        <td><button (click)="select('details', collab.collabId)" data-testid="details-btn">
+                Details
             </button>
-            <button [routerLink]='["holidayPlan", collab.collabId]' data-testid="holidays-btn">
-                Collaborator Hollidays
+            <button (click)="select('holidayPlan', collab.collabId)" data-testid="holidays-btn">
+                Hollidays
             </button>
-            <button [routerLink]='["associations", collab.collabId]' data-testid="projects-btn">
-                Collaborator Projects
+            <button (click)="select('associations', collab.collabId)" data-testid="projects-btn">
+                Projects
             </button>
         </td>
     </tr>
+    @if(selectedCollaborator === collab.collabId){
+    <router-outlet></router-outlet>
+    }
     }
 </table>

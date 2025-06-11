@@ -6,10 +6,9 @@ import { CollaboratorDetailsComponent } from './collaborators/collaborator-detai
 import { resolverCollaborator } from './collaborators/resolvers/collaborator-resolver.resolver';
 import { CollaboratorHolidaysComponent } from './collaborators/collaborator-holidays/collaborator-holidays.component';
 import { AssociationsProjectCollaboratorComponent } from './associations-project-collaborator/associations-project-collaborator.component';
-import { associationProjectCollaboratorResolver } from './associations-project-collaborator/resolvers/association-project-collaborator.resolver';
 import { ProjectComponent } from './projects/project/project.component';
 import { AddCollaboratorProjectComponent } from './associations-project-collaborator/add-collaborator-project/add-collaborator-project.component';
-import { projectResolver } from './projects/resolver/project.resolver';
+import { projectResolver } from './projects/resolvers/project.resolver';
 
 export const routes: Routes = [
     {
@@ -38,8 +37,7 @@ export const routes: Routes = [
                 path: 'associations/add-collaborator/:projectId',
                 component: AddCollaboratorProjectComponent,
                 resolve: {
-                    project: projectResolver,
-                    associations: associationProjectCollaboratorResolver
+                    project: projectResolver
                 }
             }
         ]
@@ -73,8 +71,7 @@ export const routes: Routes = [
                 path: 'associations/add-project/:collabId',
                 component: AddCollaboratorProjectComponent,
                 resolve: {
-                    collaborator: resolverCollaborator,
-                    associations: associationProjectCollaboratorResolver
+                    collaborator: resolverCollaborator
                 }
             }
         ]
