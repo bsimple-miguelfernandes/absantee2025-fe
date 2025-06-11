@@ -31,12 +31,3 @@ export class TrainingSubjectDetailsComponent {
     this.router.navigate(['/training-subjects'])
   }
 }
-
-export const resolverTrainingSubject: ResolveFn<TrainingSubject> = (
-  activatedRoute: ActivatedRouteSnapshot,
-  routerState: RouterStateSnapshot
-) => {
-  const trainingSubjectService = inject(TrainingModuleDataService);
-  const trainingSubject = trainingSubjectService.getTrainingSubjectById(activatedRoute.params['trainingSubjectId'])
-  return trainingSubject;
-}

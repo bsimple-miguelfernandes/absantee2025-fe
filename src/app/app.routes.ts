@@ -6,9 +6,10 @@ import { CollaboratorsComponent } from './collaborators/collaborators.component'
 import { TrainingModulesComponent } from './training-modules/training-modules.component';
 import { CollaboratorDetailsComponent, resolverCollaborator } from './collaborators/collaborator-details/collaborator-details.component';
 import { resolverTrainingModule, TrainingModuleDetailsComponent } from './training-modules/training-module-details/training-module-details.component';
-import { resolverTrainingSubject, TrainingSubjectDetailsComponent } from './training-subjects/training-subject-details/training-subject-details.component';
+import { TrainingSubjectDetailsComponent } from './training-subjects/training-subject-details/training-subject-details.component';
 import { TrainingSubjectFormComponent } from './training-subjects/training-subject-form/training-subject-form.component';
 import { TrainingSubjectsComponent } from './training-subjects/training-subjects.component';
+import { resolverTrainingSubject } from './training-subjects/training-subject.resolver';
 
 export const routes: Routes = [
   {
@@ -51,6 +52,10 @@ export const routes: Routes = [
     path: 'training-subjects',
     component: TrainingSubjectsComponent,
     children: [
+      {
+        path: 'create',
+        component: TrainingSubjectFormComponent,
+      },
       {
         path: ':trainingSubjectId',
         component: TrainingSubjectDetailsComponent,

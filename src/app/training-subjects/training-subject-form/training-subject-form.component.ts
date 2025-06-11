@@ -54,6 +54,7 @@ export class TrainingSubjectFormComponent implements OnInit {
 
       this.dataService.updateTrainingSubject(updatedSubject).subscribe({
         next: (res) => {
+          this.signalService.clearUpdatedSubject();
           this.signalService.updateTrainingSubject(res);
           this.cancel()
         },
