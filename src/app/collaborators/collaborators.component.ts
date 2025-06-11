@@ -20,25 +20,13 @@ import { RouterOutlet } from '@angular/router';
   imports: [
     CommonModule,
     CollaboratorListComponent,
-    CollaboratorHolidaysComponent,
-    AssociationsProjectCollaboratorComponent,
-    CollaboratorCreateComponent,
-    AssociationsTrainingModuleCollaboratorComponent,
     RouterOutlet
   ],
   templateUrl: './collaborators.component.html',
   styleUrls: ['./collaborators.component.css']
 })
 export class CollaboratorsComponent {
-  collaboratorSignalService = inject(CollaboratorSignalService);
   collaboratorDataService = inject(CollaboratorDataService);
-
-  selectedCollaborator = this.collaboratorSignalService.selectedCollaborator;
-  createdCollaborator = this.collaboratorSignalService.createdCollaborator;
-  collaboratorUpdated = this.collaboratorSignalService.updatedCollaborator;
-  selectedCollaboratorHolidays = this.collaboratorSignalService.selectedCollaboratorHoliday;
-  selectedCollaboratorProject = this.collaboratorSignalService.selectedCollaboratorProjects;
-  selectedCollaboratorTrainingModules = this.collaboratorSignalService.selectedCollaboratorTrainingModules;
 
   collaborators = signal<CollaboratorViewModel[]>([]);
 
@@ -54,29 +42,5 @@ export class CollaboratorsComponent {
         console.error('Error loading collaborators', err);
       }
     });
-
-    this.collaboratorSignalService.selectCollaborator(undefined);
-    this.collaboratorSignalService.selectCollaboratorHolidays(undefined);
-
-
-    effect(() => {
-      const updated = this.collaboratorUpdated();
-      if (updated) {
-        this.collaborators.update(collabs =>
-          collabs.map(c => c.collabId === updated.collabId ? updated : c)
-        )
-      }
-    });
-
-    effect(() => {
-      const created = this.createdCollaborator();
-      if (created) {
-        this.collaborators.update(collabs => [...collabs, created]);
-      }
-    })
-  }
-
-  startCreate() {
-    this.collaboratorSignalService.startCreateCollaborator();
   }
 }

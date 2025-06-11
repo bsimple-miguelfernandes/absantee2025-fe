@@ -1,29 +1,8 @@
-@if (projectId()){
-@if(!isCreatingAssocProjCollabSignal()) {
-<button data-test-id="create-assocCollabProj-button" (click)="projectSignalService.startCreateAssociation()">
-    Add collaborator
-</button>
-} @else {
-<app-add-collaborator-project [projectId]="projectCollaboratorsSelected()!.id" />
-}
-<h1>{{projectCollaboratorsSelected()?.title}}</h1>
-}
-@if(collaboratorId()) {
-@if(!isCreatingAssocCollabProjSignal()) {
-<button data-test-id="create-assocProjCollab-button" (click)="collaboratorSignalService.startCreateAssociation()">
-    Add project
-</button>
-}@else {
-<app-add-collaborator-project [collaboratorId]="collaboratorProjectsSelected()!.collabId" />
-}
-<h1>{{collaboratorProjectsSelected()?.names}} {{collaboratorProjectsSelected()?.surnames}}</h1>
-}
 <table>
     <tr>
-        @if (projectId()) {
+        @if (isInProject) {
         <th>Email</th>
-        }
-        @if(collaboratorId()) {
+        } @else {
         <th>Acronym</th>
         }
         <th>Init Date</th>
@@ -32,28 +11,19 @@
     </tr>
     @for (assoc of associations; track $index) {
     <tr>
-        @if (projectId()) {
+        @if (isInProject) {
         <td>{{assoc.collaboratorEmail}}</td>
-        }
-        @if(collaboratorId()) {
+        } @else {
         <td>{{assoc.projectAcronym}}</td>
         }
         <td>{{assoc.periodDate.initDate | date:'yyyy-MM-dd'}} </td>
         <td>{{assoc.periodDate.finalDate | date:'yyyy-MM-dd'}} </td>
-        @if (projectId()) {
-        <td><button (click)="onSelectCollaboratorDetails(assoc)">Collaborator Details</button> </td>
-        }
-        @if(collaboratorId()) {
-        <td><button (click)="onSelectProjectDetails(assoc)">Project Details</button> </td>
+
+        @if (isInProject) {
+        <td><button>Collaborator Details</button> </td>
+        } @else {
+        <td><button>Project Details</button> </td>
         }
     </tr>
     }
 </table>
-
-@if (projectId() && collaboratorSelected()) {
-<router-outlet></router-outlet>
-}
-
-@if (collaboratorId() && projectSelected()) {
-<app-project />
-}

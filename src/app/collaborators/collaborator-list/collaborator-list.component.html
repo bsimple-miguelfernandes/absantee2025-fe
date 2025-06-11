@@ -8,13 +8,13 @@
     <tr>
         <td>{{collab.names}}</td>
         <td>{{collab.email}}</td>
-        <td><button (click)="onSelectCollaborator(collab)" [routerLink]='["details", collab.collabId]' data-testid="details-btn">
+        <td><button [routerLink]='["details", collab.collabId]' data-testid="details-btn">
                 Collaborator Details
             </button>
-            <button (click)="onSelectCollaboratorHolidays(collab)" data-testid="holidays-btn">
-                Collaborator Hollidays
+            <button [routerLink]='["holidays", collab.collabId]' data-testid="holidays-btn">
+                Collaborator Holidays
             </button>
-            <button (click)="onSelectCollaboratorProjects(collab)" data-testid="projects-btn">
+            <button [routerLink]='["associations", collab.collabId]' data-testid="projects-btn">
                 Collaborator Projects
             </button>
             <button (click)="onSelectCollaboratorTrainingModules(collab)" data-testid="training-modules-btn">

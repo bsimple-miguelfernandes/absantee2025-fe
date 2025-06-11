@@ -21,8 +21,4 @@
     <app-project-form></app-project-form>
 }
 
-
-
-@if (projectCollaboratorsSelected()) {
-<app-associations-project-collaborator [projectId]="projectCollaboratorsSelected()!.id" />
-}
+<router-outlet />
