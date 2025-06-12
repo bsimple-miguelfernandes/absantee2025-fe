@@ -8,6 +8,7 @@ import { CollaboratorViewModel } from './collaborator.viewmodel';
 import { fromCollaboratorViewModel } from '../mappers/collaborator.mapper';
 import { ActivatedRoute } from '@angular/router';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-collaborator-details',
@@ -22,12 +23,11 @@ export class CollaboratorDetailsComponent {
 
   form!: FormGroup;
 
-  constructor(private route: ActivatedRoute, @Inject(MAT_DIALOG_DATA) private data: { collab: Collaborator }) {}
+  constructor(private route: ActivatedRoute, @Inject(MAT_DIALOG_DATA) private data: { collab: Collaborator },
+  private dialogRef: MatDialogRef<CollaboratorDetailsComponent>) {}
 
   ngOnInit() {
-    /*this.route.data.subscribe(data => {
-      this.collaborator = data['DetailsData'];*/
-
+    
       this.collaborator = this.data.collab;
 
       if (!this.form) {
@@ -99,5 +99,9 @@ export class CollaboratorDetailsComponent {
         console.log("Error updating collaborator: ", error)
       }
     });
+  }
+
+  closeDialog() {
+    this.dialogRef.close();
   }
 }
