@@ -1,10 +1,18 @@
+<app-filters [fields]="[
+    {name: 'title', label: 'Title'},
+    {name: 'acronym', label: 'Acronym'}
+]"
+(filtersChanged)="applyFilters($event)">
+
+</app-filters>
+
 <table>
     <tr>
         <th>Title</th>
         <th>Acronym</th>
         <th>Actions</th>
     </tr>
-    @for (proj of projects(); track proj.acronym) {
+    @for (proj of filteredProjects; track proj.acronym) {
     <tr>
         <td>{{proj.title}}</td>
         <td>{{proj.acronym}}</td>
