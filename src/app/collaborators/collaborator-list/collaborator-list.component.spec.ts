@@ -1,23 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { CollaboratorListComponent } from './collaborator-list.component';
-import { CollaboratorSignalService } from '../collaborator-signal.service';
-import { Collaborator } from '../collaborator';
 import { CollaboratorViewModel } from '../collaborator-details/collaborator.viewmodel';
+import { ActivatedRoute, provideRouter } from '@angular/router';
+import { of } from 'rxjs';
 
 describe('CollaboratorListComponent', () => {
   let component: CollaboratorListComponent;
   let fixture: ComponentFixture<CollaboratorListComponent>;
   let collaborators: CollaboratorViewModel [];
-  let mockCollaboratorSignalService: jasmine.SpyObj<CollaboratorSignalService>;
 
   beforeEach(async () => {
-    mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', [
-      'selectCollaborator',
-      'selectCollaboratorHolidays', 
-      'selectCollaboratorProjects'
-    ]);
-
     collaborators = [
       { 
        collabId: "0196b4ee-a7fc-750f-a698-6a5dfd27ce71",
@@ -50,19 +42,22 @@ describe('CollaboratorListComponent', () => {
        }
      }
    ];
+  
 
     await TestBed.configureTestingModule({
-      imports: [CollaboratorListComponent],
+      imports: [CollaboratorListComponent ], 
       providers: [
-        { provide: CollaboratorSignalService, useValue: mockCollaboratorSignalService },
+        {
+          provide: ActivatedRoute, useValue: { params: of({}) }
+        },
+        provideRouter([]),
       ]
-    })
-      .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CollaboratorListComponent);
     component = fixture.componentInstance;
 
-    fixture.componentRef.setInput('collaborators', collaborators);
+    fixture.componentRef.setInput('inputCollabs', collaborators);
     fixture.detectChanges();
   });
 
@@ -70,90 +65,197 @@ describe('CollaboratorListComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should show the Collaborators Info in the table', () => {
-    const rows: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll('table tr');
-    const cells1 = rows[1].querySelectorAll('td');
-    expect(cells1[0].textContent).toBe(collaborators[0].names);
-    expect(cells1[1].textContent).toBe(collaborators[0].email);
+  it('should show the filters form when showFilters is true', () => {
+    component.showFilters = true;
+    fixture.detectChanges();
 
-    const cells2 = rows[2].querySelectorAll('td');
-    expect(cells2[0].textContent).toBe(collaborators[1].names);
-    expect(cells2[1].textContent).toBe(collaborators[1].email);
+    const form = fixture.nativeElement.querySelector('form.search-form');
+    expect(form).toBeTruthy();
+
+    const nameInput = form.querySelector('input[formControlName="name"]');
+    const emailInput = form.querySelector('input[formControlName="email"]');
+    expect(nameInput).toBeTruthy();
+    expect(emailInput).toBeTruthy();
   });
 
-  it('should call selectCollaborator with the selected collaborator when a button is clicked', () => {
-    const button1: HTMLElement = fixture.nativeElement.querySelectorAll('[data-testid="details-btn"]')[1];
-    button1.click();
+  it('should hide the filters form when showFilters is false', () => {
+    component.showFilters = false;
+    fixture.detectChanges();
 
-    expect(mockCollaboratorSignalService.selectCollaborator).toHaveBeenCalledOnceWith(collaborators[1]);
+    const form = fixture.nativeElement.querySelector('form.search-form');
+    expect(form).toBeFalsy();
   });
 
-  it('should call selectCollaboratorHolidays with the selected collaborator when holidays button is clicked', () => {
-    const button: HTMLElement = fixture.nativeElement.querySelectorAll('[data-testid="holidays-btn"]')[0];
+  it('should toggle showFilters when the Show Filters button is clicked', () => {
+    component.showFilters = false;
+    fixture.detectChanges();
+
+    const button = fixture.nativeElement.querySelector('button');
     button.click();
-
-    expect(mockCollaboratorSignalService.selectCollaboratorHolidays).toHaveBeenCalledOnceWith(collaborators[0]);
-  });
-
-  it('should call selectCollaboratorProjects with the selected collaborator when projects button is clicked', () => {
-    const button: HTMLElement = fixture.nativeElement.querySelectorAll('[data-testid="projects-btn"]')[1];
-    button.click();
-
-    expect(mockCollaboratorSignalService.selectCollaboratorProjects).toHaveBeenCalledOnceWith(collaborators[1]);
-  });
-
-  it('should render the correct number of rows for collaborators', () => {
-    const rows: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll('table tr');
-    // 1 header + 2 collaborators
-    expect(rows.length).toBe(3);
-  });
-
-  it('should change the table content if new input arrived', () => {
-    const newCollaborators : CollaboratorViewModel [] = [
-      {
-        collabId: "4",
-        userId: "4",
-        names: "John",
-        surnames: "Doe",
-        email: "john.doe@example.com",
-        collaboratorPeriod: {
-          _initDate: new Date(2023, 10, 1),
-          _finalDate: new Date(2028, 5, 14)
-        },
-        userPeriod: {
-          _initDate: new Date(2023, 10, 1),
-          _finalDate: new Date(2028, 5, 14)
-        }
-      }
-    ];
-
-    fixture.componentRef.setInput('collaborators', newCollaborators);
 
     fixture.detectChanges();
 
-    const rows: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll('table tr');
-    expect(rows.length).toBe(2);
-
-    const cells1 = rows[1].querySelectorAll('td');
-    expect(cells1[0].textContent).toBe('John');
-    expect(cells1[1].textContent).toBe("john.doe@example.com");
+    expect(component.showFilters).toBeTrue();
+    button.click();
+    fixture.detectChanges();
+    expect(component.showFilters).toBeFalse();
   });
 
-  it('should render the correct table headers', () => {
-    const headers = fixture.nativeElement.querySelectorAll('table th');
-    expect(headers[0].textContent).toContain('Names');
-    expect(headers[1].textContent).toContain('Email');
-    expect(headers[2].textContent).toContain('Actions');
+  it('should filter collaborators by name', () => {
+    component.showFilters = true;
+    fixture.detectChanges();
+
+    const nameInput: HTMLInputElement = fixture.nativeElement.querySelector('input[formControlName="name"]');
+    nameInput.value = 'Jane';
+    nameInput.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+
+    expect(component.collaborators.length).toBe(1);
+    expect(component.collaborators[0].names).toBe('Jane');
   });
 
-  it('should render all action buttons for each collaborator', () => {
-    const rows: NodeListOf<HTMLElement> = fixture.nativeElement.querySelectorAll('table tr');
-    for (let i = 1; i < rows.length; i++) {
-      const buttons = rows[i].querySelectorAll('button');
-      expect(buttons.length).toBe(3);
-      expect(buttons[0].textContent).toContain('Collaborator Details');
-      expect(buttons[1].textContent).toContain('Collaborator Hollidays');
-      expect(buttons[2].textContent).toContain('Collaborator Projects');
-    }
+  it('should filter collaborators by email', () => {
+    component.showFilters = true;
+    fixture.detectChanges();
+
+    const emailInput: HTMLInputElement = fixture.nativeElement.querySelector('input[formControlName="email"]');
+    emailInput.value = 'john.doe@example.com';
+    emailInput.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+
+    expect(component.collaborators.length).toBe(1);
+    expect(component.collaborators[0].email).toBe('john.doe@example.com');
   });
+
+  it('should filter collaborators by name and email together', () => {
+    component.showFilters = true;
+    fixture.detectChanges();
+
+    const nameInput: HTMLInputElement = fixture.nativeElement.querySelector('input[formControlName="name"]');
+
+    const emailInput: HTMLInputElement = fixture.nativeElement.querySelector('input[formControlName="email"]');
+
+    nameInput.value = 'Jane';
+    nameInput.dispatchEvent(new Event('input'));
+    
+    emailInput.value = 'jane.smith@example.com';
+    emailInput.dispatchEvent(new Event('input'));
+
+    fixture.detectChanges();
+    expect(component.collaborators.length).toBe(1);
+    expect(component.collaborators[0].names).toBe('Jane');
+    expect(component.collaborators[0].email).toBe('jane.smith@example.com');
+  });
+
+  it('should render a table row for each collaborator', () => {
+    const rows = fixture.nativeElement.querySelectorAll('table tr');
+
+    expect(rows.length).toBe(1 + collaborators.length);
+    expect(rows[1].textContent).toContain('John Doe');
+    expect(rows[2].textContent).toContain('Jane Smith');
+  });
+
+  it('should display collaborator names and emails in the table', () => {
+    fixture.detectChanges();
+    const rows = fixture.nativeElement.querySelectorAll('table tr');
+    expect(rows[1].textContent).toContain('John Doe');
+    expect(rows[1].textContent).toContain('john.doe@example.com');
+    expect(rows[2].textContent).toContain('Jane Smith');
+    expect(rows[2].textContent).toContain('jane.smith@example.com');
+  });
+
+  /* it('should update collaborators when inputCollabs changes', () => {
+    const newCollabs: CollaboratorViewModel[] = [
+      {
+      collabId: "123e4567-e89b-12d3-a456-426614174000",
+      userId: "987f6543-21ba-43cd-8e76-123456789abc",
+      names: "newName",
+      surnames: "newSurname",
+      email: "newnamenewsurname@example.com",
+      userPeriod: {
+        _initDate: new Date("2020-01-01T00:00:00.000Z"),
+        _finalDate: new Date("2025-01-01T00:00:00.000Z")
+      },
+      collaboratorPeriod: {
+        _initDate: new Date("2021-01-01T00:00:00.000Z"),
+        _finalDate: new Date("2024-01-01T00:00:00.000Z")
+      }
+      }
+    ];
+    component.ngOnChanges({
+      inputCollabs: {
+        currentValue: newCollabs,
+        previousValue: collaborators,
+        firstChange: false,
+        isFirstChange: () => false
+      }
+    });
+    expect(component.collaborators).toEqual(newCollabs);
+  }); */
+
+  it('should emit openDetails event when called', () => {
+    spyOn(component.openDetails, 'emit');
+    const collab = collaborators[0];
+    component.openDetails.emit(collab);
+    expect(component.openDetails.emit).toHaveBeenCalledWith(collab);
+  });
+
+  it('should reset collaborators when filters are toggled off', () => {
+    component.collaborators = [];
+    component.showFilters = true;
+
+    fixture.detectChanges();
+    component.toggleFilters();
+
+    expect(component.showFilters).toBeFalse();
+    expect(component.collaborators).toEqual(component.inputCollabs);
+  });
+
+  it('should not filter if both name and email are empty', () => {
+    component.showFilters = true;
+    fixture.detectChanges();
+
+    component.searchForm.setValue({ name: '', email: '' });
+    fixture.detectChanges();
+
+    expect(component.collaborators.length).toBe(collaborators.length);
+  });
+
+  it('should filter by surname if name matches surname', () => {
+    component.showFilters = true;
+    fixture.detectChanges();
+
+    const nameInput: HTMLInputElement = fixture.nativeElement.querySelector('input[formControlName="name"]');
+    nameInput.value = 'Smith';
+    nameInput.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    
+    expect(component.collaborators.length).toBe(1);
+    expect(component.collaborators[0].surnames).toBe('Smith');
+  });
+
+
+ /* 
+  
+  it('should handle ngOnInit and subscribe to searchForm changes', () => {
+    spyOn(component.searchForm.valueChanges, 'subscribe').and.callThrough();
+    component.ngOnInit();
+    expect(component.searchForm.valueChanges.subscribe).toHaveBeenCalled();
+  });
+
+  
+
+  it('should not fail if inputCollabs is undefined in ngOnChanges', () => {
+    component.inputCollabs = undefined as any;
+    expect(() => {
+      component.ngOnChanges({
+        inputCollabs: {
+          currentValue: undefined,
+          previousValue: collaborators,
+          firstChange: false,
+          isFirstChange: () => false
+        }
+      });
+    }).not.toThrow();
+  }); */
 });
