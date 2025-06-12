@@ -16,8 +16,7 @@ import { resolverTrainingModule, TrainingModuleDetailsComponent } from './traini
 import { TrainingSubjectDetailsComponent } from './training-subjects/training-subject-details/training-subject-details.component';
 import { TrainingSubjectFormComponent } from './training-subjects/training-subject-form/training-subject-form.component';
 import { TrainingSubjectsComponent } from './training-subjects/training-subjects.component';
-import { resolverTrainingSubject } from './training-subjects/training-subject.resolver';
-
+import { TrainingSubjectDetailsResolver } from './training-subjects/training-subject.resolver';
 
 export const routes: Routes = [
   {
@@ -97,12 +96,16 @@ export const routes: Routes = [
       {
         path: ':trainingSubjectId',
         component: TrainingSubjectDetailsComponent,
-        resolve: { trainingSubject: resolverTrainingSubject }
+        resolve: {
+          trainingSubject: TrainingSubjectDetailsResolver
+        }
       },
       {
         path: ':trainingSubjectId/edit',
         component: TrainingSubjectFormComponent,
-        resolve: { trainingSubject: resolverTrainingSubject }
+        resolve: {
+          trainingSubject: TrainingSubjectDetailsResolver
+        }
       }
     ]
   }
