@@ -5,14 +5,13 @@ import { ProjectsDataService } from './projects-data.service';
 import { signal, WritableSignal } from '@angular/core';
 import { ProjectsSignalsService } from './projects-signals.service';
 import { ProjectViewModel } from './models/project-view-model.model';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, provideRouter } from '@angular/router';
 
 describe('ProjectsComponent', () => {
   let component: ProjectsComponent;
   let fixture: ComponentFixture<ProjectsComponent>;
   let mockProjectsDataService: jasmine.SpyObj<ProjectsDataService>;
   let mockProjectSignalService: jasmine.SpyObj<ProjectsSignalsService>;
-  let mockActivatedRoute: jasmine.SpyObj<ActivatedRoute>;
 
   let isCreatingProjectFormSignal: WritableSignal<boolean>;
   let projectCreatedSignal: WritableSignal<ProjectViewModel | undefined>;
@@ -33,20 +32,12 @@ describe('ProjectsComponent', () => {
       projectUpdated: projectUpdatedSignal
     });
 
-    mockActivatedRoute = {
-      snapshot: {},
-      params: of({}),
-      queryParams: of({}),
-      url: of([]),
-      data: of({})
-    } as any;
-
     await TestBed.configureTestingModule({
       imports: [ProjectsComponent],
       providers: [
         { provide: ProjectsDataService, useValue: mockProjectsDataService },
         { provide: ProjectsSignalsService, useValue: mockProjectSignalService },
-        { provide: ActivatedRoute, useValue: mockActivatedRoute }
+        provideRouter([])
       ]
     })
       .compileComponents();
@@ -79,16 +70,38 @@ describe('ProjectsComponent', () => {
     fixture.detectChanges();
   });
 
-  // ------------------------ Template tests ------------------------
   it('should create', () => {
+    // Assert
     expect(component).toBeTruthy();
   });
 
-  // it('should show projects table on init', () => {
-  //   const projectsTable = fixture.nativeElement.querySelector('app-projects-table');
-  //   expect(projectsTable).not.toBeNull();
-  // });
+  // ------------------------ Template tests ------------------------
 
+  it('should show search component', () => {
+    // Assert
+    const searchComp = fixture.nativeElement.querySelector('app-search-projects');
+    expect(searchComp).not.toBeNull();
+  });
+
+  it('should show projects table on init', () => {
+    // Assert
+    const projectsTable = fixture.nativeElement.querySelector('app-projects-table');
+    expect(projectsTable).not.toBeNull();
+  });
+
+  it('should show create project button, if isCreatingProjectSignal is set to false', () => {
+    // Act
+    isCreatingProjectFormSignal.set(false);
+
+    // Assert
+    const button: HTMLButtonElement = fixture.nativeElement.querySelector('[data-test-id="create-project-button"]');
+    expect(button).toBeTruthy();
+    expect(button.textContent!.trim()).toBe('Create project');
+  });
+
+  it('should show project form component, if isCreatingProjectSignal is set to true', () => {
+
+  });
 
   // it('should not show project details on init because projectSelected is undefined', () => {
   //   const projectDetails = fixture.nativeElement.querySelector('app-project');
