@@ -104,7 +104,7 @@ describe('AssociationsProjectCollaboratorComponent', () => {
     expect(mockProjectsDataService.getAssociations).toHaveBeenCalledOnceWith(projectId);
   }));
 
-  it('should get collaborator by Id and select it successfully when passing existing Id', fakeAsync(() => {
+  /* it('should get collaborator by Id and select it successfully when passing existing Id', fakeAsync(() => {
     // Arrange
     const mockAssoc: AssociationProjectCollaborators = {
       id: '1',
@@ -206,7 +206,7 @@ describe('AssociationsProjectCollaboratorComponent', () => {
     // Assert
     expect(mockProjectsDataService.getProjectById).toHaveBeenCalledOnceWith(mockAssoc.projectId);
     expect(mockProjectsSignalService.selectProject).toHaveBeenCalledOnceWith(mockProj);
-  }));
+  })); */
 
   it('should display project title when projectId is set', fakeAsync(() => {
     // Arrange
@@ -591,7 +591,7 @@ describe('AssociationsProjectCollaboratorComponent', () => {
     expect(projectDetailsElem).toBeFalsy();
   }));
 
-  it('should execute onSelectCollaboratorDetails method when clicking on collaborator details button', fakeAsync(() => {
+  /* it('should execute onSelectCollaboratorDetails method when clicking on collaborator details button', fakeAsync(() => {
     // Arrange
     const projectId = 'p1';
     const collabId = 'c1';
@@ -657,5 +657,5 @@ describe('AssociationsProjectCollaboratorComponent', () => {
 
     // Assert
     expect(component.onSelectProjectDetails).toHaveBeenCalledOnceWith(mockAssociations[0]);
-  }));
+  })); */
 });

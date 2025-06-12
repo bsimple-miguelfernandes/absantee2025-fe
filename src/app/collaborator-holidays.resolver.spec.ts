@@ -1,17 +1,26 @@
 import { TestBed } from '@angular/core/testing';
-import { ResolveFn } from '@angular/router';
+import { CollaboratorHolidaysResolver } from './collaborator-holidays.resolver';
+import { CollaboratorDataService } from './collaborators/collaborator-data.service';
 
-import { collaboratorHolidaysResolver } from './collaborator-holidays.resolver';
-
-describe('collaboratorHolidaysResolver', () => {
-  const executeResolver: ResolveFn<boolean> = (...resolverParameters) => 
-      TestBed.runInInjectionContext(() => collaboratorHolidaysResolver(...resolverParameters));
+describe('AssociationCollaboratorResolver', () => {
+  let resolver: CollaboratorHolidaysResolver;
+  let serviceSpy: jasmine.SpyObj<CollaboratorDataService>;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    const spy = jasmine.createSpyObj('CollaboratorDataService', ['getCollabById']);
+
+    TestBed.configureTestingModule({
+      providers: [
+        CollaboratorHolidaysResolver,
+        { provide: CollaboratorDataService, useValue: spy }
+      ]
+    });
+
+    resolver = TestBed.inject(CollaboratorHolidaysResolver);
+    serviceSpy = TestBed.inject(CollaboratorDataService) as jasmine.SpyObj<CollaboratorDataService>;
   });
 
   it('should be created', () => {
-    expect(executeResolver).toBeTruthy();
+    expect(resolver).toBeTruthy();
   });
 });
