@@ -8,7 +8,8 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-associations-project-collaborator',
-  imports: [DatePipe, AddCollaboratorProjectComponent, RouterModule],
+  imports: [DatePipe, RouterModule],
+  standalone: true,
   templateUrl: './associations-project-collaborator.component.html',
   styleUrl: './associations-project-collaborator.component.css'
 })

@@ -1,659 +1,283 @@
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
+import { DatePipe } from '@angular/common';
+import { of } from 'rxjs';
 import { AssociationsProjectCollaboratorComponent } from './associations-project-collaborator.component';
 import { ProjectsDataService } from '../projects/projects-data.service';
-import { ProjectsSignalsService } from '../projects/projects-signals.service';
 import { CollaboratorDataService } from '../collaborators/collaborator-data.service';
-import { CollaboratorSignalService } from '../collaborators/collaborator-signal.service';
 import { AssociationProjectCollaborators } from './association-project-collaborator.model';
-import { of, throwError } from 'rxjs';
-import { signal, WritableSignal } from '@angular/core';
-import { Project } from '../projects/models/project.model';
-import { Collaborator } from '../collaborators/collaborator';
 
 describe('AssociationsProjectCollaboratorComponent', () => {
   let component: AssociationsProjectCollaboratorComponent;
   let fixture: ComponentFixture<AssociationsProjectCollaboratorComponent>;
+  let mockActivatedRoute: jasmine.SpyObj<ActivatedRoute>;
   let mockProjectsDataService: jasmine.SpyObj<ProjectsDataService>;
-  let mockCollabDataService: jasmine.SpyObj<CollaboratorDataService>;
+  let mockCollaboratorDataService: jasmine.SpyObj<CollaboratorDataService>;
 
-  let mockProjectsSignalService: jasmine.SpyObj<ProjectsSignalsService>;
-  let selectedProjSignal: WritableSignal<Project | undefined>;
-  let projCollabsSignal: WritableSignal<Project | undefined>;
-  let mockCollabSignalService: jasmine.SpyObj<CollaboratorSignalService>;
-  let selectedCollabSignal: WritableSignal<Collaborator | undefined>;
-  let collabProjsSignal: WritableSignal<Collaborator | undefined>;
+  // Dados de teste
+  const testAssociations: AssociationProjectCollaborators[] = [
+    {
+      id: '1',
+      projectId: 'p1',
+      projectAcronym: 'PRJ1',
+      collaboratorId: 'c1',
+      collaboratorEmail: 'email1@test.com',
+      periodDate: {
+        initDate: new Date('2023-01-01'),
+        finalDate: new Date('2023-12-31')
+      }
+    },
+    {
+      id: '2',
+      projectId: 'p2',
+      projectAcronym: 'PRJ2',
+      collaboratorId: 'c2',
+      collaboratorEmail: 'email2@test.com',
+      periodDate: {
+        initDate: new Date('2024-01-01'),
+        finalDate: new Date('2024-12-31')
+      }
+    }
+  ];
 
   beforeEach(async () => {
-    mockProjectsDataService = jasmine.createSpyObj('ProjectsDataService', ['getAssociations', 'getProjectById']);
-    mockCollabDataService = jasmine.createSpyObj('CollaboratorSignalService', ['getAssociations', 'getCollabById'])
-
-    selectedProjSignal = signal<Project | undefined>(undefined);
-    projCollabsSignal = signal<Project | undefined>(undefined);
-    mockProjectsSignalService = jasmine.createSpyObj('ProjectsSignalService', ['selectProject'], {
-      projectSelected: selectedProjSignal,
-      projectCollaboratorSelected: projCollabsSignal
-    });
-
-    selectedCollabSignal = signal<Collaborator | undefined>(undefined);
-    collabProjsSignal = signal<Collaborator | undefined>(undefined);
-    mockCollabSignalService = jasmine.createSpyObj('CollaboratorSignalService', ['selectCollaborator'], {
-      selectedCollaborator: selectedCollabSignal,
-      selectedCollaboratorProjects: collabProjsSignal
+    // Criar mocks dos serviços
+    const projectsServiceSpy = jasmine.createSpyObj('ProjectsDataService', ['getProjects']);
+    const collaboratorServiceSpy = jasmine.createSpyObj('CollaboratorDataService', ['getCollaborators']);
+    
+    // Mock do ActivatedRoute
+    const activatedRouteSpy = jasmine.createSpyObj('ActivatedRoute', [], {
+      snapshot: {
+        paramMap: {
+          get: jasmine.createSpy('get').and.returnValue('test-id')
+        }
+      },
+      parent: {
+        snapshot: {
+          toString: jasmine.createSpy('toString').and.returnValue('/projects/test')
+        }
+      },
+      data: of({ AssociationData: testAssociations })
     });
 
     await TestBed.configureTestingModule({
-      imports: [AssociationsProjectCollaboratorComponent],
+      imports: [AssociationsProjectCollaboratorComponent, DatePipe],
       providers: [
-        { provide: ProjectsDataService, useValue: mockProjectsDataService },
-        { provide: ProjectsSignalsService, useValue: mockProjectsSignalService },
-        { provide: CollaboratorDataService, useValue: mockCollabDataService },
-        { provide: CollaboratorSignalService, useValue: mockCollabSignalService },
+        { provide: ProjectsDataService, useValue: projectsServiceSpy },
+        { provide: CollaboratorDataService, useValue: collaboratorServiceSpy },
+        { provide: ActivatedRoute, useValue: activatedRouteSpy }
       ]
-    })
-      .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(AssociationsProjectCollaboratorComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    
+    mockActivatedRoute = TestBed.inject(ActivatedRoute) as jasmine.SpyObj<ActivatedRoute>;
+    mockProjectsDataService = TestBed.inject(ProjectsDataService) as jasmine.SpyObj<ProjectsDataService>;
+    mockCollaboratorDataService = TestBed.inject(CollaboratorDataService) as jasmine.SpyObj<CollaboratorDataService>;
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should not call any service methods if projectId and collaboratorId are undefined', fakeAsync(() => {
-    // Assert
-    // No method should be called
-    expect(mockCollabSignalService.selectCollaborator).not.toHaveBeenCalled();
-    expect(mockProjectsDataService.getAssociations).not.toHaveBeenCalled();
-    expect(mockCollabDataService.getAssociations).not.toHaveBeenCalled();
-  }));
-
-  it('should reset selected project and fetch collaborator projects when passing a collaboratorId', fakeAsync(() => {
-    // Arrange
-    const collabId = "1";
-    const mockAssociations: AssociationProjectCollaborators[] = [];
-
-    mockCollabDataService.getAssociations.and.returnValue(of(mockAssociations));
-    fixture.componentRef.setInput('collaboratorId', collabId);
-
+  it('should initialize selectedId from route parameters', () => {
     // Act
     fixture.detectChanges();
-    tick();
-
+    
     // Assert
-    expect(mockCollabDataService.getAssociations).toHaveBeenCalledOnceWith(collabId);
-  }));
-
-  it('should reset selected collaborator and fetch project collaborators when passing a projectId', fakeAsync(() => {
-    // Arrange
-    const projectId = "1";
-    const mockAssociations: AssociationProjectCollaborators[] = [];
-
-    mockProjectsDataService.getAssociations.and.returnValue(of(mockAssociations));
-    fixture.componentRef.setInput('projectId', projectId);
-
-    // Act
-    fixture.detectChanges();
-    tick();
-
-    // Assert
-    expect(mockCollabSignalService.selectCollaborator).toHaveBeenCalledOnceWith(undefined);
-    expect(mockProjectsDataService.getAssociations).toHaveBeenCalledOnceWith(projectId);
-  }));
-
-  /* it('should get collaborator by Id and select it successfully when passing existing Id', fakeAsync(() => {
-    // Arrange
-    const mockAssoc: AssociationProjectCollaborators = {
-      id: '1',
-      projectId: 'p1',
-      projectAcronym: 'PRJ',
-      collaboratorId: 'c1',
-      collaboratorEmail: 'test@example.com',
-      periodDate: {
-        initDate: new Date(),
-        finalDate: new Date()
-      }
-    };
-
-    const mockCollab: Collaborator = {
-      collabId: 'c1',
-      userId: '1',
-      names: 'name',
-      surnames: 'surname',
-      email: 'email@email.com',
-      userPeriod: {
-        _initDate: new Date(),
-        _finalDate: new Date()
-      },
-      collaboratorPeriod: {
-        _initDate: new Date(),
-        _finalDate: new Date()
-      }
-    };
-
-    mockCollabDataService.getCollabById.and.returnValue(of(mockCollab));
-
-    // Act
-    component.onSelectCollaboratorDetails(mockAssoc);
-    tick();
-
-    // Assert
-    expect(mockCollabDataService.getCollabById).toHaveBeenCalledOnceWith('c1');
-    expect(mockCollabSignalService.selectCollaborator).toHaveBeenCalledOnceWith(mockCollab);
-  }));
-
-  it("should console log the error when getCollabId can't return a collaborator", fakeAsync(() => {
-    // Arrange
-    const mockAssoc: AssociationProjectCollaborators = {
-      id: '1',
-      projectId: 'p1',
-      projectAcronym: 'PRJ',
-      collaboratorId: 'c1',
-      collaboratorEmail: 'test@example.com',
-      periodDate: {
-        initDate: new Date(),
-        finalDate: new Date()
-      }
-    };
-
-    const mockError = new Error("Random error message!");
-    spyOn(console, 'log');
-
-    mockCollabDataService.getCollabById.and.returnValue(throwError(() => (mockError)));
-
-    // Act
-    component.onSelectCollaboratorDetails(mockAssoc);
-    tick();
-
-    // Assert
-    expect(mockCollabDataService.getCollabById).toHaveBeenCalledOnceWith('c1');
-    expect(console.log).toHaveBeenCalledOnceWith(mockError);
-  }));
-
-  it('should get collaborator by Id and select it successfully when passing existing Id', fakeAsync(() => {
-    // Arrange
-    const mockAssoc: AssociationProjectCollaborators = {
-      id: '1',
-      projectId: 'p1',
-      projectAcronym: 'PRJ',
-      collaboratorId: 'c1',
-      collaboratorEmail: 'test@example.com',
-      periodDate: {
-        initDate: new Date(),
-        finalDate: new Date()
-      }
-    };
-
-    const mockProj: Project = {
-      id: 'p1',
-      title: 'title',
-      acronym: 'TITLE',
-      periodDate: {
-        initDate: new Date(),
-        finalDate: new Date()
-      }
-    };
-
-    mockProjectsDataService.getProjectById.and.returnValue(of(mockProj));
-
-    // Act
-    component.onSelectProjectDetails(mockAssoc);
-    tick();
-
-    // Assert
-    expect(mockProjectsDataService.getProjectById).toHaveBeenCalledOnceWith(mockAssoc.projectId);
-    expect(mockProjectsSignalService.selectProject).toHaveBeenCalledOnceWith(mockProj);
-  })); */
-
-  it('should display project title when projectId is set', fakeAsync(() => {
-    // Arrange
-    const projectId = "p1";
-    const mockProj: Project = {
-      id: projectId,
-      title: 'title',
-      acronym: 'TITLE',
-      periodDate: {
-        initDate: new Date(),
-        finalDate: new Date()
-      }
-    };
-
-    const mockAssociations: AssociationProjectCollaborators[] = [];
-    mockProjectsDataService.getAssociations.and.returnValue(of(mockAssociations));
-
-    projCollabsSignal.set(mockProj);
-    fixture.componentRef.setInput('projectId', projectId);
-
-    // Act
-    fixture.detectChanges();
-    tick();
-
-    // Assert
-    const h1 = fixture.nativeElement.querySelector('h1');
-    expect(h1.textContent).toContain(mockProj.title);
-  }));
-
-  it('should display collaborator full name when collaboratorId is set', fakeAsync(() => {
-    // Arrange
-    const collabId = "c1";
-    const mockCollab: Collaborator = {
-      collabId: collabId,
-      userId: '1',
-      names: 'name',
-      surnames: 'surname',
-      email: 'email@email.com',
-      userPeriod: {
-        _initDate: new Date(),
-        _finalDate: new Date()
-      },
-      collaboratorPeriod: {
-        _initDate: new Date(),
-        _finalDate: new Date()
-      }
-    };
-
-    const mockAssociations: AssociationProjectCollaborators[] = [];
-    mockCollabDataService.getAssociations.and.returnValue(of(mockAssociations));
-
-    collabProjsSignal.set(mockCollab);
-    fixture.componentRef.setInput('collaboratorId', mockCollab);
-
-    // Act
-    fixture.detectChanges();
-    tick();
-
-    // Assert
-    const h1 = fixture.nativeElement.querySelector('h1');
-    expect(h1.textContent).toContain(mockCollab.names + " " + mockCollab.surnames);
-  }));
-
-  it('should render email column and collaborator details button when projectId is set', fakeAsync(() => {
-    // Arrange
-    const mockAssociations: AssociationProjectCollaborators[] = [
-      {
-        id: "1",
-        projectId: 'p1',
-        projectAcronym: 'PRJ',
-        collaboratorId: 'c1',
-        collaboratorEmail: 'test@example.com',
-        periodDate: {
-          initDate: new Date('2023-01-01'),
-          finalDate: new Date('2023-12-31')
-        }
-      }
-    ];
-
-    mockProjectsDataService.getAssociations.and.returnValue(of(mockAssociations));
-    fixture.componentRef.setInput('projectId', 'p1');
-
-    // Act
-    tick();
-    fixture.detectChanges();
-
-    // Assert
-    const tableHeaderCells = fixture.nativeElement.querySelectorAll('table tr th');
-    expect(tableHeaderCells[0].textContent).toContain("Email");
-
-    const emailCell = fixture.nativeElement.querySelector('td');
-    expect(emailCell.textContent).toContain('test@example.com');
-
-    const button = fixture.nativeElement.querySelector('button');
-    expect(button.textContent).toContain('Collaborator Details');
-  }));
-
-  it('should render acronym column and project details button when collaboratorId is set', fakeAsync(() => {
-    // Arrange
-    const mockAssociations: AssociationProjectCollaborators[] = [
-      {
-        id: "1",
-        projectId: 'p1',
-        projectAcronym: 'PRJ',
-        collaboratorId: 'c1',
-        collaboratorEmail: 'test@example.com',
-        periodDate: {
-          initDate: new Date('2023-01-01'),
-          finalDate: new Date('2023-12-31')
-        }
-      }
-    ];
-
-    mockCollabDataService.getAssociations.and.returnValue(of(mockAssociations));
-    fixture.componentRef.setInput('collaboratorId', 'c1');
-
-    // Act
-    tick();
-    fixture.detectChanges();
-
-    // Assert
-    const tableHeaderCells = fixture.nativeElement.querySelectorAll('table tr th');
-    expect(tableHeaderCells[0].textContent).toContain("Acronym");
-
-    const acronymCell = fixture.nativeElement.querySelector('td');
-    expect(acronymCell.textContent).toContain('PRJ');
-
-    const button = fixture.nativeElement.querySelector('button');
-    expect(button.textContent).toContain('Project Details');
-  }));
-
-  it('should show app-collaborator-details component when projectId and collaboratorSelected are set', fakeAsync(() => {
-    // Arrange
-    selectedCollabSignal.set({
-      collabId: 'c1',
-      userId: 'u1',
-      names: 'Jane',
-      surnames: 'Doe',
-      email: 'jane@example.com',
-      userPeriod: { _initDate: new Date(), _finalDate: new Date() },
-      collaboratorPeriod: { _initDate: new Date(), _finalDate: new Date() }
-    });
-
-    const mockAssociations: AssociationProjectCollaborators[] = [];
-    mockProjectsDataService.getAssociations.and.returnValue(of(mockAssociations));
-
-    fixture.componentRef.setInput('projectId', 'p1');
-
-    // Act
-    tick();
-    fixture.detectChanges();
-
-    // Assert
-    const detailComp = fixture.nativeElement.querySelector('app-collaborator-details');
-    expect(detailComp).toBeTruthy();
-  }));
-
-  it('should render a row for each association on table for project collaborators', fakeAsync(() => {
-    // Arrange
-    const mockAssociations: AssociationProjectCollaborators[] = [
-      {
-        id: "1",
-        projectId: 'p1',
-        projectAcronym: 'PRJ',
-        collaboratorId: 'c1',
-        collaboratorEmail: 'test@example.com',
-        periodDate: {
-          initDate: new Date('2023-01-01'),
-          finalDate: new Date('2023-12-31')
-        }
-      }
-    ];
-
-    mockProjectsDataService.getAssociations.and.returnValue(of(mockAssociations));
-    fixture.componentRef.setInput('projectId', 'p1');
-
-    // Act
-    tick();
-    fixture.detectChanges();
-
-    // Assert
-    const tableRows: HTMLElement[] = fixture.nativeElement.querySelectorAll('table tr');
-    // First row is header
-    const dataRows: HTMLElement[] = Array.from(tableRows).slice(1);
-
-    expect(dataRows.length).toBe(mockAssociations.length);
-
-    // check that the emails appear in the correct rows
-    expect(dataRows[0].textContent).toContain('test@example.com');
-  }));
-
-  it('should render a row for each association on table for collaborator projects', fakeAsync(() => {
-    // Arrange
-    const initDate = '2023-01-01';
-    const finalDate = '2023-12-31';
-    const mockAssociations: AssociationProjectCollaborators[] = [
-      {
-        id: "1",
-        projectId: 'p1',
-        projectAcronym: 'PRJ',
-        collaboratorId: 'c1',
-        collaboratorEmail: 'test@example.com',
-        periodDate: {
-          initDate: new Date(initDate),
-          finalDate: new Date(finalDate)
-        }
-      }
-    ];
-
-    mockCollabDataService.getAssociations.and.returnValue(of(mockAssociations));
-    fixture.componentRef.setInput('collaboratorId', 'c1');
-
-    // Act
-    tick();
-    fixture.detectChanges();
-
-    // Assert
-    const tableRows: HTMLElement[] = fixture.nativeElement.querySelectorAll('table tr');
-    // First row is header
-    const dataRows: HTMLElement[] = Array.from(tableRows).slice(1);
-
-    expect(dataRows.length).toBe(mockAssociations.length);
-
-    const assocCells = fixture.nativeElement.querySelectorAll('table tr td');
-    expect(assocCells[0].textContent.trim()).toContain(mockAssociations[0].projectAcronym);
-    expect(assocCells[1].textContent.trim()).toEqual(initDate);
-    expect(assocCells[2].textContent.trim()).toEqual(finalDate);
-  }));
-
-  it('should render collaborator details component if projectId and selectedCollaborator signal are defined', fakeAsync(() => {
-    // Arrange
-    const projectId = 'p1';
-    const collabId = 'c1';
-    const mockCollab: Collaborator = {
-      collabId: collabId,
-      userId: '1',
-      names: 'names',
-      surnames: 'surnames',
-      email: 'namesSurnames@email.com',
-      userPeriod: {
-        _initDate: new Date('2023-01-01'),
-        _finalDate: new Date('2023-12-31')
-      },
-      collaboratorPeriod: {
-        _initDate: new Date('2023-01-01'),
-        _finalDate: new Date('2023-12-31')
-      }
-    };
-    const mockAssociations: AssociationProjectCollaborators[] = [
-      {
-        id: "1",
-        projectId: projectId,
-        projectAcronym: 'PRJ',
-        collaboratorId: collabId,
-        collaboratorEmail: 'test@example.com',
-        periodDate: {
-          initDate: new Date('2023-01-01'),
-          finalDate: new Date('2023-12-31')
-        }
-      }
-    ];
-
-    mockProjectsDataService.getAssociations.and.returnValue(of(mockAssociations));
-    fixture.componentRef.setInput('projectId', projectId);
-
-    selectedCollabSignal.set(mockCollab);
-
-    // Act
-    tick();
-    fixture.detectChanges();
-
-    // Assert
-    const collabDetailsComponentElement = fixture.nativeElement.querySelector('app-collaborator-details');
-    expect(collabDetailsComponentElement).not.toBe(undefined);
-  }));
-
-  it('should render project component if collaboratorId and selectedProject are defined', fakeAsync(() => {
-    // Arrange
-    const projectId = 'p1';
-    const collabId = 'c1';
-    const mockProject: Project = {
-      id: projectId,
-      title: 'title',
-      acronym: 'PRJ',
-      periodDate: {
-        initDate: new Date('2023-01-01'),
-        finalDate: new Date('2023-12-31')
-      }
-    };
-    const mockAssociations: AssociationProjectCollaborators[] = [
-      {
-        id: "1",
-        projectId: projectId,
-        projectAcronym: 'PRJ',
-        collaboratorId: collabId,
-        collaboratorEmail: 'test@example.com',
-        periodDate: {
-          initDate: new Date('2023-01-01'),
-          finalDate: new Date('2023-12-31')
-        }
-      }
-    ];
-
-    mockCollabDataService.getAssociations.and.returnValue(of(mockAssociations));
-    fixture.componentRef.setInput('collaboratorId', collabId);
-
-    selectedProjSignal.set(mockProject);
-
-    // Act
-    tick();
-    fixture.detectChanges();
-
-    // Assert
-    const projectComponentElement = fixture.nativeElement.querySelector('app-project');
-    expect(projectComponentElement).not.toBe(undefined);
-  }));
-
-  it('should not render h1 elements if no input signal is defined', () => {
-    // Assert 
-    const h1Elements = fixture.nativeElement.querySelectorAll('h1');
-
-    expect(h1Elements.length).toBe(0);
+    expect(component.selectedId).toBe('test-id');
+    expect(mockActivatedRoute.snapshot.paramMap.get).toHaveBeenCalledWith('selectedId');
   });
 
-  it('should not render collaborator details component if selectedCollaborator signal is undefined', fakeAsync(() => {
-    // Arrange
-    const projectId = 'p1';
-    const collabId = 'c1';
-    const mockAssociations: AssociationProjectCollaborators[] = [
+  it('should set isInProject to true when route contains "projects"', () => {
+    // Act
+    fixture.detectChanges();
+    
+    // Assert
+    expect(component.isInProject).toBe(true);
+  });
+
+  it('should set isInProject to false when route does not contain "projects"', async () => {
+    // Arrange - Criar um novo TestBed com rota diferente
+    const newActivatedRouteSpy = jasmine.createSpyObj('ActivatedRoute', [], {
+      snapshot: {
+        paramMap: {
+          get: jasmine.createSpy('get').and.returnValue('test-id')
+        }
+      },
+      parent: {
+        snapshot: {
+          toString: jasmine.createSpy('toString').and.returnValue('/collaborators/test')
+        }
+      },
+      data: of({ AssociationData: testAssociations })
+    });
+
+    await TestBed.resetTestingModule();
+    await TestBed.configureTestingModule({
+      imports: [AssociationsProjectCollaboratorComponent, DatePipe],
+      providers: [
+        { provide: ProjectsDataService, useValue: jasmine.createSpyObj('ProjectsDataService', ['getProjects']) },
+        { provide: CollaboratorDataService, useValue: jasmine.createSpyObj('CollaboratorDataService', ['getCollaborators']) },
+        { provide: ActivatedRoute, useValue: newActivatedRouteSpy }
+      ]
+    }).compileComponents();
+
+    const newFixture = TestBed.createComponent(AssociationsProjectCollaboratorComponent);
+    const newComponent = newFixture.componentInstance;
+    
+    // Act
+    newFixture.detectChanges();
+    
+    // Assert
+    expect(newComponent.isInProject).toBe(false);
+  });
+
+  it('should load associations from route data on ngOnInit', () => {
+    // Act
+    component.ngOnInit();
+    fixture.detectChanges();
+    
+    // Assert
+    expect(component.associations).toEqual(testAssociations);
+    expect(component.associations.length).toBe(2);
+  });
+
+  it('should have correct association data structure', () => {
+    // Act
+    component.ngOnInit();
+    fixture.detectChanges();
+    
+    // Assert
+    const firstAssociation = component.associations[0];
+    expect(firstAssociation.id).toBe('1');
+    expect(firstAssociation.projectId).toBe('p1');
+    expect(firstAssociation.projectAcronym).toBe('PRJ1');
+    expect(firstAssociation.collaboratorId).toBe('c1');
+    expect(firstAssociation.collaboratorEmail).toBe('email1@test.com');
+    expect(firstAssociation.periodDate.initDate).toEqual(new Date('2023-01-01'));
+    expect(firstAssociation.periodDate.finalDate).toEqual(new Date('2023-12-31'));
+  });
+
+  it('should inject services correctly', () => {
+    // Act
+    fixture.detectChanges();
+    
+    // Assert
+    expect(component.collaboratorDataService).toBeDefined();
+    expect(component.projectsDataService).toBeDefined();
+  });
+
+  // Teste para verificar se o componente reage a mudanças nos dados da rota
+  it('should update associations when route data changes', async () => {
+    // Arrange - Primeiro inicializar com dados originais
+    component.ngOnInit();
+    fixture.detectChanges();
+    expect(component.associations.length).toBe(2);
+
+    const newAssociations: AssociationProjectCollaborators[] = [
       {
-        id: "1",
-        projectId: projectId,
-        projectAcronym: 'PRJ',
-        collaboratorId: collabId,
-        collaboratorEmail: 'test@example.com',
+        id: '3',
+        projectId: 'p3',
+        projectAcronym: 'PRJ3',
+        collaboratorId: 'c3',
+        collaboratorEmail: 'email3@test.com',
         periodDate: {
-          initDate: new Date('2023-01-01'),
-          finalDate: new Date('2023-12-31')
+          initDate: new Date('2025-01-01'),
+          finalDate: new Date('2025-12-31')
         }
       }
     ];
 
-    mockProjectsDataService.getAssociations.and.returnValue(of(mockAssociations));
-    fixture.componentRef.setInput('projectId', projectId);
-
-    // Act
-    tick();
-    fixture.detectChanges();
-
-    // Assert
-    const collabDetailsElem = fixture.nativeElement.querySelector('app-collaborator-details');
-    expect(collabDetailsElem).toBeFalsy();
-  }));
-
-  it('should not render project component if selectedproject signal is undefined', fakeAsync(() => {
-    // Arrange
-    const projectId = 'p1';
-    const collabId = 'c1';
-    const mockAssociations: AssociationProjectCollaborators[] = [
-      {
-        id: "1",
-        projectId: projectId,
-        projectAcronym: 'PRJ',
-        collaboratorId: collabId,
-        collaboratorEmail: 'test@example.com',
-        periodDate: {
-          initDate: new Date('2023-01-01'),
-          finalDate: new Date('2023-12-31')
+    // Recriar o componente com novos dados
+    const newActivatedRouteSpy = jasmine.createSpyObj('ActivatedRoute', [], {
+      snapshot: {
+        paramMap: {
+          get: jasmine.createSpy('get').and.returnValue('test-id')
         }
-      }
-    ];
-
-    mockCollabDataService.getAssociations.and.returnValue(of(mockAssociations));
-    fixture.componentRef.setInput('collaboratorId', collabId);
-
-    // Act
-    tick();
-    fixture.detectChanges();
-
-    // Assert
-    const projectDetailsElem = fixture.nativeElement.querySelector('app-project');
-    expect(projectDetailsElem).toBeFalsy();
-  }));
-
-  /* it('should execute onSelectCollaboratorDetails method when clicking on collaborator details button', fakeAsync(() => {
-    // Arrange
-    const projectId = 'p1';
-    const collabId = 'c1';
-    const mockAssociations: AssociationProjectCollaborators[] = [
-      {
-        id: "1",
-        projectId: projectId,
-        projectAcronym: 'PRJ',
-        collaboratorId: collabId,
-        collaboratorEmail: 'test@example.com',
-        periodDate: {
-          initDate: new Date('2023-01-01'),
-          finalDate: new Date('2023-12-31')
+      },
+      parent: {
+        snapshot: {
+          toString: jasmine.createSpy('toString').and.returnValue('/projects/test')
         }
-      }
-    ];
+      },
+      data: of({ AssociationData: newAssociations })
+    });
 
-    spyOn(component, 'onSelectCollaboratorDetails');
+    await TestBed.resetTestingModule();
+    await TestBed.configureTestingModule({
+      imports: [AssociationsProjectCollaboratorComponent, DatePipe],
+      providers: [
+        { provide: ProjectsDataService, useValue: mockProjectsDataService },
+        { provide: CollaboratorDataService, useValue: mockCollaboratorDataService },
+        { provide: ActivatedRoute, useValue: newActivatedRouteSpy }
+      ]
+    }).compileComponents();
 
-    mockProjectsDataService.getAssociations.and.returnValue(of(mockAssociations));
-    fixture.componentRef.setInput('projectId', projectId);
-
+    const newFixture = TestBed.createComponent(AssociationsProjectCollaboratorComponent);
+    const newComponent = newFixture.componentInstance;
+    
     // Act
-    tick();
-    fixture.detectChanges();
-    const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
-    button.click();
-    fixture.detectChanges();
-
+    newComponent.ngOnInit();
+    newFixture.detectChanges();
+    
     // Assert
-    expect(component.onSelectCollaboratorDetails).toHaveBeenCalledOnceWith(mockAssociations[0]);
-  }));
+    expect(newComponent.associations).toEqual(newAssociations);
+    expect(newComponent.associations.length).toBe(1);
+  });
+});
 
-  it('should execute onSelectProjectDetails method when clicking on Project details button', fakeAsync(() => {
-    // Arrange
-    const projectId = 'p1';
-    const collabId = 'c1';
-    const mockAssociations: AssociationProjectCollaborators[] = [
-      {
-        id: "1",
-        projectId: projectId,
-        projectAcronym: 'PRJ',
-        collaboratorId: collabId,
-        collaboratorEmail: 'test@example.com',
-        periodDate: {
-          initDate: new Date('2023-01-01'),
-          finalDate: new Date('2023-12-31')
+// Teste adicional para cenários de erro
+describe('AssociationsProjectCollaboratorComponent Error Scenarios', () => {
+  let component: AssociationsProjectCollaboratorComponent;
+  let fixture: ComponentFixture<AssociationsProjectCollaboratorComponent>;
+  let mockActivatedRoute: jasmine.SpyObj<ActivatedRoute>;
+
+  beforeEach(async () => {
+    const activatedRouteSpy = jasmine.createSpyObj('ActivatedRoute', [], {
+      snapshot: {
+        paramMap: {
+          get: jasmine.createSpy('get').and.returnValue(null)
         }
-      }
-    ];
+      },
+      parent: {
+        snapshot: {
+          toString: jasmine.createSpy('toString').and.returnValue('/other/route')
+        }
+      },
+      data: of({ AssociationData: [] })
+    });
 
-    spyOn(component, 'onSelectProjectDetails');
+    await TestBed.configureTestingModule({
+      imports: [AssociationsProjectCollaboratorComponent, DatePipe],
+      providers: [
+        { provide: ProjectsDataService, useValue: jasmine.createSpyObj('ProjectsDataService', ['getProjects']) },
+        { provide: CollaboratorDataService, useValue: jasmine.createSpyObj('CollaboratorDataService', ['getCollaborators']) },
+        { provide: ActivatedRoute, useValue: activatedRouteSpy }
+      ]
+    }).compileComponents();
 
-    mockCollabDataService.getAssociations.and.returnValue(of(mockAssociations));
-    fixture.componentRef.setInput('collaboratorId', collabId);
+    fixture = TestBed.createComponent(AssociationsProjectCollaboratorComponent);
+    component = fixture.componentInstance;
+    mockActivatedRoute = TestBed.inject(ActivatedRoute) as jasmine.SpyObj<ActivatedRoute>;
+  });
 
+  it('should handle empty associations array', () => {
     // Act
-    tick();
+    component.ngOnInit();
     fixture.detectChanges();
-    const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
-    button.click();
-    fixture.detectChanges();
-
+    
     // Assert
-    expect(component.onSelectProjectDetails).toHaveBeenCalledOnceWith(mockAssociations[0]);
-  })); */
+    expect(component.associations).toEqual([]);
+    expect(component.associations.length).toBe(0);
+  });
+
+  it('should handle null selectedId', () => {
+    // Act
+    fixture.detectChanges();
+    
+    // Assert
+    expect(component.selectedId).toBeNull();
+  });
 });
