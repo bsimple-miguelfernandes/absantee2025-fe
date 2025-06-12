@@ -21,9 +21,9 @@
     </tr>
     @for (collab of collaborators; track collab.email) {
     <tr>
-        <td>{{collab.names}}</td>
+        <td>{{collab.names}} {{collab.surnames}}</td>
         <td>{{collab.email}}</td>
-        <td><button (click)="openDetails(collab)" data-testid="details-btn">
+        <td><button (click)="this.openDetails.emit(collab)" data-testid="details-btn">
                 Collaborator Details
             </button>
             <button [routerLink]='["holidays", collab.collabId]' data-testid="holidays-btn">
