@@ -1,7 +1,6 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { ProjectViewModel } from '../models/project-view-model.model';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { debounceTime, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-search-projects',
@@ -21,21 +20,16 @@ export class SearchProjectsComponent {
   });
 
   constructor() {
-    this.searchForm.valueChanges
-      .pipe(debounceTime(200), startWith(this.searchForm.value))
-      .subscribe(() => this.filterProjects());
-  }
+    this.searchForm.valueChanges.subscribe((values) => {
 
-  private filterProjects() {
-    const { name, acronym } = this.searchForm.value;
+      const filtered = this.projects.filter(project => {
+        const matchesName = !values.name || project.title.toLowerCase().includes(values.name.toLowerCase());
+        const matchesAcronym = !values.acronym || project.acronym.toLowerCase().includes(values.acronym.toLowerCase());
 
-    const filtered = this.projects.filter(project => {
-      const matchesName = !name || project.title.toLowerCase().includes(name.toLowerCase());
-      const matchesAcronym = !acronym || project.acronym.toLowerCase().includes(acronym.toLowerCase());
+        return matchesName && matchesAcronym;
+      });
 
-      return matchesName && matchesAcronym;
+      this.filteredList.emit(filtered);
     });
-
-    this.filteredList.emit(filtered);
   }
 }

@@ -29,7 +29,16 @@ export class ProjectsTableComponent {
     while (route.firstChild) {
       route = route.firstChild;
     }
-    const projectId = route.snapshot.paramMap.get('projectId');
+
+    let projectId;
+    const params = route.snapshot.paramMap;
+
+    if (params.get('projectId')) {
+      projectId = params.get('projectId');
+    } else {
+      projectId = params.get('selectedId')
+    }
+
     return projectId;
   }
 }

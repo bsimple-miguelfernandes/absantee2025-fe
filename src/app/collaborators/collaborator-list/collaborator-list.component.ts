@@ -3,6 +3,7 @@ import { Collaborator } from '../collaborator';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CollaboratorViewModel } from '../collaborator-details/collaborator.viewmodel';
 
 @Component({
   selector: 'app-collaborator-list',
@@ -11,10 +12,10 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
   styleUrl: './collaborator-list.component.css'
 })
 export class CollaboratorListComponent {
-  @Input() inputCollabs!: Collaborator[];
-  @Output() openDetails = new EventEmitter<Collaborator>();
+  @Input() inputCollabs!: CollaboratorViewModel[];
+  @Output() openDetails = new EventEmitter<CollaboratorViewModel>();
 
-  collaborators: Collaborator[] = [];
+  collaborators: CollaboratorViewModel[] = [];
 
   showFilters: boolean = false;
 

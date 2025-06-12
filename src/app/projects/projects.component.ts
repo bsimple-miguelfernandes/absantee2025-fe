@@ -16,9 +16,9 @@ import { SearchProjectsComponent } from "./search-projects/search-projects.compo
 
 export class ProjectsComponent {
   projectSignalService = inject(ProjectsSignalsService);
-  isCreatingProjectSignal = this.projectSignalService.isCreatingProjectForm;
   projectCreatedSignal = this.projectSignalService.projectCreated;
   projectUpdatedSignal = this.projectSignalService.projectUpdated;
+  isCreatingProjectSignal = this.projectSignalService.isCreatingProjectForm;
 
   projectDataService = inject(ProjectsDataService);
   projects = signal<ProjectViewModel[]>([]);

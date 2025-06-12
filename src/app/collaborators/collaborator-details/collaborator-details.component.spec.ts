@@ -6,6 +6,8 @@ import { Collaborator } from '../collaborator';
 import { CollaboratorDataService } from '../collaborator-data.service';
 import { of } from 'rxjs';
 import { CollaboratorViewModel } from './collaborator.viewmodel';
+import { provideRouter } from '@angular/router';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 describe('CollaboratorDetailsComponent', () => {
   let component: CollaboratorDetailsComponent;
@@ -13,25 +15,10 @@ describe('CollaboratorDetailsComponent', () => {
   let collaborator: CollaboratorViewModel ;
   let mockCollaboratorSignalService: jasmine.SpyObj<CollaboratorSignalService>;
   let mockCollaboratorDataService: jasmine.SpyObj<CollaboratorDataService>;
-  let selectedSignal: WritableSignal<CollaboratorViewModel | undefined>;
 
   beforeEach(async () => {
-    selectedSignal = signal<CollaboratorViewModel  | undefined>(undefined);
-    mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', ['updateCollaborator', 'cancelCreateCollaborator'], {
-      selectedCollaborator: selectedSignal
-    });
+    mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', ['updateCollaborator', 'cancelCreateCollaborator']);
     mockCollaboratorDataService = jasmine.createSpyObj('CollaboratorDataService',  ['updateCollaborator']);
-
-    await TestBed.configureTestingModule({
-      imports: [CollaboratorDetailsComponent],
-      providers: [
-        { provide: CollaboratorSignalService, useValue: mockCollaboratorSignalService },
-        { provide: CollaboratorDataService, useValue: mockCollaboratorDataService }
-      ]
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(CollaboratorDetailsComponent);
-    component = fixture.componentInstance;
 
     collaborator = {
       collabId: "1",
@@ -50,7 +37,19 @@ describe('CollaboratorDetailsComponent', () => {
       }
     };
 
-    selectedSignal.set(collaborator);
+    await TestBed.configureTestingModule({
+      imports: [CollaboratorDetailsComponent],
+      providers: [
+        { provide: CollaboratorSignalService, useValue: mockCollaboratorSignalService },
+        { provide: CollaboratorDataService, useValue: mockCollaboratorDataService },
+        { provide: MAT_DIALOG_DATA, useValue: { collab: collaborator } },
+        { provide: MatDialogRef, useValue: {} },
+        provideRouter([])
+      ]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(CollaboratorDetailsComponent);
+    component = fixture.componentInstance;
 
     fixture.detectChanges();
   });
@@ -77,7 +76,8 @@ describe('CollaboratorDetailsComponent', () => {
     expect(collabEndDateInput.value).toBe(collaborator.collaboratorPeriod._finalDate.toISOString().split('T')[0]);
   });
 
-  it('should update form inputs when collaborator input changes', async () => {
+  // this test doesnt make sense while collab details is a dialogbox, since the collab doesn't change in it's lifespan
+  /*it('should update form inputs when collaborator input changes', async () => {
     const newCollaborator : CollaboratorViewModel  = {
       collabId: "2",
       userId: '2',
@@ -113,7 +113,7 @@ describe('CollaboratorDetailsComponent', () => {
     expect(userEndDateInput.value).toBe(newCollaborator.userPeriod._finalDate.toISOString().split('T')[0]);
     expect(collabInitDateInput.value).toBe(newCollaborator.collaboratorPeriod._initDate.toISOString().split('T')[0]);
     expect(collabEndDateInput.value).toBe(newCollaborator.collaboratorPeriod._finalDate.toISOString().split('T')[0]);
-  });
+  });*/
 
   it('should call updateCollaborator when form is submitted', () => {
     const emailControl = component.form.get('email')!;
@@ -146,10 +146,6 @@ describe('CollaboratorDetailsComponent', () => {
         _finalDate: new Date(2024, 6, 30)
       }
     };
-
-    selectedSignal.set(collaborator);
-    fixture.detectChanges();
-    await fixture.whenStable();
 
     component.form.patchValue(newCollaborator);
     component.form.markAsDirty();

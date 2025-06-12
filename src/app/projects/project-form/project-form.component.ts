@@ -17,7 +17,6 @@ export class ProjectFormComponent {
   projectSignalsService = inject(ProjectsSignalsService);
   projectDataService = inject(ProjectsDataService);
   router = inject(Router);
-  route = inject(ActivatedRoute);
 
   isEditingProjectForm = this.projectSignalsService.isEditingProjectForm;
   isCreatingProjectForm = this.projectSignalsService.isCreatingProjectForm;
