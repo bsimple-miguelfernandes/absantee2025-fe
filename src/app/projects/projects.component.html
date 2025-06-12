@@ -11,12 +11,6 @@
 
 <br />
 
-@if(isEditingProjectSignal()){
-<app-project-form />
-}
-
-<br />
-
 <app-search-projects [projects]="projects()" (filteredList)="onFilter($event)" />
 
 <br />

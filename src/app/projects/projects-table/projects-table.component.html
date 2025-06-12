@@ -12,8 +12,10 @@
             <button (click)="selectRoute('associations', proj.id!)" data-testid="collabs-btn">Collaborators</button>
         </td>
     </tr>
-    @if (selectedProject === proj.id) {
-    <router-outlet />
-    }
+    <tr>
+        @if (currentSelectedProject() === proj.id) {
+        <router-outlet />
+        }
+    </tr>
     }
 </table>

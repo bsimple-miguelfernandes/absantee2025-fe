@@ -14,17 +14,22 @@ export class ProjectsTableComponent {
   router = inject(Router);
   route = inject(ActivatedRoute);
 
-  selectedProject!: string;
-
   selectRoute(url: string, id: string) {
     const currentUrl = this.router.url;
 
-    if (this.selectedProject === id && currentUrl.includes(url)) {
+    if (this.currentSelectedProject() === id && currentUrl.includes(url)) {
       this.router.navigate(['/projects']);
-      this.selectedProject = "";
     } else {
       this.router.navigate([url, id], { relativeTo: this.route });
-      this.selectedProject = id;
     }
+  }
+
+  currentSelectedProject() {
+    let route = this.route;
+    while (route.firstChild) {
+      route = route.firstChild;
+    }
+    const projectId = route.snapshot.paramMap.get('projectId');
+    return projectId;
   }
 }

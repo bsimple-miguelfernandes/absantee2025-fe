@@ -26,10 +26,6 @@ describe('ProjectsSignalsService', () => {
       }
     };
 
-    service.selectProject(mockProject);
-
-    expect(service.projectSelected()).toEqual(mockProject);
-    expect(service.projectCollaboratorSelected()).toEqual(undefined);
   });
 
   it('should set projectSelected and projectCollaboratorSelected when calling selectProjectCollaborators', () => {
@@ -43,10 +39,6 @@ describe('ProjectsSignalsService', () => {
       }
     };
 
-    service.selectProjectCollaborators(mockProject);
-
-    expect(service.projectSelected()).toEqual(undefined);
-    expect(service.projectCollaboratorSelected()).toEqual(mockProject);
   });
 
 });

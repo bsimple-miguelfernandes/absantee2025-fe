@@ -1,12 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ProjectComponent } from './project.component';
-import { routes } from '../../app.routes';
-import { RouterModule } from '@angular/router';
-import { DatePipe } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import { Project } from '../models/project.model';
 import { ProjectsSignalsService } from '../projects-signals.service';
 import { signal, WritableSignal } from '@angular/core';
+import { of } from 'rxjs';
 
 describe('ProjectComponent', () => {
   let component: ProjectComponent;
@@ -22,7 +20,17 @@ describe('ProjectComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ProjectComponent],
       providers: [
-        { provide: ProjectsSignalsService, useValue: mockProjectsSignalService }
+        { provide: ProjectsSignalsService, useValue: mockProjectsSignalService },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {},
+            params: of({}),
+            queryParams: of({}),
+            url: of([]),
+            data: of({})
+          }
+        }
       ]
     })
       .compileComponents();

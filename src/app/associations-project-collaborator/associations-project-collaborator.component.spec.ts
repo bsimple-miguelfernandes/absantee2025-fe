@@ -66,7 +66,6 @@ describe('AssociationsProjectCollaboratorComponent', () => {
     // No method should be called
     expect(mockCollabSignalService.selectCollaborator).not.toHaveBeenCalled();
     expect(mockProjectsDataService.getAssociations).not.toHaveBeenCalled();
-    expect(mockProjectsSignalService.selectProject).not.toHaveBeenCalled();
     expect(mockCollabDataService.getAssociations).not.toHaveBeenCalled();
   }));
 
@@ -83,7 +82,6 @@ describe('AssociationsProjectCollaboratorComponent', () => {
     tick();
 
     // Assert
-    expect(mockProjectsSignalService.selectProject).toHaveBeenCalledOnceWith(undefined);
     expect(mockCollabDataService.getAssociations).toHaveBeenCalledOnceWith(collabId);
   }));
 

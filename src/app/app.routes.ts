@@ -9,9 +9,9 @@ import { CollaboratorHolidaysComponent } from './collaborators/collaborator-holi
 import { AssociationsProjectCollaboratorComponent } from './associations-project-collaborator/associations-project-collaborator.component';
 import { AssociationCollaboratorResolver } from './association-collaborator.resolver';
 import { ProjectComponent } from './projects/project/project.component';
-import { ProjectDetailsResolver } from './project-details.resolver';
 import { AssociationProjectResolver } from './association-project.resolver';
 import { ProjectFormComponent } from './projects/project-form/project-form.component';
+import { ProjectDetailsResolver } from './projects/resolvers/project-details.resolver';
 
 export const routes: Routes = [
     {

@@ -5,6 +5,7 @@ import { ProjectsSignalsService } from '../projects-signals.service';
 import { PeriodDateForm } from '../../PeriodDate';
 import { ProjectsDataService } from '../projects-data.service';
 import { ProjectForm } from '../models/project.model';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-project-form',
@@ -14,7 +15,9 @@ import { ProjectForm } from '../models/project.model';
 })
 export class ProjectFormComponent {
   projectSignalsService = inject(ProjectsSignalsService);
-  projectDataService = inject(ProjectsDataService)
+  projectDataService = inject(ProjectsDataService);
+  router = inject(Router);
+  route = inject(ActivatedRoute);
 
   isEditingProjectForm = this.projectSignalsService.isEditingProjectForm;
   isCreatingProjectForm = this.projectSignalsService.isCreatingProjectForm;
@@ -49,6 +52,8 @@ export class ProjectFormComponent {
   cancel() {
     this.projectSignalsService.cancelCreateProject();
     this.projectSignalsService.cancelEditProject();
+    this.router.navigate(['/projects']);
+
   }
 
   onSubmit() {
@@ -79,6 +84,8 @@ export class ProjectFormComponent {
       }
       this.projectForm.reset();
     }
+    this.router.navigate(['/projects']);
   }
+
 }
 

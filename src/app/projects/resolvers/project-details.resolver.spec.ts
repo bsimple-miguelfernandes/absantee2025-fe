@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
+import { ProjectsDataService } from '../projects-data.service';
 import { ProjectDetailsResolver } from './project-details.resolver';
-import { ProjectsDataService } from './projects/projects-data.service';
 
 describe('ProjectDetailsResolver', () => {
   let resolver: ProjectDetailsResolver;

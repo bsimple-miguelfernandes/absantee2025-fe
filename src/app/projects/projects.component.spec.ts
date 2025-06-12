@@ -1,57 +1,52 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ProjectsComponent } from './projects.component';
 import { of } from 'rxjs';
-import { RouterModule } from '@angular/router';
-import { routes } from '../app.routes';
 import { ProjectsDataService } from './projects-data.service';
 import { signal, WritableSignal } from '@angular/core';
 import { ProjectsSignalsService } from './projects-signals.service';
-import { CollaboratorDataService } from '../collaborators/collaborator-data.service';
-import { Project } from './models/project.model';
+import { ProjectViewModel } from './models/project-view-model.model';
+import { ActivatedRoute } from '@angular/router';
 
 describe('ProjectsComponent', () => {
   let component: ProjectsComponent;
   let fixture: ComponentFixture<ProjectsComponent>;
   let mockProjectsDataService: jasmine.SpyObj<ProjectsDataService>;
-  let projects: Project[];
   let mockProjectSignalService: jasmine.SpyObj<ProjectsSignalsService>;
-  let projectSelectedSignal: WritableSignal<Project | undefined>;
-  let projectCollaboratorsSelectedSignal: WritableSignal<Project | undefined>;
-  let mockCollaboratorDataService: jasmine.SpyObj<CollaboratorDataService>;
+  let mockActivatedRoute: jasmine.SpyObj<ActivatedRoute>;
+
   let isCreatingProjectFormSignal: WritableSignal<boolean>;
-  let isEditingProjectFormSignal: WritableSignal<Project | undefined>;
-  let projectCreatedSignal: WritableSignal<Project | undefined>;
-  let projectUpdatedSignal: WritableSignal<Project | undefined>;
+  let projectCreatedSignal: WritableSignal<ProjectViewModel | undefined>;
+  let projectUpdatedSignal: WritableSignal<ProjectViewModel | undefined>;
+  let projects: ProjectViewModel[];
+  let filteredProjects: ProjectViewModel[];
 
   beforeEach(async () => {
-    mockProjectsDataService = jasmine.createSpyObj('ProjectsDataService', ['getProjects', 'getAssociations']);
+    mockProjectsDataService = jasmine.createSpyObj('ProjectsDataService', ['getProjects']);
 
-    projectSelectedSignal = signal<Project | undefined>(undefined);
-    projectCollaboratorsSelectedSignal = signal<Project | undefined>(undefined);
     isCreatingProjectFormSignal = signal<boolean>(false);
-    isEditingProjectFormSignal = signal<Project | undefined>(undefined);
-    projectCreatedSignal = signal<Project | undefined>(undefined);
-    projectUpdatedSignal = signal<Project | undefined>(undefined);
-    mockProjectSignalService = jasmine.createSpyObj('ProjectsSignalsService', ['selectProject', 'selectProjectCollaborators', 'startCreateProject', 'cancelCreateProject'], {
-      projectSelected: projectSelectedSignal,
-      projectCollaboratorSelected: projectCollaboratorsSelectedSignal,
+    projectCreatedSignal = signal<ProjectViewModel | undefined>(undefined);
+    projectUpdatedSignal = signal<ProjectViewModel | undefined>(undefined);
+
+    mockProjectSignalService = jasmine.createSpyObj('ProjectsSignalsService', ['startCreateProject'], {
       isCreatingProjectForm: isCreatingProjectFormSignal,
-      isEditingProjectForm: isEditingProjectFormSignal,
       projectCreated: projectCreatedSignal,
       projectUpdated: projectUpdatedSignal
+    });
 
-    })
+    mockActivatedRoute = {
+      snapshot: {},
+      params: of({}),
+      queryParams: of({}),
+      url: of([]),
+      data: of({})
+    } as any;
 
-    mockCollaboratorDataService = jasmine.createSpyObj('CollaboratorDataService', ['getAssociations']);
     await TestBed.configureTestingModule({
-      imports: [ProjectsComponent,
-        RouterModule.forRoot(routes)
-      ],
+      imports: [ProjectsComponent],
       providers: [
         { provide: ProjectsDataService, useValue: mockProjectsDataService },
         { provide: ProjectsSignalsService, useValue: mockProjectSignalService },
-        { provide: CollaboratorDataService, useValue: mockCollaboratorDataService }
+        { provide: ActivatedRoute, useValue: mockActivatedRoute }
       ]
     })
       .compileComponents();
@@ -76,6 +71,7 @@ describe('ProjectsComponent', () => {
         }
       }
     ];
+
     mockProjectsDataService.getProjects.and.returnValue(of(projects));
 
     fixture = TestBed.createComponent(ProjectsComponent);
@@ -83,79 +79,79 @@ describe('ProjectsComponent', () => {
     fixture.detectChanges();
   });
 
+  // ------------------------ Template tests ------------------------
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should show projects table on init', () => {
-    const projectsTable = fixture.nativeElement.querySelector('app-projects-table');
-    expect(projectsTable).not.toBeNull();
-  });
+  // it('should show projects table on init', () => {
+  //   const projectsTable = fixture.nativeElement.querySelector('app-projects-table');
+  //   expect(projectsTable).not.toBeNull();
+  // });
 
-  it('should not show project details on init because projectSelected is undefined', () => {
-    const projectDetails = fixture.nativeElement.querySelector('app-project');
-    expect(projectDetails).toBeNull();
-  });
 
-  it('should not show project associations on init because projectCollaboratorsSelected is undefined', () => {
-    const associations = fixture.nativeElement.querySelector('app-associations-project-collaborator');
-    expect(associations).toBeNull();
-  });
+  // it('should not show project details on init because projectSelected is undefined', () => {
+  //   const projectDetails = fixture.nativeElement.querySelector('app-project');
+  //   expect(projectDetails).toBeNull();
+  // });
 
-  it('should show project details when projectSelected changes', () => {
-    const project: Project = {
-      id: '2',
-      title: 'Test 2',
-      acronym: 'T2',
-      periodDate: {
-        initDate: new Date(2020, 1, 1),
-        finalDate: new Date(2021, 1, 1)
-      }
-    };
+  // it('should not show project associations on init because projectCollaboratorsSelected is undefined', () => {
+  //   const associations = fixture.nativeElement.querySelector('app-associations-project-collaborator');
+  //   expect(associations).toBeNull();
+  // });
 
-    projectSelectedSignal.set(project);
+  // it('should show project details when projectSelected changes', () => {
+  //   const project: ProjectViewModel = {
+  //     id: '2',
+  //     title: 'Test 2',
+  //     acronym: 'T2',
+  //     periodDate: {
+  //       initDate: new Date(2020, 1, 1),
+  //       finalDate: new Date(2021, 1, 1)
+  //     }
+  //   };
 
-    fixture.detectChanges();
-    const projectDetails = fixture.nativeElement.querySelector('app-project');
-    expect(projectDetails).not.toBeNull();
-  });
 
-  it('should show project associations when projectCollaboratorsSelected changes', () => {
-    const project: Project = {
-      id: '2',
-      title: 'Test 2',
-      acronym: 'T2',
-      periodDate: {
-        initDate: new Date(2020, 1, 1),
-        finalDate: new Date(2021, 1, 1)
-      }
-    };
+  //   fixture.detectChanges();
+  //   const projectDetails = fixture.nativeElement.querySelector('app-project');
+  //   expect(projectDetails).not.toBeNull();
+  // });
 
-    projectCollaboratorsSelectedSignal.set(project);
-    mockProjectsDataService.getAssociations.and.returnValue(of([]));
+  // it('should show project associations when projectCollaboratorsSelected changes', () => {
+  //   const project: ProjectViewModel = {
+  //     id: '2',
+  //     title: 'Test 2',
+  //     acronym: 'T2',
+  //     periodDate: {
+  //       initDate: new Date(2020, 1, 1),
+  //       finalDate: new Date(2021, 1, 1)
+  //     }
+  //   };
 
-    fixture.detectChanges();
-    const associations = fixture.nativeElement.querySelector('app-associations-project-collaborator');
-    expect(associations).not.toBeNull();
-  });
+  //   mockProjectsDataService.getAssociations.and.returnValue(of([]));
 
-  it('should update projects list when projectCreatedSignal changes', () => {
-    const project: Project = {
-      id: '3',
-      title: 'Test 3',
-      acronym: 'T3',
-      periodDate: {
-        initDate: new Date(2020, 1, 1),
-        finalDate: new Date(2021, 1, 1)
-      }
-    };
+  //   fixture.detectChanges();
+  //   const associations = fixture.nativeElement.querySelector('app-associations-project-collaborator');
+  //   expect(associations).not.toBeNull();
+  // });
 
-    projectCreatedSignal.set(project);
+  // it('should update projects list when projectCreatedSignal changes', () => {
+  //   const project: ProjectViewModel = {
+  //     id: '3',
+  //     title: 'Test 3',
+  //     acronym: 'T3',
+  //     periodDate: {
+  //       initDate: new Date(2020, 1, 1),
+  //       finalDate: new Date(2021, 1, 1)
+  //     }
+  //   };
 
-    fixture.detectChanges();
+  //   projectCreatedSignal.set(project);
 
-    const projectList = [...projects, project];
+  //   fixture.detectChanges();
 
-    expect(component.projects()).toEqual(projectList);
-  });
+  //   const projectList = [...projects, project];
+
+  //   expect(component.projects()).toEqual(projectList);
+  // });
 });

@@ -1,4 +1,4 @@
-import { map, Observable } from "rxjs";
+import { Observable } from "rxjs";
 import { environment } from "../../environments/environment";
 import { HttpClient } from "@angular/common/http";
 import { AssociationProjectCollaborators, AssociationProjectCollaboratorsDTO, mapToAssociationProjectCollaborators } from "../associations-project-collaborator/association-project-collaborator.model";
@@ -24,9 +24,7 @@ export class ProjectsDataService {
   }
 
   getAssociations(id: string): Observable<AssociationProjectCollaborators[]> {
-    return this.http.get<AssociationProjectCollaboratorsDTO[]>(`${this.baseUrl}/Project/${id}/associations`).pipe(
-      map(dtoList => dtoList.map(dto => mapToAssociationProjectCollaborators(dto)))
-    );
+    return this.http.get<AssociationProjectCollaboratorsDTO[]>(`${this.baseUrl}/Project/${id}/associations`);
   }
 
   createProject(newProject: ProjectCreateRequest): Observable<Project> {
@@ -38,8 +36,6 @@ export class ProjectsDataService {
   }
 
   createAssociation(id: string, newAssoc: AssociationProjectCollaboratorCreateRequest): Observable<AssociationProjectCollaborators> {
-    return this.http.post<AssociationProjectCollaboratorsDTO>(`${this.baseUrl}/Project/${id}/collaborators`, newAssoc).pipe(
-      map(dto => mapToAssociationProjectCollaborators(dto))
-    );;
+    return this.http.post<AssociationProjectCollaboratorsDTO>(`${this.baseUrl}/Project/${id}/collaborators`, newAssoc);
   }
 }

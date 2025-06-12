@@ -17,13 +17,11 @@ import { SearchProjectsComponent } from "./search-projects/search-projects.compo
 export class ProjectsComponent {
   projectSignalService = inject(ProjectsSignalsService);
   isCreatingProjectSignal = this.projectSignalService.isCreatingProjectForm;
-  isEditingProjectSignal = this.projectSignalService.isEditingProjectForm;
   projectCreatedSignal = this.projectSignalService.projectCreated;
   projectUpdatedSignal = this.projectSignalService.projectUpdated;
 
   projectDataService = inject(ProjectsDataService);
   projects = signal<ProjectViewModel[]>([]);
-
   filteredList: ProjectViewModel[] = [];
 
   constructor() {
@@ -43,13 +41,11 @@ export class ProjectsComponent {
       const projectEdited = this.projectUpdatedSignal();
 
       if (projectCreated) {
-        this.projects.update(projects => [...projects, projectCreated]);
+        this.filteredList = [...this.filteredList, projectCreated];
       }
 
       if (projectEdited) {
-        this.projects.update(projects =>
-          projects.map(p => p.id === projectEdited.id ? projectEdited : p)
-        );
+        this.filteredList = this.filteredList.map(p => p.id === projectEdited.id ? projectEdited : p);
       }
     })
   }

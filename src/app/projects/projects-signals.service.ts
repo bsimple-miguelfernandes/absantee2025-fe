@@ -1,26 +1,22 @@
 import { Injectable, signal } from '@angular/core';
 import { AssociationProjectCollaborators } from '../associations-project-collaborator/association-project-collaborator.model';
 import { Project } from './models/project.model';
+import { ProjectViewModel } from './models/project-view-model.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectsSignalsService {
-  private projectSelectedSignal = signal<Project | undefined>(undefined);
-  readonly projectSelected = this.projectSelectedSignal.asReadonly();
-
-  private projectCollaboratorsSelectedSignal = signal<Project | undefined>(undefined);
-  readonly projectCollaboratorSelected = this.projectCollaboratorsSelectedSignal.asReadonly();
-
   private isCreatingProjectFormSignal = signal(false);
   readonly isCreatingProjectForm = this.isCreatingProjectFormSignal.asReadonly();
-  private isEditingProjectFormSignal = signal<Project | undefined>(undefined);
+
+  private isEditingProjectFormSignal = signal<ProjectViewModel | undefined>(undefined);
   readonly isEditingProjectForm = this.isEditingProjectFormSignal.asReadonly();
 
-  private projectCreatedSignal = signal<Project | undefined>(undefined);
+  private projectCreatedSignal = signal<ProjectViewModel | undefined>(undefined);
   readonly projectCreated = this.projectCreatedSignal.asReadonly();
 
-  private projectUpdatedSignal = signal<Project | undefined>(undefined);
+  private projectUpdatedSignal = signal<ProjectViewModel | undefined>(undefined);
   readonly projectUpdated = this.projectUpdatedSignal.asReadonly();
 
   private isCreatingAssociationSignal = signal(false);
@@ -55,20 +51,8 @@ export class ProjectsSignalsService {
     this.isCreatingProjectFormSignal.set(false);
   }
 
-
   cancelEditProject() {
     this.isEditingProjectFormSignal.set(undefined);
-  }
-
-
-  selectProject(selected: Project | undefined) {
-    this.projectCollaboratorsSelectedSignal.set(undefined);
-    this.projectSelectedSignal.set(selected);
-  }
-
-  selectProjectCollaborators(selected: Project | undefined) {
-    this.projectSelectedSignal.set(undefined);
-    this.projectCollaboratorsSelectedSignal.set(selected);
   }
 
   createProject(projectCreated: Project) {
