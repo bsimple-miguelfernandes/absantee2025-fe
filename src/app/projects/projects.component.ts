@@ -2,7 +2,6 @@ import { Component, effect, inject, signal } from '@angular/core';
 import { ProjectComponent } from "./project/project.component";
 import { ProjectsTableComponent } from "./projects-table/projects-table.component";
 import { ProjectsSignalsService } from './projects-signals.service';
-import { AssociationsProjectCollaboratorComponent } from "../associations-project-collaborator/associations-project-collaborator.component";
 import { ProjectsDataService } from './projects-data.service';
 import { Project } from './project/project';
 import { ProjectFormComponent } from "./project-form/project-form.component";
@@ -10,7 +9,7 @@ import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-projects',
-  imports: [ProjectsTableComponent, ProjectComponent, AssociationsProjectCollaboratorComponent, ProjectFormComponent, RouterModule],
+  imports: [ProjectsTableComponent, ProjectComponent, ProjectFormComponent, RouterModule],
   templateUrl: './projects.component.html',
   styleUrl: './projects.component.css'
 })
@@ -48,7 +47,7 @@ export class ProjectsComponent {
 
       if (projectEdited) {
         this.projects.update(projects =>
-        projects.map(p => p.id === projectEdited.id ? projectEdited : p)
+          projects.map(p => p.id === projectEdited.id ? projectEdited : p)
         );
       }
     })
