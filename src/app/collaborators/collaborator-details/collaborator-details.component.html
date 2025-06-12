@@ -1,3 +1,6 @@
+<button type = "button" (click)="closeDialog()" class="close-button">✖</button>
+
+
 <form [formGroup]="form" (ngSubmit)="onSubmit()">
   <label for="names">Names</label>
   <input id="names" formControlName="names" />
