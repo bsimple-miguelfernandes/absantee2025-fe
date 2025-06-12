@@ -62,4 +62,22 @@ export class CollaboratorsComponent {
       });
     });
   }
+
+  openCreate() {
+    let collabDialog = this.dialog.open(CollaboratorCreateComponent);
+
+    collabDialog.afterClosed().subscribe(res => {
+      this.collaboratorDataService.getCollabs().subscribe({
+        next: (collaborators) => {
+          const collabVM = collaborators.map(toCollaboratorViewModel)
+
+          this.collaborators.set(collabVM);
+        },
+        error: (err) => {
+          alert('Error loading collaborators');
+          console.error('Error loading collaborators', err);
+        }
+      });
+    });
+  }
 }

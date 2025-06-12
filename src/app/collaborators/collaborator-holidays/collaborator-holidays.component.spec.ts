@@ -8,6 +8,7 @@ import { HolidayPeriod } from './holiday-period';
 import { of } from 'rxjs';
 import { Collaborator } from '../collaborator';
 import { By } from '@angular/platform-browser';
+import { provideRouter } from '@angular/router';
 
 describe('CollaboratorHolidaysComponent', () => {
   let component: CollaboratorHolidaysComponent;
@@ -32,7 +33,8 @@ describe('CollaboratorHolidaysComponent', () => {
       imports: [CollaboratorHolidaysComponent],
       providers: [
         { provide: CollaboratorSignalService, useValue: mockCollaboratorSignalService },
-        { provide: CollaboratorDataService, useValue: mockCollabotadorDataService }
+        { provide: CollaboratorDataService, useValue: mockCollabotadorDataService },
+        provideRouter([])
       ]
     })
       .compileComponents();
