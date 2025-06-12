@@ -27,6 +27,12 @@ export class TrainingSubjectsListComponent {
     this.selectedTrainingSubject = id;
   }
 
+  ngOnInit() {
+    this.route.paramMap.subscribe(params => {
+      this.selectedTrainingSubject = params.get('trainingSubjectId') ?? '';
+    });
+  }
+
   ngOnChanges() {
     this.filteredSubjects = this.trainingSubjects();
   }

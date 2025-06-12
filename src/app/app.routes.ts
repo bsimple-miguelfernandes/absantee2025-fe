@@ -97,7 +97,7 @@ export const routes: Routes = [
         path: ':trainingSubjectId',
         component: TrainingSubjectDetailsComponent,
         resolve: {
-          trainingSubject: TrainingSubjectDetailsResolver
+          trainingSubject: TrainingSubjectDetailsResolver,
         }
       },
       {
