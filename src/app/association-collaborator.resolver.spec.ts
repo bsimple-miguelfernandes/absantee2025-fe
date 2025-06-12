@@ -1,17 +1,26 @@
 import { TestBed } from '@angular/core/testing';
-import { ResolveFn } from '@angular/router';
+import { AssociationCollaboratorResolver } from './association-collaborator.resolver';
+import { CollaboratorDataService } from './collaborators/collaborator-data.service';
 
-import { associationCollaboratorResolver } from './association-collaborator.resolver';
-
-describe('associationCollaboratorResolver', () => {
-  const executeResolver: ResolveFn<boolean> = (...resolverParameters) => 
-      TestBed.runInInjectionContext(() => associationCollaboratorResolver(...resolverParameters));
+describe('AssociationCollaboratorResolver', () => {
+  let resolver: AssociationCollaboratorResolver;
+  let serviceSpy: jasmine.SpyObj<CollaboratorDataService>;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    const spy = jasmine.createSpyObj('CollaboratorDataService', ['getAssociations']);
+
+    TestBed.configureTestingModule({
+      providers: [
+        AssociationCollaboratorResolver,
+        { provide: CollaboratorDataService, useValue: spy }
+      ]
+    });
+
+    resolver = TestBed.inject(AssociationCollaboratorResolver);
+    serviceSpy = TestBed.inject(CollaboratorDataService) as jasmine.SpyObj<CollaboratorDataService>;
   });
 
   it('should be created', () => {
-    expect(executeResolver).toBeTruthy();
+    expect(resolver).toBeTruthy();
   });
 });

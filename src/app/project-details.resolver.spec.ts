@@ -1,17 +1,26 @@
 import { TestBed } from '@angular/core/testing';
-import { ResolveFn } from '@angular/router';
+import { ProjectDetailsResolver } from './project-details.resolver';
+import { ProjectsDataService } from './projects/projects-data.service';
 
-import { projectDetailsResolver } from './project-details.resolver';
-
-describe('projectDetailsResolver', () => {
-  const executeResolver: ResolveFn<boolean> = (...resolverParameters) => 
-      TestBed.runInInjectionContext(() => projectDetailsResolver(...resolverParameters));
+describe('ProjectDetailsResolver', () => {
+  let resolver: ProjectDetailsResolver;
+  let serviceSpy: jasmine.SpyObj<ProjectsDataService>;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    const spy = jasmine.createSpyObj('CollaboratorDataService', ['getProjectById']);
+
+    TestBed.configureTestingModule({
+      providers: [
+        ProjectDetailsResolver,
+        { provide: ProjectsDataService, useValue: spy }
+      ]
+    });
+
+    resolver = TestBed.inject(ProjectDetailsResolver);
+    serviceSpy = TestBed.inject(ProjectsDataService) as jasmine.SpyObj<ProjectsDataService>;
   });
 
   it('should be created', () => {
-    expect(executeResolver).toBeTruthy();
+    expect(resolver).toBeTruthy();
   });
 });

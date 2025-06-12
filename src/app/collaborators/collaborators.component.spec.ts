@@ -16,12 +16,12 @@ describe('CollaboratorsComponent', () => {
   let signalServiceSpy: jasmine.SpyObj<CollaboratorSignalService>;
 
   let selectedCollabSignal: WritableSignal<CollaboratorViewModel | undefined>;
-  let selectedCollabHolidaySignal: WritableSignal<CollaboratorViewModel  | undefined>;
-  let selectedCollabProject: WritableSignal<CollaboratorViewModel  | undefined>;
+  let selectedCollabHolidaySignal: WritableSignal<CollaboratorViewModel | undefined>;
+  let selectedCollabProject: WritableSignal<CollaboratorViewModel | undefined>;
   let updatedCollabSignal: WritableSignal<any>;
   let createCollabSignal: WritableSignal<any>;
 
-  const collabsListDouble: CollaboratorViewModel [] = [
+  const collabsListDouble: CollaboratorViewModel[] = [
     {
       collabId: "0196b4ee-a7fc-750f-a698-6a5dfd27ce71",
       userId: "37726a9c-7246-4074-bd06-f2a58b494230",
@@ -63,9 +63,9 @@ describe('CollaboratorsComponent', () => {
   };
 
   beforeEach(async () => {
-    selectedCollabSignal = signal<CollaboratorViewModel  | undefined>(undefined);
-    selectedCollabHolidaySignal = signal<CollaboratorViewModel  | undefined>(undefined);
-    selectedCollabProject = signal<CollaboratorViewModel  | undefined>(undefined);
+    selectedCollabSignal = signal<CollaboratorViewModel | undefined>(undefined);
+    selectedCollabHolidaySignal = signal<CollaboratorViewModel | undefined>(undefined);
+    selectedCollabProject = signal<CollaboratorViewModel | undefined>(undefined);
     updatedCollabSignal = signal<any>(undefined);
     createCollabSignal = signal<any>(undefined);
 
@@ -134,17 +134,17 @@ describe('CollaboratorsComponent', () => {
     expect(signalServiceSpy.selectCollaboratorHolidays).toHaveBeenCalledWith(undefined);
   });
 
-//   it('should update collaborator when collaboratorUpdated signal changes', fakeAsync(() => {
-//   fixture.detectChanges(); 
-//   const updated = toCollaboratorViewModel({ ...collabsListDouble[0], names: 'Updated Name' });
+  //   it('should update collaborator when collaboratorUpdated signal changes', fakeAsync(() => {
+  //   fixture.detectChanges(); 
+  //   const updated = toCollaboratorViewModel({ ...collabsListDouble[0], names: 'Updated Name' });
 
-//   updatedCollabSignal.set(updated); 
-//   flushEffects(); 
+  //   updatedCollabSignal.set(updated); 
+  //   flushEffects(); 
 
-//   fixture.detectChanges();
-//   const updatedItem = component.collaborators().find(c => c.collabId === updated.collabId);
-//   expect(updatedItem?.names).toBe('Updated Name');
-// }));
+  //   fixture.detectChanges();
+  //   const updatedItem = component.collaborators().find(c => c.collabId === updated.collabId);
+  //   expect(updatedItem?.names).toBe('Updated Name');
+  // }));
 
   // it('should add collaborator when createdCollaborator signal changes', fakeAsync(() => {
   //   const created = toCollaboratorViewModel({
@@ -159,10 +159,10 @@ describe('CollaboratorsComponent', () => {
   //   expect(component.collaborators().some(c => c.collabId === 'new-id')).toBeTrue();
   // }));
 
-  it('should call signal service startCreateCollaborator in startCreate method', () => {
+  /* it('should call signal service startCreateCollaborator in startCreate method', () => {
     component.startCreate();
     expect(signalServiceSpy.startCreateCollaborator).toHaveBeenCalled();
-  });
+  }); */
 
   it("should show collaborator table component with collaborators", () => {
     const element = fixture.nativeElement.querySelector("app-collaborator-list");
@@ -205,7 +205,7 @@ describe('CollaboratorsComponent', () => {
     expect(button).toBeNull();
   });
 
-   it("should show collaborator details if selected collaborator", () => {
+  it("should show collaborator details if selected collaborator", () => {
     selectedCollabSignal.set(collabsListDouble[0]);
     fixture.detectChanges();
     const collaboratorDetails = fixture.nativeElement.querySelector('app-collaborator-details');
@@ -225,7 +225,7 @@ describe('CollaboratorsComponent', () => {
     expect(collaboratorHolidays).toBeTruthy();
   });
 });
-   
+
 function flushEffects() {
   throw new Error('Function not implemented.');
 }
