@@ -5,6 +5,8 @@ import { CollaboratorSignalService } from '../collaborator-signal.service';
 import { CollaboratorDataService } from '../collaborator-data.service';
 import { CollaboratorCreateRequest } from '../collaborators-create/create-collaborator';
 import { Collaborator } from '../collaborator';
+import { toCollaboratorViewModel } from '../mappers/collaborator.mapper';
+
 @Component({
   selector: 'app-collaborator-form',
   standalone: true,
