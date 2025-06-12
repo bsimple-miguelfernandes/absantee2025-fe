@@ -19,8 +19,8 @@ export class CollaboratorDataService {
   constructor() {
   }
 
-  getCollabs(): Observable<Collaborator[]> {
-    return this.httpClient.get<Collaborator[]>(`${this.baseUrl}/collaborators/details`);
+  getCollabs(): Observable<Collaborator[]> { 
+    return this.httpClient.get<Collaborator[]>(`${this.baseUrl}/collaborators/details`); 
   }
 
   getCollabById(id: string): Observable<Collaborator> {
@@ -45,19 +45,19 @@ export class CollaboratorDataService {
   }
 
   editHoliday(collaboratorId: string, updatedPeriod: HolidayPeriod) {
-    return this.httpClient.put<HolidayPeriod>(`${this.baseUrl}/collaborators/${collaboratorId}/holidayplan/holidayperiod`, updatedPeriod);
-  }
+    return this.httpClient.put<HolidayPeriod>(`${this.baseUrl}/collaborators/${collaboratorId}/holidayplan/holidayperiod`, updatedPeriod); 
+  } 
 
   getAssociations(id: string): Observable<AssociationProjectCollaborators[]> {
     return this.httpClient.get<AssociationProjectCollaboratorsDTO[]>(`${this.baseUrl}/collaborators/${id}/associations`).pipe(
       map(dtoList => dtoList.map(dto => mapToAssociationProjectCollaborators(dto)))
-    );
+    ); 
   }
 
   createAssociation(id: string, newAssoc: AssociationCollaboratorProjectCreateRequest): Observable<AssociationProjectCollaborators> {
     return this.httpClient.post<AssociationProjectCollaboratorsDTO>(`${this.baseUrl}/collaborators/${id}/projects`, newAssoc).pipe(
       map(dto => mapToAssociationProjectCollaborators(dto))
-    );
+    ); 
   }
 
 }

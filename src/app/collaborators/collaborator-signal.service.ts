@@ -8,7 +8,6 @@ import { CollaboratorViewModel } from './collaborator-details/collaborator.viewm
   providedIn: 'root'
 })
 export class CollaboratorSignalService {
-  //private httpClient = inject(HttpClient);
 
   private updateCollaboratorSignal = signal<CollaboratorViewModel | undefined>(undefined);
   readonly updatedCollaborator = this.updateCollaboratorSignal.asReadonly();
@@ -34,6 +33,23 @@ export class CollaboratorSignalService {
   private createdAssociationSignal = signal<AssociationProjectCollaborators | undefined>(undefined);
   readonly createdAssociation = this.createdAssociationSignal.asReadonly();
 
+  private isEditingCollaboratorSignal = signal(false);
+  readonly isEditingCollaborator = this.isEditingCollaboratorSignal.asReadonly();
+
+  //refresh pagina
+  private collaboratorsSignal = signal<CollaboratorViewModel[]>([]);
+  readonly collaborators = this.collaboratorsSignal.asReadonly();
+
+startEditCollaborator(collaborator: CollaboratorViewModel) {
+  this.selectedCollaboratorSignal.set(collaborator);
+  this.isEditingCollaboratorSignal.set(true);
+}
+
+cancelEditCollaborator() {
+  this.isEditingCollaboratorSignal.set(false);
+  this.selectedCollaboratorSignal.set(undefined);
+}
+
   startCreateAssociation() {
     this.isCreatingAssociationSignal.set(true);
   }
@@ -52,14 +68,26 @@ export class CollaboratorSignalService {
 
   startCreateCollaborator() {
     this.isCreatingCollaboratorSignal.set(true);
-  }
-
-  createCollaborator(create: CollaboratorViewModel ) {
-    this.createdCollaboratorSignal.set(create)
+    this.isEditingCollaboratorSignal.set(false);
   }
 
   cancelCreateCollaborator() {
     this.isCreatingCollaboratorSignal.set(false);
+  }
+  setCollaborators(collaborators: CollaboratorViewModel[]) {
+    this.collaboratorsSignal.set(collaborators);
+  }
+  addCollaborator(collaborator: CollaboratorViewModel) {
+    this.collaboratorsSignal.update(prev => [...prev, collaborator]);
+  }
+  updateCollaboratorInList(updated: CollaboratorViewModel) {
+    this.collaboratorsSignal.update(prev =>
+      prev.map(c => c.collabId === updated.collabId ? updated : c)
+    );
+  }
+
+  removeCollaborator(id: string) {
+    this.collaboratorsSignal.update(prev => prev.filter(c => c.collabId !== id));
   }
 
   selectCollaborator(selected: CollaboratorViewModel  | undefined){

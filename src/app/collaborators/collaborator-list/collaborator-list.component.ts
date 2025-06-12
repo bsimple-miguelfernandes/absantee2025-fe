@@ -13,41 +13,44 @@ import { CollaboratorDetailsComponent } from '../collaborator-details/collaborat
   styleUrl: './collaborator-list.component.css'
 })
 export class CollaboratorListComponent {
-  @Input() inputCollabs!: Collaborator[];
-  collaborators: Collaborator[] = [];
+  @Input() inputCollabs!: Collaborator[]; 
+  collaborators: Collaborator[] = []; 
 
-  showFilters: boolean = false;
+  showFilters: boolean = false; 
 
-  searchForm: FormGroup = new FormGroup({
-    name: new FormControl(''),
-    email: new FormControl('')
-  });
+  searchForm: FormGroup = new FormGroup({ 
+    name: new FormControl(''), 
+    email: new FormControl('') 
+  }); 
 
-  constructor(private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog) {} 
 
-  ngOnChanges(changes: SimpleChanges) {
-    if(changes['inputCollabs'] && this.inputCollabs) {
-      this.collaborators = this.inputCollabs;
-    }
+  ngOnChanges(changes: SimpleChanges) { 
+    if(changes['inputCollabs'] && this.inputCollabs) { 
+      this.collaborators = this.inputCollabs; 
+    } 
+  } 
+
+  ngOnInit() {  
+    this.searchForm.valueChanges.subscribe(values => { 
+      const { name, email } = values; 
+      this.collaborators = this.inputCollabs.filter(c => 
+        (!name || c.names.toLowerCase().includes(name.toLowerCase())  
+          || c.surnames.toLowerCase().includes(name.toLowerCase())) && 
+        (!email || c.email.toLowerCase().includes(email.toLowerCase())) 
+      ); 
+    }); 
+  } 
+
+  toggleFilters() {  
+    this.showFilters = !this.showFilters 
+    if(!this.showFilters) { 
+      this.collaborators = this.inputCollabs; 
+    } 
   }
-
-  ngOnInit() { 
-    this.searchForm.valueChanges.subscribe(values => {
-      const { name, email } = values;
-      this.collaborators = this.inputCollabs.filter(c =>
-        (!name || c.names.toLowerCase().includes(name.toLowerCase()) 
-          || c.surnames.toLowerCase().includes(name.toLowerCase())) &&
-        (!email || c.email.toLowerCase().includes(email.toLowerCase()))
-      );
-    });
-  }
-
-  toggleFilters() {
-    this.showFilters = !this.showFilters
-    if(!this.showFilters) {
-      this.collaborators = this.inputCollabs;
-    }
-  }
+   resetFilters() { 
+    this.searchForm.reset(); 
+    this.collaborators = this.inputCollabs;}
 
   openDetails(collab: Collaborator) {
     this.dialog.open(CollaboratorDetailsComponent, {

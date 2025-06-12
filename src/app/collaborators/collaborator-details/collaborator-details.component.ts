@@ -25,8 +25,6 @@ export class CollaboratorDetailsComponent {
   constructor(private route: ActivatedRoute, @Inject(MAT_DIALOG_DATA) private data: { collab: Collaborator }) {}
 
   ngOnInit() {
-    /*this.route.data.subscribe(data => {
-      this.collaborator = data['DetailsData'];*/
 
       this.collaborator = this.data.collab;
 

@@ -1,4 +1,15 @@
-<app-collaborator-list [inputCollabs]="collaborators()">
-</app-collaborator-list>
+<app-collaborator-list [inputCollabs]="collaborators()"></app-collaborator-list>
 
-<router-outlet/>
+@if(!isCreatingCollaboratorSignal()) {
+<button data-test-id="create-collab-button" (click)="collaboratorSignalService.startCreateCollaborator()">
+    Criar collaborador
+</button>
+}
+@else{
+<app-collaborator-form />
+}
+
+@if(isEditingCollaboratorSignal()){
+    <app-collaborator-form></app-collaborator-form>            
+}
+<router-outlet></router-outlet>

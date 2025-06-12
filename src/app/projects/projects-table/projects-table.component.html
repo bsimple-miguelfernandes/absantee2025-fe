@@ -1,16 +1,33 @@
+<button (click)="toggleFilters()">Show Filters</button>
+
+<div *ngIf="showFilters()" class="search-form">
+  <form [formGroup]="searchForm">
+    <label>
+      Title:
+      <input formControlName="title" type="text" placeholder="Search by title">
+    </label>
+
+    <label>
+      Acronym:
+      <input formControlName="acronym" type="text" placeholder="Search by acronym">
+    </label>
+  </form>
+</div>
+
 <table>
+  <tr>
+    <th>Title</th>
+    <th>Acronym</th>
+    <th>Actions</th>
+  </tr>
+  @for (proj of filteredProjects(); track proj.id) {
     <tr>
-        <th>Title</th>
-        <th>Acronym</th>
-        <th>Actions</th>
+      <td>{{ proj.title }}</td>
+      <td>{{ proj.acronym }}</td>
+      <td>
+        <button [routerLink]="['details', proj.id]" data-testid="details-btn">Project Details</button>
+        <button [routerLink]="['associations', proj.id]" data-testid="collabs-btn">Project Collaborators</button>
+      </td>
     </tr>
-    @for (proj of projects(); track proj.acronym) {
-    <tr>
-        <td>{{proj.title}}</td>
-        <td>{{proj.acronym}}</td>
-        <td><button [routerLink]="['details', proj.id]" data-testid="details-btn">Project Details</button>
-            <button [routerLink]="['associations', proj.id]" data-testid="collabs-btn">Project Collaborators</button>
-        </td>
-    </tr>
-    }
+  }
 </table>

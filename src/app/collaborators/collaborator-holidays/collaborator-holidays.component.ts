@@ -5,17 +5,24 @@ import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule
 import { HolidayPeriod, mapHolidayPeriodDtoToHolidayPeriod } from './holiday-period';
 import { ActivatedRoute } from '@angular/router';
 
-
 function dateRangeValidator(group: AbstractControl): ValidationErrors | null {
   const initDate = group.get('initDate')?.value;
   const finalDate = group.get('finalDate')?.value;
 
-  if (!initDate || !finalDate) return null;
+  const areDatesFilled = !!initDate && !!finalDate;
 
-  return new Date(initDate) <= new Date(finalDate)
-    ? null
-    : { dateRangeInvalid: true };
+  if (!areDatesFilled) {
+    return null; // Deixa outros validadores lidarem com campos obrigatórios
+  }
+
+  const init = new Date(initDate);
+  const final = new Date(finalDate);
+
+  const isRangeValid = init <= final;
+
+  return isRangeValid ? null : { dateRangeInvalid: true };
 }
+
 
 export enum ButtonType {
   Edit,

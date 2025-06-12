@@ -1,0 +1,42 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="form-card">
+  <h2>{{ isEditing() ? "Edit Collaborator" : "Add Collaborator" }}</h2>
+
+  <div class="form-row">
+    <label class="form-label">Names</label>
+    <input type="text" formControlName="names" class="form-input" />
+  </div>
+
+  <div class="form-row">
+    <label class="form-label">Surnames</label>
+    <input type="text" formControlName="surnames" class="form-input" />
+  </div>
+
+  <div class="form-row">
+    <label class="form-label">Email</label>
+    <input type="email" formControlName="email" class="form-input" />
+  </div>
+
+  <div class="form-row">
+    <label class="form-label">Deactivation Date</label>
+    <input type="date" formControlName="deactivationDate" class="form-input" />
+  </div>
+
+  <div formGroupName="collaboratorPeriod" class="period-group">
+    <div class="form-row">
+      <label class="form-label">Init Date</label>
+      <input type="date" formControlName="initDate" class="form-input" />
+    </div>
+
+    <div class="form-row">
+      <label class="form-label">Final Date</label>
+      <input type="date" formControlName="finalDate" class="form-input" />
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="button" (click)="cancel()">Cancel</button>
+    <button type="submit" [disabled]="form.invalid">
+      {{ isEditing() ? "Save" : "Add" }}
+    </button>
+  </div>
+</form>

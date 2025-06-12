@@ -1,21 +1,21 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, effect } from '@angular/core';
 import { CollaboratorListComponent } from "./collaborator-list/collaborator-list.component";
 import { CollaboratorHolidaysComponent } from "./collaborator-holidays/collaborator-holidays.component";
 import { AssociationsProjectCollaboratorComponent } from "../associations-project-collaborator/associations-project-collaborator.component";
 import { CollaboratorDataService } from './collaborator-data.service';
-import { CollaboratorCreateComponent } from './collaborators-create/collaborator-create.component';
 import { CommonModule } from '@angular/common';
 import { CollaboratorViewModel } from './collaborator-details/collaborator.viewmodel';
 import { toCollaboratorViewModel } from './mappers/collaborator.mapper';
 import { RouterOutlet } from '@angular/router';
-
+import { CollaboratorFormComponent } from './collaborator-form/collaborator-form.component';
+import { CollaboratorSignalService } from './collaborator-signal.service';
 @Component({
   selector: 'app-collaborators',
   standalone: true,
   imports: [
     CommonModule,
     CollaboratorListComponent,
-    CollaboratorCreateComponent,
+    CollaboratorFormComponent,
     RouterOutlet
   ],
   templateUrl: './collaborators.component.html',
@@ -23,9 +23,20 @@ import { RouterOutlet } from '@angular/router';
 })
 export class CollaboratorsComponent {
   collaboratorDataService = inject(CollaboratorDataService);
+  collaboratorSignalService = inject(CollaboratorSignalService);
 
   collaborators = signal<CollaboratorViewModel[]>([]);
-
+  isCreatingCollaboratorSignal = this.collaboratorSignalService.isCreatingCollaborator;
+  isEditingCollaboratorSignal = this.collaboratorSignalService.isEditingCollaborator;
+ ngOnInit() {
+    this.collaboratorDataService.getCollabs().subscribe({
+      next: list => {
+        const vmList = list.map(toCollaboratorViewModel);
+        this.collaboratorSignalService.setCollaborators(vmList);
+      },
+      error: err => console.error('Erro ao carregar colaboradores', err)
+    });
+  }
   constructor() {
     this.collaboratorDataService.getCollabs().subscribe({
       next: (collaborators) => {
