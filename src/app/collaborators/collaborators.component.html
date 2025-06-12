@@ -1,4 +1,4 @@
-<app-collaborator-list [inputCollabs]="collaborators()">
+<app-collaborator-list [inputCollabs]="collaborators()" (openDetails)="openDetails($event)">
 </app-collaborator-list>
 
 <router-outlet/>
