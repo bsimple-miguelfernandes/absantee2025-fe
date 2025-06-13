@@ -1,13 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CollaboratorListComponent } from './collaborator-list.component';
 import { CollaboratorViewModel } from '../collaborator-details/collaborator.viewmodel';
-import { ActivatedRoute, provideRouter } from '@angular/router';
-import { of } from 'rxjs';
+import { provideRouter, Router, RouterLink } from '@angular/router';
+import { CollaboratorHolidaysComponent } from '../collaborator-holidays/collaborator-holidays.component';
+import { AssociationsProjectCollaboratorComponent } from '../../associations-project-collaborator/associations-project-collaborator.component';
+import { Location } from '@angular/common';
+
 
 describe('CollaboratorListComponent', () => {
   let component: CollaboratorListComponent;
   let fixture: ComponentFixture<CollaboratorListComponent>;
   let collaborators: CollaboratorViewModel [];
+
+  let router: Router;
+  let location: Location;
 
   beforeEach(async () => {
     collaborators = [
@@ -45,20 +51,21 @@ describe('CollaboratorListComponent', () => {
   
 
     await TestBed.configureTestingModule({
-      imports: [CollaboratorListComponent ], 
+      imports: [CollaboratorListComponent], 
       providers: [
-        {
-          provide: ActivatedRoute, useValue: { params: of({}) }
-        },
-        provideRouter([]),
+        provideRouter([
+          { path: 'holidays/:collabId', component: CollaboratorHolidaysComponent },
+          { path: 'associations/:collabId', component: AssociationsProjectCollaboratorComponent }
+        ]),
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(CollaboratorListComponent);
     component = fixture.componentInstance;
-
     fixture.componentRef.setInput('inputCollabs', collaborators);
     fixture.detectChanges();
+    router = TestBed.inject(Router);
+    location = TestBed.inject(Location);
   });
 
   it('should create', () => {
@@ -164,35 +171,6 @@ describe('CollaboratorListComponent', () => {
     expect(rows[2].textContent).toContain('jane.smith@example.com');
   });
 
-  /* it('should update collaborators when inputCollabs changes', () => {
-    const newCollabs: CollaboratorViewModel[] = [
-      {
-      collabId: "123e4567-e89b-12d3-a456-426614174000",
-      userId: "987f6543-21ba-43cd-8e76-123456789abc",
-      names: "newName",
-      surnames: "newSurname",
-      email: "newnamenewsurname@example.com",
-      userPeriod: {
-        _initDate: new Date("2020-01-01T00:00:00.000Z"),
-        _finalDate: new Date("2025-01-01T00:00:00.000Z")
-      },
-      collaboratorPeriod: {
-        _initDate: new Date("2021-01-01T00:00:00.000Z"),
-        _finalDate: new Date("2024-01-01T00:00:00.000Z")
-      }
-      }
-    ];
-    component.ngOnChanges({
-      inputCollabs: {
-        currentValue: newCollabs,
-        previousValue: collaborators,
-        firstChange: false,
-        isFirstChange: () => false
-      }
-    });
-    expect(component.collaborators).toEqual(newCollabs);
-  }); */
-
   it('should emit openDetails event when called', () => {
     spyOn(component.openDetails, 'emit');
     const collab = collaborators[0];
@@ -235,27 +213,24 @@ describe('CollaboratorListComponent', () => {
   });
 
 
- /* 
-  
-  it('should handle ngOnInit and subscribe to searchForm changes', () => {
-    spyOn(component.searchForm.valueChanges, 'subscribe').and.callThrough();
-    component.ngOnInit();
-    expect(component.searchForm.valueChanges.subscribe).toHaveBeenCalled();
+  it('should navigate to holidays page when holidays button is clicked', async () => {
+    const holidayButtons = fixture.nativeElement.querySelectorAll('[data-testid="holidays-btn"]');
+    const holidayButton = holidayButtons[0];
+
+    holidayButton.click();
+    await fixture.whenStable();
+
+    expect(location.path()).toBe('/holidays/0196b4ee-a7fc-750f-a698-6a5dfd27ce71');
   });
 
-  
+  it('should navigate to associations page when projects button is clicked', async () => {
+    const projectButtons = fixture.nativeElement.querySelectorAll('[data-testid="projects-btn"]');
+    const projectButton = projectButtons[0];
 
-  it('should not fail if inputCollabs is undefined in ngOnChanges', () => {
-    component.inputCollabs = undefined as any;
-    expect(() => {
-      component.ngOnChanges({
-        inputCollabs: {
-          currentValue: undefined,
-          previousValue: collaborators,
-          firstChange: false,
-          isFirstChange: () => false
-        }
-      });
-    }).not.toThrow();
-  }); */
+    projectButton.click();
+    await fixture.whenStable();
+
+    expect(location.path()).toBe('/associations/0196b4ee-a7fc-750f-a698-6a5dfd27ce71');
+  });
+
 });
