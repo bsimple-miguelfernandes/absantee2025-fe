@@ -12,8 +12,7 @@ import { Project } from "./models/project.model";
 export class ProjectsDataService {
   private readonly baseUrl = environment.apiBaseUrl;
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) { }
 
   getProjects(): Observable<Project[]> {
     return this.http.get<Project[]>(`${this.baseUrl}/Project`)

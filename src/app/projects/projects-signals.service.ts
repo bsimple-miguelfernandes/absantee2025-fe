@@ -1,17 +1,11 @@
 import { Injectable, signal } from '@angular/core';
 import { AssociationProjectCollaborators } from '../associations-project-collaborator/association-project-collaborator.model';
-import { Project } from './models/project.model';
 import { ProjectViewModel } from './models/project-view-model.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectsSignalsService {
-  private isCreatingProjectFormSignal = signal(false);
-  readonly isCreatingProjectForm = this.isCreatingProjectFormSignal.asReadonly();
-
-  private isEditingProjectFormSignal = signal<ProjectViewModel | undefined>(undefined);
-  readonly isEditingProjectForm = this.isEditingProjectFormSignal.asReadonly();
 
   private projectCreatedSignal = signal<ProjectViewModel | undefined>(undefined);
   readonly projectCreated = this.projectCreatedSignal.asReadonly();
@@ -37,35 +31,15 @@ export class ProjectsSignalsService {
     this.isCreatingAssociationSignal.set(false);
   }
 
-  startCreateProject() {
-    this.isCreatingProjectFormSignal.set(true);
-    this.isEditingProjectFormSignal.set(undefined);
-  }
-
-  cancelCreateProject() {
-    this.isCreatingProjectFormSignal.set(false);
-  }
-
-  startEditProject(project: Project) {
-    this.isEditingProjectFormSignal.set(project)
-    this.isCreatingProjectFormSignal.set(false);
-  }
-
-  cancelEditProject() {
-    this.isEditingProjectFormSignal.set(undefined);
-  }
-
-  createProject(projectCreated: Project) {
+  createProject(projectCreated: ProjectViewModel) {
     this.projectCreatedSignal.set(projectCreated);
   }
 
-  saveProject(project: Project) {
+  saveProject(project: ProjectViewModel) {
     this.projectCreatedSignal.set(project);
-    this.cancelCreateProject();
   }
 
-  updateProject(project: Project) {
+  updateProject(project: ProjectViewModel) {
     this.projectUpdatedSignal.set(project);
-    this.cancelEditProject();
   }
 }

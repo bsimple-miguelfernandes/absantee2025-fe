@@ -1,57 +1,57 @@
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
-// import { ProjectComponent } from './project.component';
-// import { ActivatedRoute } from '@angular/router';
-// import { Project } from '../models/project.model';
-// import { ProjectsSignalsService } from '../projects-signals.service';
-// import { signal, WritableSignal } from '@angular/core';
-// import { of } from 'rxjs';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ProjectComponent } from './project.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ProjectsSignalsService } from '../projects-signals.service';
+import { BehaviorSubject, of } from 'rxjs';
+import { ProjectViewModel } from '../models/project-view-model.model';
 
-// describe('ProjectComponent', () => {
-//   let component: ProjectComponent;
-//   let fixture: ComponentFixture<ProjectComponent>;
-//   let project: Project;
-//   let mockProjectsSignalService: jasmine.SpyObj<ProjectsSignalsService>;
-//   let projectSelectedSignal: WritableSignal<Project | undefined>;
-//   beforeEach(async () => {
-//     projectSelectedSignal = signal<Project | undefined>(undefined);
-//     mockProjectsSignalService = jasmine.createSpyObj('ProjectsSignalsService', [], {
-//       projectSelected: projectSelectedSignal
-//     });
-//     await TestBed.configureTestingModule({
-//       imports: [ProjectComponent],
-//       providers: [
-//         { provide: ProjectsSignalsService, useValue: mockProjectsSignalService },
-//         {
-//           provide: ActivatedRoute,
-//           useValue: {
-//             snapshot: {},
-//             params: of({}),
-//             queryParams: of({}),
-//             url: of([]),
-//             data: of({})
-//           }
-//         }
-//       ]
-//     })
-//       .compileComponents();
+describe('ProjectComponent', () => {
+    let component: ProjectComponent;
+    let fixture: ComponentFixture<ProjectComponent>;
 
-//     fixture = TestBed.createComponent(ProjectComponent);
-//     component = fixture.componentInstance;
+    let mockProjectsSignalService: jasmine.SpyObj<ProjectsSignalsService>;
+    let routerSpy: jasmine.SpyObj<Router>;
 
-//     project = {
-//       id: '1',
-//       title: 'Test 1',
-//       acronym: 'T1',
-//       periodDate: {
-//         initDate: new Date(2020, 1, 1),
-//         finalDate: new Date(2021, 1, 1)
-//       }
-//     };
-//     projectSelectedSignal.set(project);
-//     fixture.detectChanges();
-//   });
+    const mockProject: ProjectViewModel = {
+        id: '1',
+        title: 'Test Project',
+        acronym: 'TP',
+        periodDate: {
+            initDate: new Date(2020, 1, 1),
+            finalDate: new Date(2021, 1, 1)
+        }
+    };
 
-//   it('should create', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
+    beforeEach(async () => {
+        mockProjectsSignalService = jasmine.createSpyObj('ProjectsSignalsService', ['startEditProject']);
+        routerSpy = jasmine.createSpyObj('Router', ['navigate']);
+
+        await TestBed.configureTestingModule({
+            imports: [ProjectComponent],
+            providers: [
+                { provide: ProjectsSignalsService, useValue: mockProjectsSignalService },
+                { provide: ActivatedRoute, useValue: { data: of({ ProjectData: mockProject }) } },
+                { provide: Router, useValue: routerSpy }
+            ]
+        }).compileComponents();
+
+        fixture = TestBed.createComponent(ProjectComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
+
+    it('should create', () => {
+        expect(component).toBeTruthy();
+        expect(component.project).toEqual(mockProject);
+    });
+
+    // --------------- Controller tests ---------------
+
+    it('should initialize project from route data - ngOnInit code block', () => {
+        // Assert
+        expect(component.project).toEqual(mockProject);
+    });
+
+    it('should ')
+
+});

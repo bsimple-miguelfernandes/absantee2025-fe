@@ -1,12 +1,12 @@
 <br>
 
-@if(!isCreatingProjectSignal()) {
-<button data-test-id="create-project-button" (click)="projectSignalService.startCreateProject()">
+@if(!isCreatingProject()) {
+<button [routerLink]="['create']" data-test-id="create-project-button">
     Create project
 </button>
 }
 @else{
-<app-project-form />
+<router-outlet />
 }
 
 <br />

@@ -1,11 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ProjectsComponent } from './projects.component';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { ProjectsDataService } from './projects-data.service';
 import { signal, WritableSignal } from '@angular/core';
 import { ProjectsSignalsService } from './projects-signals.service';
 import { ProjectViewModel } from './models/project-view-model.model';
-import { ActivatedRoute, provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
+import { toProjectViewModel } from './mappers/project.mapper';
+import { routes } from '../app.routes';
 
 describe('ProjectsComponent', () => {
   let component: ProjectsComponent;
@@ -13,21 +15,36 @@ describe('ProjectsComponent', () => {
   let mockProjectsDataService: jasmine.SpyObj<ProjectsDataService>;
   let mockProjectSignalService: jasmine.SpyObj<ProjectsSignalsService>;
 
-  let isCreatingProjectFormSignal: WritableSignal<boolean>;
   let projectCreatedSignal: WritableSignal<ProjectViewModel | undefined>;
   let projectUpdatedSignal: WritableSignal<ProjectViewModel | undefined>;
-  let projects: ProjectViewModel[];
-  let filteredProjects: ProjectViewModel[];
+  let projects: ProjectViewModel[] = [
+    {
+      id: '1',
+      title: 'Test 1',
+      acronym: 'T1',
+      periodDate: {
+        initDate: new Date(2020, 1, 1),
+        finalDate: new Date(2021, 1, 1)
+      }
+    },
+    {
+      id: '2',
+      title: 'Test 2',
+      acronym: 'T2',
+      periodDate: {
+        initDate: new Date(2020, 1, 1),
+        finalDate: new Date(2021, 1, 1)
+      }
+    }
+  ];
 
   beforeEach(async () => {
     mockProjectsDataService = jasmine.createSpyObj('ProjectsDataService', ['getProjects']);
 
-    isCreatingProjectFormSignal = signal<boolean>(false);
     projectCreatedSignal = signal<ProjectViewModel | undefined>(undefined);
     projectUpdatedSignal = signal<ProjectViewModel | undefined>(undefined);
 
     mockProjectSignalService = jasmine.createSpyObj('ProjectsSignalsService', ['startCreateProject'], {
-      isCreatingProjectForm: isCreatingProjectFormSignal,
       projectCreated: projectCreatedSignal,
       projectUpdated: projectUpdatedSignal
     });
@@ -37,31 +54,10 @@ describe('ProjectsComponent', () => {
       providers: [
         { provide: ProjectsDataService, useValue: mockProjectsDataService },
         { provide: ProjectsSignalsService, useValue: mockProjectSignalService },
-        provideRouter([])
+        provideRouter(routes)
       ]
     })
       .compileComponents();
-
-    projects = [
-      {
-        id: '1',
-        title: 'Test 1',
-        acronym: 'T1',
-        periodDate: {
-          initDate: new Date(2020, 1, 1),
-          finalDate: new Date(2021, 1, 1)
-        }
-      },
-      {
-        id: '2',
-        title: 'Test 2',
-        acronym: 'T2',
-        periodDate: {
-          initDate: new Date(2020, 1, 1),
-          finalDate: new Date(2021, 1, 1)
-        }
-      }
-    ];
 
     mockProjectsDataService.getProjects.and.returnValue(of(projects));
 
@@ -89,82 +85,117 @@ describe('ProjectsComponent', () => {
     expect(projectsTable).not.toBeNull();
   });
 
-  it('should show create project button, if isCreatingProjectSignal is set to false', () => {
+  it('should show create project button when route does not includes "create"', async () => {
+    // Arrange
+    const router = TestBed.inject(Router);
+
     // Act
-    isCreatingProjectFormSignal.set(false);
+    // Example without the create word
+    await router.navigate(['/projects/']);
+    fixture.detectChanges();
 
     // Assert
-    const button: HTMLButtonElement = fixture.nativeElement.querySelector('[data-test-id="create-project-button"]');
-    expect(button).toBeTruthy();
-    expect(button.textContent!.trim()).toBe('Create project');
+    const button = fixture.nativeElement.querySelector('[data-test-id="create-project-button"]');
+    expect(button).not.toBeNull();
+    expect(button.textContent).toContain('Create project');
   });
 
-  it('should show project form component, if isCreatingProjectSignal is set to true', () => {
+  it('should show project form component when route includes "create"', async () => {
+    // Arrange
+    const router = TestBed.inject(Router);
 
+    // Act
+    await router.navigate(['/projects/create']);
+    fixture.detectChanges();
+
+    // Assert
+    const button = fixture.nativeElement.querySelector('[data-test-id="create-project-button"]');
+    expect(button).toBeNull();
   });
 
-  // it('should not show project details on init because projectSelected is undefined', () => {
-  //   const projectDetails = fixture.nativeElement.querySelector('app-project');
-  //   expect(projectDetails).toBeNull();
-  // });
+  // ------------------- Controller -------------------
 
-  // it('should not show project associations on init because projectCollaboratorsSelected is undefined', () => {
-  //   const associations = fixture.nativeElement.querySelector('app-associations-project-collaborator');
-  //   expect(associations).toBeNull();
-  // });
+  it('should load and transform projects on init', () => {
+    // Assert
+    expect(mockProjectsDataService.getProjects).toHaveBeenCalled();
+    const expectedVMs = projects.map(toProjectViewModel);
+    expect(component.projects()).toEqual(expectedVMs);
+    expect(component.filteredList).toEqual(expectedVMs);
+  });
 
-  // it('should show project details when projectSelected changes', () => {
-  //   const project: ProjectViewModel = {
-  //     id: '2',
-  //     title: 'Test 2',
-  //     acronym: 'T2',
-  //     periodDate: {
-  //       initDate: new Date(2020, 1, 1),
-  //       finalDate: new Date(2021, 1, 1)
-  //     }
-  //   };
+  it('should alert and log error when getProjects fails', () => {
+    // Arrange
+    spyOn(window, 'alert');
+    const consoleSpy = spyOn(console, 'error');
+    mockProjectsDataService.getProjects.and.returnValue(throwError(() => new Error('fail')));
 
+    // Act
+    fixture = TestBed.createComponent(ProjectsComponent);
+    component = fixture.componentInstance;
 
-  //   fixture.detectChanges();
-  //   const projectDetails = fixture.nativeElement.querySelector('app-project');
-  //   expect(projectDetails).not.toBeNull();
-  // });
+    // Assert
+    expect(window.alert).toHaveBeenCalledWith('Error loading projects');
+    expect(consoleSpy).toHaveBeenCalledWith('Error loading projects', jasmine.any(Error));
+  });
 
-  // it('should show project associations when projectCollaboratorsSelected changes', () => {
-  //   const project: ProjectViewModel = {
-  //     id: '2',
-  //     title: 'Test 2',
-  //     acronym: 'T2',
-  //     periodDate: {
-  //       initDate: new Date(2020, 1, 1),
-  //       finalDate: new Date(2021, 1, 1)
-  //     }
-  //   };
+  it('should add project to filteredList when projectCreatedSignal emits', () => {
+    // Arrange
+    const newProject: ProjectViewModel = {
+      id: '3',
+      title: 'Gamma',
+      acronym: 'GAM',
+      periodDate: { initDate: new Date(), finalDate: new Date() }
+    };
 
-  //   mockProjectsDataService.getAssociations.and.returnValue(of([]));
+    // Act
+    projectCreatedSignal.set(newProject);
+    fixture.detectChanges();
 
-  //   fixture.detectChanges();
-  //   const associations = fixture.nativeElement.querySelector('app-associations-project-collaborator');
-  //   expect(associations).not.toBeNull();
-  // });
+    // Assert
+    expect(component.filteredList.some(p => p.id === '3')).toBeTrue();
+  });
 
-  // it('should update projects list when projectCreatedSignal changes', () => {
-  //   const project: ProjectViewModel = {
-  //     id: '3',
-  //     title: 'Test 3',
-  //     acronym: 'T3',
-  //     periodDate: {
-  //       initDate: new Date(2020, 1, 1),
-  //       finalDate: new Date(2021, 1, 1)
-  //     }
-  //   };
+  it('should update a project in filteredList when projectUpdatedSignal emits', () => {
+    // Arrange
+    const updatedProject = { ...projects[0], title: 'Alpha Updated' };
 
-  //   projectCreatedSignal.set(project);
+    // Act
+    projectUpdatedSignal.set(updatedProject);
+    fixture.detectChanges();
 
-  //   fixture.detectChanges();
+    // Assert
+    const updated = component.filteredList.find(p => p.id === updatedProject.id);
+    expect(updated?.title).toBe('Alpha Updated');
+  });
 
-  //   const projectList = [...projects, project];
+  it('should return true from isCreatingProject() when route does not include "create"', async () => {
+    // Arrange
+    const router = TestBed.inject(Router);
 
-  //   expect(component.projects()).toEqual(projectList);
-  // });
+    // Act
+    // Exemple route
+    await router.navigate(['/projects/']);
+    fixture.detectChanges();
+
+    // Assert
+    expect(component.isCreatingProject()).toBeFalse();
+  });
+
+  it('should return false from isCreatingProject() when route includes "create"', async () => {
+    // Arrange
+    const router = TestBed.inject(Router);
+
+    // Act
+    await router.navigate(['/projects/create']);
+    fixture.detectChanges();
+
+    // Assert
+    expect(component.isCreatingProject()).toBeTrue();
+  });
+
+  it('should update filteredList when onFilter is called', () => {
+    const filtered: ProjectViewModel[] = [toProjectViewModel(projects[0])];
+    component.onFilter(filtered);
+    expect(component.filteredList).toEqual(filtered);
+  });
 });

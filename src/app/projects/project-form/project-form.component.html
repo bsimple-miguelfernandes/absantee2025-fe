@@ -1,5 +1,5 @@
 <form [formGroup]="projectForm" (ngSubmit)="onSubmit()" class="form-card">
-  <h2>{{ isEditingProjectForm() ? "Edit Project" : "Add Project" }}</h2>
+  <h2>{{ this.projectToEdit ? "Edit Project" : "Add Project" }}</h2>
 
   <div class="form-row">
     <label class="form-label">Title</label>
@@ -24,9 +24,9 @@
   </div>
 
   <div class="actions">
-    <button type="button" (click)="cancel()">Cancel</button>
-    <button type="submit" [disabled]="projectForm.invalid">
-      {{ isEditingProjectForm() ? "Save" : "Add" }}
+    <button type="button" (click)="exit()">Cancel</button>
+    <button type="submit" [disabled]="projectForm.invalid || !projectForm.dirty">
+      {{ this.projectToEdit ? "Save" : "Add" }}
     </button>
   </div>
 </form>

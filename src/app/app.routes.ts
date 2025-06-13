@@ -30,6 +30,10 @@ export const routes: Routes = [
                 }
             },
             {
+                path: 'create',
+                component: ProjectFormComponent
+            },
+            {
                 path: 'edit/:projectId',
                 component: ProjectFormComponent,
                 resolve: {

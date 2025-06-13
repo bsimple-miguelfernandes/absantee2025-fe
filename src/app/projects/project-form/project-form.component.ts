@@ -1,11 +1,13 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject, effect } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ProjectsSignalsService } from '../projects-signals.service';
 import { PeriodDateForm } from '../../PeriodDate';
 import { ProjectsDataService } from '../projects-data.service';
 import { ProjectForm } from '../models/project.model';
 import { ActivatedRoute, Router } from '@angular/router';
+import { formatDate } from '../../utils/date';
+import { ProjectViewModel } from '../models/project-view-model.model';
+import { ProjectsSignalsService } from '../projects-signals.service';
 
 @Component({
   selector: 'app-project-form',
@@ -13,78 +15,66 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './project-form.component.html',
   styleUrl: './project-form.component.css'
 })
-export class ProjectFormComponent {
-  projectSignalsService = inject(ProjectsSignalsService);
-  projectDataService = inject(ProjectsDataService);
+export class ProjectFormComponent implements OnInit {
   router = inject(Router);
-
-  isEditingProjectForm = this.projectSignalsService.isEditingProjectForm;
-  isCreatingProjectForm = this.projectSignalsService.isCreatingProjectForm;
+  route = inject(ActivatedRoute);
+  location = inject(Location);
+  projectDataService = inject(ProjectsDataService);
+  projectSignalService = inject(ProjectsSignalsService);
 
   projectForm!: FormGroup;
+  projectToEdit?: ProjectViewModel;
 
-  constructor() {
+  ngOnInit() {
 
     this.projectForm = new FormGroup<ProjectForm>({
       title: new FormControl('', Validators.required),
       acronym: new FormControl('', Validators.required),
       periodDate: new FormGroup<PeriodDateForm>({
-        initDate: new FormControl(this.formatDate(new Date()), Validators.required),
-        finalDate: new FormControl(this.formatDate(new Date()), Validators.required),
+        initDate: new FormControl(formatDate(new Date()), Validators.required),
+        finalDate: new FormControl(formatDate(new Date()), Validators.required),
       })
     });
 
-    effect(() => {
-      const project = this.isEditingProjectForm();
+    this.route.data.subscribe(data => {
+      const project = data['ProjectData'];
       if (project) {
+        this.projectToEdit = project;
         this.projectForm.patchValue(project);
-      } else {
-        this.projectForm.reset();
       }
     });
   };
 
-  private formatDate(date: Date): string {
-    return date.toISOString().split('T')[0];
-  }
-
-  cancel() {
-    this.projectSignalsService.cancelCreateProject();
-    this.projectSignalsService.cancelEditProject();
-    this.router.navigate(['/projects']);
-
+  exit() {
+    if (window.history.length > 1) {
+      this.location.back();
+    } else {
+      this.router.navigate(['/projects']);
+    }
   }
 
   onSubmit() {
-    if (this.projectForm.valid) {
-      const formValue = this.projectForm.value;
+    if (!this.projectForm.valid) return;
 
-      const project = this.isEditingProjectForm() ? { ...this.isEditingProjectForm(), ...formValue } : formValue;
+    const formValue = this.projectForm.value;
+    const project = this.projectToEdit ? { ...this.projectToEdit, ...formValue } : formValue;
 
-      if (this.isCreatingProjectForm()) {
+    if (this.projectToEdit) {
+      this.projectSignalService.updateProject(project);
 
-        this.projectDataService.createProject(project).subscribe({
-          next: (createdProject) => {
-            console.log("Created project: ", createdProject);
-            this.projectSignalsService.saveProject(project);
-            this.projectSignalsService.cancelCreateProject();
-          }
-        })
-      } else if (this.isEditingProjectForm()) {
-        this.projectSignalsService.updateProject(project);
-
-        this.projectDataService.updateProject(project).subscribe({
-          next: (updatedProject) => {
-            console.log("Updated Project: ", updatedProject);
-            this.projectSignalsService.updateProject(project);
-            this.projectSignalsService.cancelEditProject();
-          }
-        })
-      }
-      this.projectForm.reset();
+      this.projectDataService.updateProject(project).subscribe({
+        next: (updatedProject) => {
+          this.projectSignalService.updateProject(updatedProject);
+        }
+      });
+    } else {
+      this.projectDataService.createProject(project).subscribe({
+        next: (createdProject) => {
+          this.projectSignalService.saveProject(createdProject);
+        }
+      });
     }
-    this.router.navigate(['/projects']);
+    this.projectForm.reset();
+    this.exit();
   }
-
 }
-
