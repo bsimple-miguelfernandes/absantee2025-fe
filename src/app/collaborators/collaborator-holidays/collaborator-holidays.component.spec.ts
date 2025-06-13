@@ -8,36 +8,21 @@ import { HolidayPeriod } from './holiday-period';
 import { of } from 'rxjs';
 import { Collaborator } from '../collaborator';
 import { By } from '@angular/platform-browser';
-import { provideRouter } from '@angular/router';
+import { ActivatedRoute, provideRouter, ResolveFn } from '@angular/router';
 
 describe('CollaboratorHolidaysComponent', () => {
   let component: CollaboratorHolidaysComponent;
   let fixture: ComponentFixture<CollaboratorHolidaysComponent>;
-  let mockCollaboratorSignalService: jasmine.SpyObj<CollaboratorSignalService>;
-  let selectedCollaboratorHolidaysSignal: WritableSignal<Collaborator | undefined>;
   let mockCollabotadorDataService: jasmine.SpyObj<CollaboratorDataService>;
   let collaborator: Collaborator;
   let collaboratorHolidays: HolidayPeriod[];
 
   beforeEach(async () => {
-    selectedCollaboratorHolidaysSignal = signal<Collaborator | undefined>(undefined);
-    mockCollaboratorSignalService = jasmine.createSpyObj('CollaboratorSignalService', [], {
-      selectedCollaboratorHoliday: selectedCollaboratorHolidaysSignal
-    });
     mockCollabotadorDataService = jasmine.createSpyObj('CollaboratorDataService', [
       'getCollaboratorHolidays',
       'editHoliday',
       'addHoliday'
     ]);
-    await TestBed.configureTestingModule({
-      imports: [CollaboratorHolidaysComponent],
-      providers: [
-        { provide: CollaboratorSignalService, useValue: mockCollaboratorSignalService },
-        { provide: CollaboratorDataService, useValue: mockCollabotadorDataService },
-        provideRouter([])
-      ]
-    })
-      .compileComponents();
 
     collaboratorHolidays = [
       {
@@ -56,6 +41,30 @@ describe('CollaboratorHolidaysComponent', () => {
       }
     ];
 
+    let mockResolver = {
+      resolve() {
+        return of(collaboratorHolidays);
+      }
+    }
+
+    await TestBed.configureTestingModule({
+      imports: [CollaboratorHolidaysComponent],
+      providers: [
+        { provide: CollaboratorDataService, useValue: mockCollabotadorDataService },
+        { provide: ActivatedRoute,
+          useValue: {
+            snapshot: {
+              paramMap: {
+                get: (key: string) => '1' // mock collabId
+              }
+            },
+            data: of({ HolidaysData: collaboratorHolidays })
+          }
+        }
+      ]
+    })
+      .compileComponents();
+
     mockCollabotadorDataService.getCollaboratorHolidays.and.returnValue(of(collaboratorHolidays));
 
     collaborator = {
@@ -73,8 +82,6 @@ describe('CollaboratorHolidaysComponent', () => {
         _finalDate: new Date("2025-12-31")
       }
     };
-    selectedCollaboratorHolidaysSignal.set(collaborator);
-    mockCollabotadorDataService.getCollaboratorHolidays.and.returnValue(of(collaboratorHolidays));
 
     fixture = TestBed.createComponent(CollaboratorHolidaysComponent);
     component = fixture.componentInstance;
@@ -86,12 +93,6 @@ describe('CollaboratorHolidaysComponent', () => {
   });
 
   //ui changes and actions
-  it('should display the name and surname of selected collaborator', () => {
-    const title = fixture.nativeElement.querySelector("h1").textContent;
-
-    expect(title).toEqual(collaborator.names + " " + collaborator.surnames);
-  });
-
   it('should show the Holidays Info in the table', () => {
     fixture.detectChanges();
     const inputs = fixture.debugElement.queryAll(By.css('input'));

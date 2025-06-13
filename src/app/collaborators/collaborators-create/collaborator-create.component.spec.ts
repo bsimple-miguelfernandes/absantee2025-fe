@@ -247,6 +247,6 @@ describe('CollaboratorCreateComponent', () => {
 
     fixture.detectChanges();
 
-    expect(mockDialog.close).toHaveBeenCalled()
+    expect(mockDialog.close).toHaveBeenCalled();
   });
 });
