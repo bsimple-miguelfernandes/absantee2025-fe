@@ -1,8 +1,12 @@
+@if (project) {
 <div class="project-card">
   <h1>{{ project.title }}</h1>
   <h2>{{ project.acronym }}</h2>
   <p class="dates">
     {{ project.periodDate.initDate| date: 'longDate' }} – {{ project.periodDate.finalDate| date: 'longDate' }}
   </p>
-  <button (click)="editProject(project)">Manage Project</button>
+  <button data-test-id="edit-project-button" (click)="editProject(project)">Manage Project</button>
 </div>
+} @else {
+<p>Error loading project!</p>
+}
