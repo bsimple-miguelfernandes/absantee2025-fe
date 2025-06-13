@@ -7,25 +7,31 @@ import { CollaboratorDataService } from '../collaborator-data.service';
 import { of, throwError } from 'rxjs';
 import { Collaborator } from '../collaborator';
 import { CollaboratorViewModel } from '../collaborator-details/collaborator.viewmodel';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { By } from '@angular/platform-browser';
 
 describe('CollaboratorCreateComponent', () => {
   let component: CollaboratorCreateComponent;
   let fixture: ComponentFixture<CollaboratorCreateComponent>;
   let mockDataService: jasmine.SpyObj<CollaboratorDataService>;
   let mockSignalService: jasmine.SpyObj<CollaboratorSignalService>;
+  let mockDialog: jasmine.SpyObj<MatDialogRef<CollaboratorCreateComponent, any>>;
 
 
   beforeEach(async () => {
     // Criação de versões "falsas" (spies) dos serviços com os métodos necessários espiados
     mockDataService = jasmine.createSpyObj('CollaboratorDataService', ['createCollaborator']);
     mockSignalService = jasmine.createSpyObj('CollaboratorSignalService', ['createCollaborator', 'cancelCreateCollaborator']);
+    mockDialog = jasmine.createSpyObj('MatDialogRef<CollaboratorCreateComponent, any>', ['close']);
 
     // Configuração do ambiente de teste com o componente e suas dependências
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, CollaboratorCreateComponent],  // Importa o módulo de formulários e o próprio componente
       providers: [
         { provide: CollaboratorDataService, useValue: mockDataService }, // Injeta o mock do serviço
-        { provide: CollaboratorSignalService, useValue: mockSignalService } // Injeta o mock do serviço
+        { provide: CollaboratorSignalService, useValue: mockSignalService }, // Injeta o mock do serviço
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+        { provide: MatDialogRef, useValue: mockDialog }
       ]
     }).compileComponents();
 
@@ -152,6 +158,95 @@ describe('CollaboratorCreateComponent', () => {
 
     expect(window.alert).toHaveBeenCalledWith('Please fill all required fields.');
     expect(component.collaboratorDataService.createCollaborator).not.toHaveBeenCalled();
+  }));
 
-  }))
+  it('should call dialog.close when cancel button is clicked', () => {
+    const cancelButton = fixture.debugElement.queryAll(By.css('button'))[1].nativeElement;
+    cancelButton.click();
+
+    fixture.detectChanges();
+
+    expect(mockDialog.close).toHaveBeenCalled();
+  });
+
+  it('should call dialog.close when submit button is clicked', async () => {
+    const today = new Date();
+    const collab = {
+      names: 'John',
+      surnames: 'Doe',
+      email: 'john.doe@example.com',
+      deactivationDate: today.toISOString().split('T')[0],
+      collaboratorPeriod: {
+        initDate: today.toISOString().split('T')[0],
+        finalDate: today.toISOString().split('T')[0]
+      }
+    };
+
+    const collabResponse = {
+      userId: '',
+      collabId: '',
+      names: 'John',
+      surnames: 'Doe',
+      email: 'john.doe@example.com',
+      deactivationDate: today.toISOString().split('T')[0],
+      collaboratorPeriod: {
+        _initDate: today,
+        _finalDate: today
+      },
+      userPeriod: {
+        _initDate: today,
+        _finalDate: today
+      }
+    };
+
+    component.form.setValue(collab);
+
+    mockDataService.createCollaborator.and.returnValue(of(collabResponse));
+    
+    const submitButton = fixture.debugElement.queryAll(By.css('button'))[0].nativeElement;
+    submitButton.click();
+
+    expect(mockDialog.close).toHaveBeenCalled();
+  });
+
+  it('should call dialog.close when onSubmit is called', () => {
+    const today = new Date();
+    const collab = {
+      names: 'John',
+      surnames: 'Doe',
+      email: 'john.doe@example.com',
+      deactivationDate: today.toISOString().split('T')[0],
+      collaboratorPeriod: {
+        initDate: today.toISOString().split('T')[0],
+        finalDate: today.toISOString().split('T')[0]
+      }
+    };
+
+    const collabResponse = {
+      userId: '',
+      collabId: '',
+      names: 'John',
+      surnames: 'Doe',
+      email: 'john.doe@example.com',
+      deactivationDate: today.toISOString().split('T')[0],
+      collaboratorPeriod: {
+        _initDate: today,
+        _finalDate: today
+      },
+      userPeriod: {
+        _initDate: today,
+        _finalDate: today
+      }
+    };
+
+    component.form.setValue(collab);
+
+    mockDataService.createCollaborator.and.returnValue(of(collabResponse));
+
+    component.onSubmit();
+
+    fixture.detectChanges();
+
+    expect(mockDialog.close).toHaveBeenCalled();
+  });
 });

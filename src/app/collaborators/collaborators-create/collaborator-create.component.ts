@@ -4,6 +4,7 @@ import { CollaboratorSignalService } from "../collaborator-signal.service";
 import { CollaboratorDataService } from "../collaborator-data.service";
 import { CollaboratorCreateRequest } from "./create-collaborator";
 import { Validators } from "@angular/forms";
+import { MatDialogRef } from "@angular/material/dialog";
 
 @Component({
   selector: 'app-collaborator-create',
@@ -25,6 +26,8 @@ export class CollaboratorCreateComponent {
       finalDate: new FormControl(this.formatDate(new Date()), Validators.required)
     }),
   });
+
+  constructor(private dialogRef: MatDialogRef<CollaboratorCreateComponent>) {}
 
   private formatDate(date: Date): string {
     return date.toISOString().split('T')[0];
@@ -65,11 +68,17 @@ export class CollaboratorCreateComponent {
         console.error('Error creating collaborator:', error);
       }
     });
+
+    this.closeDialog();
   }
 
+  closeDialog() {
+    this.dialogRef.close();
+  }
 
   onCancel() {
     this.collaboratorSignalService.cancelCreateCollaborator();
+    this.closeDialog();
     this.form.reset();
   }
 }
