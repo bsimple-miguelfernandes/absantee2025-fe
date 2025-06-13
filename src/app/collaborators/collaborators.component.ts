@@ -12,7 +12,6 @@ import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-collaborators',
-  standalone: true,
   imports: [
     CommonModule,
     CollaboratorListComponent,
@@ -23,15 +22,17 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./collaborators.component.css']
 })
 export class CollaboratorsComponent {
-  collaboratorDataService = inject(CollaboratorDataService);
+  
 
   collaborators = signal<CollaboratorViewModel[]>([]);
 
-  constructor(private dialog: MatDialog) {
+   constructor(
+    private collaboratorDataService: CollaboratorDataService,
+    private dialog: MatDialog
+  ) {
     this.collaboratorDataService.getCollabs().subscribe({
       next: (collaborators) => {
-        const collabVM = collaborators.map(toCollaboratorViewModel)
-
+        const collabVM = collaborators.map(toCollaboratorViewModel);
         this.collaborators.set(collabVM);
       },
       error: (err) => {
