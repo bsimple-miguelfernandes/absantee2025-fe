@@ -1,1 +1,28 @@
-<p>devices-create works!</p>
+<form [formGroup]="deviceForm" (ngSubmit)="save()" class="form-card">
+  <h2>Add Device</h2>
+
+  <div>
+    <label class="form-label">Description</label>
+    <input type="text" formControlName="description" class="form-input" />
+  </div>
+
+  <div>
+    <label class="form-label">Brand</label>
+    <input type="text" formControlName="brand" class="form-input" />
+  </div>
+
+  <div>
+    <label class="form-label">Model</label>
+    <input type="text" formControlName="model" class="form-input" />
+  </div>
+
+  <div>
+    <label class="form-label">Serial Number</label>
+    <input type="text" formControlName="serialNumber" class="form-input" />
+  </div>
+
+  <div class="actions">
+    <button type="button" (click)="cancel()">Cancel</button>
+    <button type="submit" [disabled]="deviceForm.invalid">Add</button>
+  </div>
+</form>

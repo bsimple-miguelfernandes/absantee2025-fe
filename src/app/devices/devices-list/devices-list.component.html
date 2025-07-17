@@ -10,7 +10,7 @@
   <tbody>
     @for (device of devices; track device.id) {
       <tr>
-        <td>{{ device.id }}</td>
+        <td>{{ device.description }}</td>
         <td>{{ device.brand }}</td>
         <td>{{ device.model }}</td>
         <td>{{ device.serialNumber }}</td>
@@ -18,3 +18,9 @@
     }
   </tbody>
 </table>
+
+ <button type="button" [routerLink]="['/devices', 'create']">
+  Add Device
+</button>
+
+
