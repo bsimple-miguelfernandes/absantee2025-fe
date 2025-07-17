@@ -1,0 +1,69 @@
+<div class="subjects-container">
+    <h2>Subjects</h2>
+
+    <!-- Subject Creation Form -->
+    <button class="btn-add" (click)="toggleForm()">
+        {{ showAddForm ? 'Cancel' : 'Add New Subject' }}
+    </button>
+
+    @if (showAddForm) {
+    <form [formGroup]="subjectForm" (ngSubmit)="addSubject()" class="form-card">
+        <div class="form-row">
+            <label class="form-label">Description</label>
+            <input type="text" formControlName="description" class="form-input" aria-describedby="descError" />
+            @if (subjectForm.controls.description.touched && subjectForm.controls.description.invalid) {
+            <div id="descError" class="error">
+                @if (subjectForm.controls.description.errors?.['required']) {
+                <div>Description is required.</div>
+                }
+                @if (subjectForm.controls.description.errors?.['maxlength']) {
+                <div>Description cannot exceed 50 characters.</div>
+                }
+            </div>
+            }
+        </div>
+
+        <div class="form-row">
+            <label class="form-label">Details</label>
+            <input type="text" formControlName="details" class="form-input" aria-describedby="detailsError" />
+            @if (subjectForm.controls.details.touched && subjectForm.controls.details.invalid) {
+            <div id="detailsError" class="error">
+                @if (subjectForm.controls.details.errors?.['maxlength']) {
+                <div>Details cannot exceed 500 characters.</div>
+                }
+            </div>
+            }
+        </div>
+
+        <div class="actions">
+            <button type="submit" [disabled]="subjectForm.invalid || !subjectForm.dirty">
+                Save
+            </button>
+        </div>
+    </form>
+    }
+
+    <!-- Subjects Table -->
+    <table class="subjects-table">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (subject of subjects; track subject.description) {
+            <tr>
+                <td>{{subject.description}}</td>
+                <td>{{subject.details}}</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="pagination-controls">
+        <button (click)="prevPage()" [disabled]="pageIndex === 1">Previous</button>
+        <span>Page {{ pageIndex }}</span>
+        <button (click)="nextPage()" [disabled]="subjects.length < pageSize">Next</button>
+    </div>
+</div>

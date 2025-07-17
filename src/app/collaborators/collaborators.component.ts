@@ -15,18 +15,17 @@ import { MatDialog } from '@angular/material/dialog';
   imports: [
     CommonModule,
     CollaboratorListComponent,
-    CollaboratorCreateComponent,
     RouterOutlet
   ],
   templateUrl: './collaborators.component.html',
   styleUrls: ['./collaborators.component.css']
 })
 export class CollaboratorsComponent {
-  
+
 
   collaborators = signal<CollaboratorViewModel[]>([]);
 
-   constructor(
+  constructor(
     private collaboratorDataService: CollaboratorDataService,
     private dialog: MatDialog
   ) {

@@ -12,6 +12,8 @@ import { ProjectComponent } from './projects/project/project.component';
 import { AssociationProjectResolver } from './association-project.resolver';
 import { ProjectFormComponent } from './projects/project-form/project-form.component';
 import { ProjectDetailsResolver } from './projects/resolvers/project-details.resolver';
+import { SubjectsComponent } from './subjects/subjects.component';
+import { TaskForcesComponent } from './task-forces/task-forces.component';
 
 export const routes: Routes = [
     {
@@ -75,5 +77,13 @@ export const routes: Routes = [
                 }
             }
         ]
+    },
+    {
+        path: 'subjects',
+        component: SubjectsComponent
+    },
+    {
+        path: 'taskforces',
+        component: TaskForcesComponent
     }
 ];
