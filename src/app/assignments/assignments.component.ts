@@ -5,19 +5,27 @@ import { AssignmentViewModel } from './assignment.viewmodel';
 import { AssignmentsListComponent } from './assignments-list/assignments-list.component';
 import { RouterOutlet } from '@angular/router';
 import { AssignmentSignalsService } from './assigments-signals.service';
+import { CollaboratorsAssignmentsListComponent } from './collaborators-assignments-list/collaborators-assignments-list.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-assignments',
   templateUrl: './assignments.component.html',
   styleUrl: './assignments.component.css',
   standalone: true,
-  imports: [AssignmentsListComponent, RouterOutlet]
+  imports: [
+    AssignmentsListComponent,
+    CollaboratorsAssignmentsListComponent,
+    RouterOutlet,
+    CommonModule
+  ]
 })
 export class AssignmentsComponent {
   private dataService = inject(AssignmentsDataService);
   private signalService = inject(AssignmentSignalsService);
 
   assignments = signal<AssignmentViewModel[]>([]);
+  showCollaborators = signal<boolean>(false);
 
   constructor() {
     this.loadAssignments();
@@ -42,5 +50,9 @@ export class AssignmentsComponent {
       next: (dtos) => this.assignments.set(dtos.map(toAssignmentViewModel)),
       error: (err) => console.error('Erro ao carregar assignments:', err)
     });
+  }
+
+  toggleCollaborators() {
+    this.showCollaborators.update((prev) => !prev);
   }
 }

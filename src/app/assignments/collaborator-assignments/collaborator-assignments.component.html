@@ -1,0 +1,24 @@
+<h3>Assignments deste Colaborador</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Device</th>
+      <th>Modelo</th>
+      <th>Serial</th>
+      <th>Início</th>
+      <th>Fim</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (a of assignments(); track a.id) {
+      <tr>
+        <td>{{ a.deviceDescription }}</td>
+        <td>{{ a.deviceModel }}</td>
+        <td>{{ a.deviceSerialNumber }}</td>
+        <td>{{ a.period.initDate }}</td>
+        <td>{{ a.period.finalDate }}</td>
+      </tr>
+    }
+  </tbody>
+</table>

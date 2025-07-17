@@ -1,0 +1,12 @@
+<ul>
+  @for (c of collaborators(); track c.id) {
+    <li>
+      <strong>{{ c.name }}</strong> - {{ c.email }}
+      <button (click)="showAssignments(c.id)">Ver Assignments</button>
+    </li>
+  }
+</ul>
+
+@if (selectedCollaboratorId()) {
+  <app-collaborator-assignments [collaboratorId]="selectedCollaboratorId()!" />
+}

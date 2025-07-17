@@ -5,6 +5,8 @@ import { AssignmentViewModel } from "../../assignments/assignment.viewmodel";
 export function toAssignmentViewModel(dto: AssignmentDetails): AssignmentViewModel {
     return {
         id: dto.id,
+        deviceId: dto.deviceId,
+        collaboratorId: dto.collaboratorId,
         collaboratorName: dto.collaboratorName,
         collaboratorEmail: dto.collaboratorEmail,
         deviceDescription: dto.deviceDescription,

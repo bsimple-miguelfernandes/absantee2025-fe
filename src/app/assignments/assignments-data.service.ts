@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { AssignmentDetails } from './assignment-details';
 import { AssignmentCreateRequest } from './assigments-form/assignment-create-request';
 import { Assignment } from './assignment';
+import { AssignmentViewModel } from './assignment.viewmodel';
 
 @Injectable({
     providedIn: 'root'
@@ -17,6 +18,12 @@ export class AssignmentsDataService {
 
     getAssignmentById(id: string): Observable<AssignmentDetails> {
         return this.http.get<AssignmentDetails>(`http://localhost:5131/api/assignments/${id}/details`);
+    }
+
+    getAssignmentsByCollaboratorId(collaboratorId: string) {
+        return this.http.get<AssignmentDetails[]>(
+            `http://localhost:5131/api/assignments/collaborator/${collaboratorId}/details`
+        );
     }
 
     createAssignment(newAssignment: AssignmentCreateRequest): Observable<Assignment> {
