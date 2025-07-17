@@ -15,6 +15,10 @@ export class AssignmentsDataService {
         return this.http.get<AssignmentDetails[]>('http://localhost:5131/api/assignments/with-details');
     }
 
+    getAssignmentById(id: string): Observable<AssignmentDetails> {
+        return this.http.get<AssignmentDetails>(`http://localhost:5131/api/assignments/${id}/details`);
+    }
+
     createAssignment(newAssignment: AssignmentCreateRequest): Observable<Assignment> {
         return this.http.post<Assignment>(
             `http://localhost:5151/api/assignments`,

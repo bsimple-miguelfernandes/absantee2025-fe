@@ -22,6 +22,7 @@ import { DevicesCreateComponent } from './devices/devices-create/devices-create.
 import { AssignmentsComponent } from './assignments/assignments.component';
 import { AssignmentDetailsComponent } from './assignments/assignment-details/assignment-details.component';
 import { AssignmentsFormComponent } from './assignments/assigments-form/assigments-form.component';
+import { AssignmentDetailsResolver } from './assignment-details.resolver';
 
 export const routes: Routes = [
   {
@@ -134,7 +135,9 @@ export const routes: Routes = [
       },
       {
         path: ':assignmentId',
-        component: AssignmentDetailsComponent
+        component: AssignmentDetailsComponent,
+        resolve: { assignment: AssignmentDetailsResolver }
+
       },
       {
         path: ':assignmentId/edit',

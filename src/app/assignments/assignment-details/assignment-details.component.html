@@ -1,1 +1,48 @@
-<p>assignment-details works!</p>
+<div class="details-card">
+  <h2>Assignment Details</h2>
+
+  <div class="detail-row">
+    <span class="label">ID:</span>
+    <span class="value">{{ assignment.id }}</span>
+  </div>
+
+  <div class="detail-row">
+    <span class="label">Colaborador:</span>
+    <span class="value">{{ assignment.collaboratorName }}</span>
+  </div>
+
+  <div class="detail-row">
+    <span class="label">Email:</span>
+    <span class="value">{{ assignment.collaboratorEmail }}</span>
+  </div>
+
+  <div class="detail-row">
+    <span class="label">Device:</span>
+    <span class="value">{{ assignment.deviceDescription }}</span>
+  </div>
+
+  <div class="detail-row">
+    <span class="label">Modelo:</span>
+    <span class="value">{{ assignment.deviceModel }}</span>
+  </div>
+
+  <div class="detail-row">
+    <span class="label">Serial Number:</span>
+    <span class="value">{{ assignment.deviceSerialNumber }}</span>
+  </div>
+
+  <div class="detail-row">
+    <span class="label">Início:</span>
+    <span class="value">{{ assignment.periodDate.initDate | date }}</span>
+  </div>
+
+  <div class="detail-row">
+    <span class="label">Fim:</span>
+    <span class="value">{{ assignment.periodDate.finalDate | date }}</span>
+  </div>
+
+  <div class="actions">
+    <button (click)="close()">Fechar</button>
+    <button [routerLink]="['/assignments', assignment.id, 'edit']">Editar</button>
+  </div>
+</div>

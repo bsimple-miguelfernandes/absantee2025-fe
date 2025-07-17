@@ -1,17 +1,14 @@
-<div class="header-row">
-  
-</div>
-
 <table class="assignments-table">
   <thead>
     <tr>
-      <th>Colaborador</th>
+      <th>Collaborator</th>
       <th>Email</th>
-      <th>Dispositivo</th>
-      <th>Modelo</th>
+      <th>Device</th>
+      <th>Model</th>
       <th>SN</th>
-      <th>Início</th>
-      <th>Fim</th>
+      <th>Start</th>
+      <th>End</th>
+      <th>Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -24,11 +21,26 @@
         <td>{{ assignment.deviceSerialNumber }}</td>
         <td>{{ assignment.period.initDate | date: 'yyyy-MM-dd' }}</td>
         <td>{{ assignment.period.finalDate | date: 'yyyy-MM-dd' }}</td>
+        <td>
+          <button (click)="selectRoute('/assignments', assignment.id)">
+            Details
+          </button>
+        </td>
       </tr>
+
+      @if (selectedAssignmentId === assignment.id) {
+        <tr>
+          <td colspan="8">
+            <router-outlet></router-outlet>
+          </td>
+        </tr>
+      }
     }
   </tbody>
 </table>
+
 <br>
+
 <button class="create-button" [routerLink]="['/assignments/create']">
-    Criar Assignment
-  </button>
+  Criar Assignment
+</button>
