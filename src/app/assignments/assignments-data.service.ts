@@ -1,30 +1,15 @@
-import { HttpClient } from "@angular/common/http";
-import { inject, Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { Assignment } from "./assignment";
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { AssignmentDetails } from './assignment-details';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AssignmentsDataService {
-    private httpClient = inject(HttpClient);
+    private http = inject(HttpClient);
 
-    constructor() { }
-
-    getAssignments(): Observable<Assignment[]> {
-        return this.httpClient.get<Assignment[]>(`http://localhost:5131/api/assignments`);
+    getAssignmentsWithDetails(): Observable<AssignmentDetails[]> {
+        return this.http.get<AssignmentDetails[]>('http://localhost:5131/api/assignments/with-details');
     }
-
-    getAssignmentById(id: string): Observable<Assignment> {
-        return this.httpClient.get<Assignment>(`http://localhost:5131/api/assignments/${id}`);
-    }
-
-    getAssignmentsByCollaboratorId(id: string): Observable<Assignment[]> {
-        return this.httpClient.get<Assignment[]>(`http://localhost:5131/api/assignments/collaborator/${id}`);
-    }
-
-    getAssignmentsByDeviceId(id: string): Observable<Assignment[]> {
-        return this.httpClient.get<Assignment[]>(`http://localhost:5131/api/assignments/device/${id}`);
-    }
-
 }

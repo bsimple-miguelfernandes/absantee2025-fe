@@ -14,9 +14,7 @@ import { forkJoin, map, switchMap } from 'rxjs';
   imports: [AssignmentsListComponent]
 })
 export class AssignmentsComponent {
-  private assignmentsDataService = inject(AssignmentsDataService);
-  private devicesDataService = inject(DevicesDataService);
-
+  private dataService = inject(AssignmentsDataService);
   assignments = signal<AssignmentViewModel[]>([]);
 
   constructor() {
@@ -24,28 +22,8 @@ export class AssignmentsComponent {
   }
 
   private loadAssignments() {
-    this.assignmentsDataService.getAssignments().pipe(
-      switchMap(assignments => {
-        const assignmentVM$ = assignments.map(a =>
-          this.devicesDataService.getDeviceById(a.deviceId).pipe(
-            map(device =>
-              toAssignmentViewModel(
-                a,
-                a.collaboratorId,
-                device.description,
-                device.brand,
-                device.serialNumber
-              )
-            )
-          )
-        );
-        return forkJoin(assignmentVM$);
-      })
-    ).subscribe({
-      next: (viewModels) => {
-        this.assignments.set(viewModels);
-        console.log('Loaded assignments:', viewModels);
-      },
+    this.dataService.getAssignmentsWithDetails().subscribe({
+      next: (dtos) => this.assignments.set(dtos.map(toAssignmentViewModel)),
       error: (err) => console.error('Erro ao carregar assignments:', err)
     });
   }

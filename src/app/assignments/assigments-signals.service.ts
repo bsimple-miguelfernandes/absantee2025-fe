@@ -5,14 +5,14 @@ import { AssignmentViewModel } from './assignment.viewmodel';
     providedIn: 'root'
 })
 export class AssignmentSignalsService {
-    private createdAssignmentSignal = signal<AssignmentViewModel | undefined>(undefined);
-    readonly createdAssignment = this.createdAssignmentSignal.asReadonly();
+    private assignmentsSignal = signal<AssignmentViewModel[]>([]);
+    readonly assignments = this.assignmentsSignal.asReadonly();
 
-    saveAssignment(assignment: AssignmentViewModel | undefined) {
-        this.createdAssignmentSignal.set(assignment);
+    setAssignments(assignments: AssignmentViewModel[]) {
+        this.assignmentsSignal.set(assignments);
     }
 
-    clearCreatedAssignment() {
-        this.createdAssignmentSignal.set(undefined);
+    clearAssignments() {
+        this.assignmentsSignal.set([]);
     }
 }

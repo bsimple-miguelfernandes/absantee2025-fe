@@ -1,24 +1,26 @@
 <table class="assignments-table">
-  <thead>
-    <tr>
-      <th>Collaborator ID</th>
-      <th>Device Description</th>
-      <th>Model</th>
-      <th>Serial Number</th>
-      <th>Start Date</th>
-      <th>End Date</th>
-    </tr>
-  </thead>
-  <tbody>
-    @for (assignment of assignments; track assignment.id) {
-      <tr>
-        <td>{{ assignment.collaboratorId }}</td>
-        <td>{{ assignment.deviceDescription }}</td>
-        <td>{{ assignment.deviceModel }}</td>
-        <td>{{ assignment.deviceSerialNumber }}</td>
-        <td>{{ assignment.period.initDate | date: 'yyyy-MM-dd' }}</td>
-        <td>{{ assignment.period.finalDate | date: 'yyyy-MM-dd' }}</td>
-      </tr>
-    }
-  </tbody>
-</table>
+      <thead>
+        <tr>
+          <th>Collaborator Name</th>
+          <th>Email</th>
+          <th>Device</th>
+          <th>Model</th>
+          <th>SN</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (assignment of assignments; track assignment.id) {
+          <tr>
+            <td>{{ assignment.collaboratorName }}</td>
+            <td>{{ assignment.collaboratorEmail }}</td>
+            <td>{{ assignment.deviceDescription }}</td>
+            <td>{{ assignment.deviceModel }}</td>
+            <td>{{ assignment.deviceSerialNumber }}</td>
+            <td>{{ assignment.period.initDate | date: 'yyyy-MM-dd' }}</td>
+            <td>{{ assignment.period.finalDate | date: 'yyyy-MM-dd' }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>

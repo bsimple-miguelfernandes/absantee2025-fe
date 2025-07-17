@@ -1,22 +1,18 @@
-import { Assignment } from "../../assignments/assignment";
+import { AssignmentDetails } from "../../assignments/assignment-details";
 import { AssignmentViewModel } from "../../assignments/assignment.viewmodel";
 
-export function toAssignmentViewModel(
-    a: Assignment,
-    collaboratorId: string,
-    description: string,
-    model: string,
-    serialNumber: string
-): AssignmentViewModel {
+
+export function toAssignmentViewModel(dto: AssignmentDetails): AssignmentViewModel {
     return {
-        id: a.id,
-        collaboratorId: collaboratorId,
-        deviceDescription: description,
-        deviceModel: model,
-        deviceSerialNumber: serialNumber,
+        id: dto.id,
+        collaboratorName: dto.collaboratorName,
+        collaboratorEmail: dto.collaboratorEmail,
+        deviceDescription: dto.deviceDescription,
+        deviceModel: dto.deviceModel,
+        deviceSerialNumber: dto.deviceSerialNumber,
         period: {
-            initDate: new Date(a.periodDate.initDate),
-            finalDate: new Date(a.periodDate.finalDate)
+            initDate: new Date(dto.periodDate.initDate),
+            finalDate: new Date(dto.periodDate.finalDate),
         }
     };
 }

@@ -1,6 +1,7 @@
 export interface AssignmentViewModel {
     id: string;
-    collaboratorId: string;
+    collaboratorName: string;
+    collaboratorEmail: string;
     deviceDescription: string;
     deviceModel: string;
     deviceSerialNumber: string;
