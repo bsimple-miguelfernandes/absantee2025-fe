@@ -19,6 +19,9 @@ import { TrainingSubjectsComponent } from './training-subjects/training-subjects
 import { TrainingSubjectDetailsResolver } from './training-subjects/training-subject.resolver';
 import { DevicesComponent } from './devices/devices.component';
 import { DevicesCreateComponent } from './devices/devices-create/devices-create.component';
+import { AssignmentsComponent } from './assignments/assignments.component';
+import { AssigmentsFormComponent } from './assignments/assigments-form/assigments-form.component';
+import { AssignmentDetailsComponent } from './assignments/assignment-details/assignment-details.component';
 
 export const routes: Routes = [
   {
@@ -118,6 +121,24 @@ export const routes: Routes = [
       {
         path: 'create',
         component: DevicesCreateComponent
+      }
+    ]
+  },
+  {
+    path: 'assignments',
+    component: AssignmentsComponent,
+    children: [
+      {
+        path: 'create',
+        component: AssigmentsFormComponent
+      },
+      {
+        path: ':assignmentId',
+        component: AssignmentDetailsComponent
+      },
+      {
+        path: ':assignmentId/edit',
+        component: AssigmentsFormComponent
       }
     ]
   }
