@@ -8,6 +8,7 @@ import { CollaboratorCreateRequest } from './collaborators-create/create-collabo
 import { environment } from '../../environments/environment';
 import { AssociationTrainingModuleCollaborator } from '../training-modules/association-training-module-collaborator';
 import { AssociationCollaboratorProjectCreateRequest } from '../associations-project-collaborator/add-collaborator-project/add-association';
+import { CollaboratorDetails } from './collaborator-details';
 
 @Injectable({
   providedIn: 'root'
@@ -62,6 +63,10 @@ export class CollaboratorDataService {
     return this.httpClient.post<AssociationProjectCollaboratorsDTO>(`${this.baseUrl}/collaborators/${id}/projects`, newAssoc).pipe(
       map(dto => mapToAssociationProjectCollaborators(dto))
     );
+  }
+
+  getCollaborators(): Observable<CollaboratorDetails[]> {
+    return this.httpClient.get<CollaboratorDetails[]>('http://localhost:5031/api/collaborators/details');
   }
 
 }

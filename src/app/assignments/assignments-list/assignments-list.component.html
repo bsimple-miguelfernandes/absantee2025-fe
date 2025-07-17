@@ -1,26 +1,34 @@
+<div class="header-row">
+  
+</div>
+
 <table class="assignments-table">
-      <thead>
-        <tr>
-          <th>Collaborator Name</th>
-          <th>Email</th>
-          <th>Device</th>
-          <th>Model</th>
-          <th>SN</th>
-          <th>Start Date</th>
-          <th>End Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (assignment of assignments; track assignment.id) {
-          <tr>
-            <td>{{ assignment.collaboratorName }}</td>
-            <td>{{ assignment.collaboratorEmail }}</td>
-            <td>{{ assignment.deviceDescription }}</td>
-            <td>{{ assignment.deviceModel }}</td>
-            <td>{{ assignment.deviceSerialNumber }}</td>
-            <td>{{ assignment.period.initDate | date: 'yyyy-MM-dd' }}</td>
-            <td>{{ assignment.period.finalDate | date: 'yyyy-MM-dd' }}</td>
-          </tr>
-        }
-      </tbody>
-    </table>
+  <thead>
+    <tr>
+      <th>Colaborador</th>
+      <th>Email</th>
+      <th>Dispositivo</th>
+      <th>Modelo</th>
+      <th>SN</th>
+      <th>Início</th>
+      <th>Fim</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (assignment of assignments; track assignment.id) {
+      <tr>
+        <td>{{ assignment.collaboratorName }}</td>
+        <td>{{ assignment.collaboratorEmail }}</td>
+        <td>{{ assignment.deviceDescription }}</td>
+        <td>{{ assignment.deviceModel }}</td>
+        <td>{{ assignment.deviceSerialNumber }}</td>
+        <td>{{ assignment.period.initDate | date: 'yyyy-MM-dd' }}</td>
+        <td>{{ assignment.period.finalDate | date: 'yyyy-MM-dd' }}</td>
+      </tr>
+    }
+  </tbody>
+</table>
+<br>
+<button class="create-button" [routerLink]="['/assignments/create']">
+    Criar Assignment
+  </button>

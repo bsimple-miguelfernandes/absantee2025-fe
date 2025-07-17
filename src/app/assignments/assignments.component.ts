@@ -5,13 +5,14 @@ import { toAssignmentViewModel } from '../collaborators/mappers/assignment.mappe
 import { AssignmentViewModel } from './assignment.viewmodel';
 import { AssignmentsListComponent } from './assignments-list/assignments-list.component';
 import { forkJoin, map, switchMap } from 'rxjs';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-assignments',
   templateUrl: './assignments.component.html',
   styleUrl: './assignments.component.css',
   standalone: true,
-  imports: [AssignmentsListComponent]
+  imports: [AssignmentsListComponent, RouterOutlet]
 })
 export class AssignmentsComponent {
   private dataService = inject(AssignmentsDataService);

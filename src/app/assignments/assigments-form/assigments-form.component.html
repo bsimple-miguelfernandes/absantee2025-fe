@@ -1,1 +1,38 @@
-<p>assigments-form works!</p>
+<form [formGroup]="assignmentForm" (ngSubmit)="save()" class="form-card">
+  <h2>{{ isEditMode ? 'Editar Assignment' : 'Criar Assignment' }}</h2>
+
+  <div>
+    <label>Colaborador</label>
+    <select formControlName="collaboratorId" class="form-input">
+      <option *ngFor="let collab of collaborators()" [value]="collab.id">
+        {{ collab.name }}
+      </option>
+    </select>
+  </div>
+
+  <div>
+    <label>Dispositivo</label>
+    <select formControlName="deviceId" class="form-input">
+      <option *ngFor="let device of devices()" [value]="device.id">
+        {{ device.description }}
+      </option>
+    </select>
+  </div>
+
+  <div class="form-row">
+    <label>Data Inicial</label>
+    <input type="date" formControlName="initDate" class="form-input" />
+  </div>
+
+  <div class="form-row">
+    <label>Data Final</label>
+    <input type="date" formControlName="finalDate" class="form-input" />
+  </div>
+
+  <div class="actions">
+    <button type="button" (click)="cancel()">Cancelar</button>
+    <button type="submit" [disabled]="assignmentForm.invalid">
+      {{ isEditMode ? 'Guardar' : 'Criar' }}
+    </button>
+  </div>
+</form>

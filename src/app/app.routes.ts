@@ -20,8 +20,8 @@ import { TrainingSubjectDetailsResolver } from './training-subjects/training-sub
 import { DevicesComponent } from './devices/devices.component';
 import { DevicesCreateComponent } from './devices/devices-create/devices-create.component';
 import { AssignmentsComponent } from './assignments/assignments.component';
-import { AssigmentsFormComponent } from './assignments/assigments-form/assigments-form.component';
 import { AssignmentDetailsComponent } from './assignments/assignment-details/assignment-details.component';
+import { AssignmentsFormComponent } from './assignments/assigments-form/assigments-form.component';
 
 export const routes: Routes = [
   {
@@ -130,7 +130,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'create',
-        component: AssigmentsFormComponent
+        component: AssignmentsFormComponent
       },
       {
         path: ':assignmentId',
@@ -138,7 +138,7 @@ export const routes: Routes = [
       },
       {
         path: ':assignmentId/edit',
-        component: AssigmentsFormComponent
+        component: AssignmentsFormComponent
       }
     ]
   }

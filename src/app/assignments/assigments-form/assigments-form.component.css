@@ -1,0 +1,84 @@
+/* Container geral */
+.form-card {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Cabeçalho */
+.form-card h2 {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Cada linha do formulário */
+.form-row {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Labels */
+.form-row label,
+label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+/* Inputs e selects */
+input[type="text"],
+input[type="date"],
+select {
+  padding: 0.6rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  transition: border-color 0.2s;
+}
+
+input:focus,
+select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Ações */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+/* Botões */
+button {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+button[type="submit"] {
+  background-color: #007bff;
+  color: white;
+}
+
+button[type="submit"]:disabled {
+  background-color: #9ec4f6;
+  cursor: not-allowed;
+}
+
+button[type="button"] {
+  background-color: #e0e0e0;
+}
+
+button:hover {
+  opacity: 0.9;
+}
