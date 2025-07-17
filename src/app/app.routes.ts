@@ -17,6 +17,8 @@ import { TrainingSubjectDetailsComponent } from './training-subjects/training-su
 import { TrainingSubjectFormComponent } from './training-subjects/training-subject-form/training-subject-form.component';
 import { TrainingSubjectsComponent } from './training-subjects/training-subjects.component';
 import { TrainingSubjectDetailsResolver } from './training-subjects/training-subject.resolver';
+import { DevicesComponent } from './devices/devices.component';
+import { DevicesCreateComponent } from './devices/devices-create/devices-create.component';
 
 export const routes: Routes = [
   {
@@ -106,6 +108,16 @@ export const routes: Routes = [
         resolve: {
           trainingSubject: TrainingSubjectDetailsResolver
         }
+      }
+    ]
+  },
+  {
+    path: 'devices',
+    component: DevicesComponent,
+    children: [
+      {
+        path: 'create',
+        component: DevicesCreateComponent
       }
     ]
   }

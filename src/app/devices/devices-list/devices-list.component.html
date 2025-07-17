@@ -1,0 +1,20 @@
+<table>
+  <thead>
+    <tr>
+      <th>Description</th>
+      <th>Brand</th>
+      <th>Model</th>
+      <th>Serial Number</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (device of devices; track device.id) {
+      <tr>
+        <td>{{ device.id }}</td>
+        <td>{{ device.brand }}</td>
+        <td>{{ device.model }}</td>
+        <td>{{ device.serialNumber }}</td>
+      </tr>
+    }
+  </tbody>
+</table>
