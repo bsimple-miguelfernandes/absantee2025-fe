@@ -28,7 +28,13 @@ export class AssignmentsComponent {
         this.loadAssignments();
         this.signalService.clearCreatedAssignment();
       }
-    })
+
+      const updated = this.signalService.updatedAssignment();
+      if (updated !== undefined) {
+        this.loadAssignments();
+        this.signalService.clearUpdatedAssignment();
+      }
+    });
   }
 
   private loadAssignments() {

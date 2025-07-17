@@ -26,7 +26,7 @@ export class AssignmentsFormComponent implements OnInit {
 
   assignmentForm!: FormGroup;
   isEditMode = false;
-  assignmentId?: string;
+  assignmentId: string | null = null;
 
   collaborators: { id: string; name: string }[] = [];
   devices: { id: string; description: string }[] = [];
@@ -36,6 +36,23 @@ export class AssignmentsFormComponent implements OnInit {
   ngOnInit() {
     this.assignmentId = this.route.snapshot.params['assignmentId'];
     this.isEditMode = !!this.assignmentId;
+
+    if (this.isEditMode && this.assignmentId) {
+      this.dataService.getAssignmentById(this.assignmentId).subscribe({
+        next: (assignment) => {
+          this.assignmentForm.patchValue({
+            collaboratorId: assignment.collaboratorId,
+            deviceId: assignment.deviceId,
+            initDate: assignment.periodDate.initDate,
+            finalDate: assignment.periodDate.finalDate
+          });
+
+          this.useNewDevice.set(false);
+        },
+        error: err => console.error('Erro ao carregar assignment', err)
+      });
+    }
+
 
     this.assignmentForm = this.fb.group({
       collaboratorId: ['', Validators.required],
@@ -96,7 +113,20 @@ export class AssignmentsFormComponent implements OnInit {
     };
 
     if (this.isEditMode && this.assignmentId) {
-      // TODO: lógica de edição
+      const updateRequest = {
+        id: this.assignmentId,
+        collaboratorId: formValue.collaboratorId,
+        deviceId: formValue.deviceId,
+        periodDate
+      };
+
+      this.dataService.updateAssignment(updateRequest).subscribe({
+        next: () => {
+          this.signalService.updateAssignment({ id: this.assignmentId! } as AssignmentViewModel);
+          this.cancel();
+        },
+        error: (err) => console.error('Erro ao atualizar assignment:', err)
+      });
     } else {
       if (formValue.useNewDevice) {
         this.dataService.createAssignmentWithDevice({

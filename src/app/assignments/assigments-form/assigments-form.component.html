@@ -18,12 +18,14 @@
     <input type="date" formControlName="finalDate" class="form-input" />
   </div>
 
+  @if(!isEditMode){
   <div class="form-row">
     <label>
       <input type="checkbox" formControlName="useNewDevice" />
       Criar novo dispositivo
     </label>
   </div>
+}
 
   @if (useNewDevice()) {
     <div class="form-row">

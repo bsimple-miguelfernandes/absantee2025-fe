@@ -26,6 +26,16 @@ export class AssignmentsDataService {
         );
     }
 
+    updateAssignment(dto: {
+        id: string;
+        collaboratorId: string;
+        deviceId: string;
+        periodDate: { initDate: string; finalDate: string };
+    }) {
+        return this.http.put(`http://localhost:5151/api/assignments/`, dto);
+    }
+
+
     createAssignmentWithDevice(body: {
         collaboratorId: string;
         periodDate: {
