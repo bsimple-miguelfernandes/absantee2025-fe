@@ -4,10 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AssignmentsDataService } from '../assignments-data.service';
 import { CollaboratorDataService } from '../../collaborators/collaborator-data.service';
 import { DevicesDataService } from '../../devices/devices-data.service';
-import { AssignmentFormModel } from './assignment-form.model';
 import { CommonModule } from '@angular/common';
 import { AssignmentCreateRequest } from './assignment-create-request';
 import { AssignmentSignalsService } from '../assigments-signals.service';
+import { AssignmentViewModel } from '../assignment.viewmodel';
 
 @Component({
   selector: 'app-assigments-form',
@@ -31,23 +31,30 @@ export class AssignmentsFormComponent implements OnInit {
   collaborators: { id: string; name: string }[] = [];
   devices: { id: string; description: string }[] = [];
 
+  useNewDevice = signal(false);
+
   ngOnInit() {
     this.assignmentId = this.route.snapshot.params['assignmentId'];
     this.isEditMode = !!this.assignmentId;
 
     this.assignmentForm = this.fb.group({
       collaboratorId: ['', Validators.required],
-      deviceId: ['', Validators.required],
+      useNewDevice: [false],
+      deviceId: [''],
+      deviceDescription: [''],
+      deviceBrand: [''],
+      deviceModel: [''],
+      deviceSerialNumber: [''],
       initDate: ['', Validators.required],
       finalDate: ['', Validators.required]
     });
 
+    this.assignmentForm.get('useNewDevice')?.valueChanges.subscribe(val => {
+      this.useNewDevice.set(val);
+    });
+
     this.loadCollaborators();
     this.loadDevices();
-
-    if (this.isEditMode) {
-      // TODO: carregar dados do assignment para edição
-    }
   }
 
   private loadCollaborators() {
@@ -57,7 +64,8 @@ export class AssignmentsFormComponent implements OnInit {
           id: c.collabId,
           name: `${c.names} ${c.surnames}`
         }));
-      }
+      },
+      error: err => console.error('Erro ao carregar colaboradores', err)
     });
   }
 
@@ -68,7 +76,8 @@ export class AssignmentsFormComponent implements OnInit {
           id: d.id,
           description: d.description
         }));
-      }
+      },
+      error: err => console.error('Erro ao carregar dispositivos', err)
     });
   }
 
@@ -81,36 +90,45 @@ export class AssignmentsFormComponent implements OnInit {
 
     const formValue = this.assignmentForm.value;
 
-    const request: AssignmentCreateRequest = {
-      collaboratorId: formValue.collaboratorId,
-      deviceId: formValue.deviceId,
-      periodDate: {
-        initDate: new Date(formValue.initDate).toISOString().split('T')[0],
-        finalDate: new Date(formValue.finalDate).toISOString().split('T')[0]
-      }
+    const periodDate = {
+      initDate: new Date(formValue.initDate).toISOString().split('T')[0],
+      finalDate: new Date(formValue.finalDate).toISOString().split('T')[0]
     };
 
     if (this.isEditMode && this.assignmentId) {
-      // TODO: fazer update com PUT
+      // TODO: lógica de edição
     } else {
-      this.dataService.createAssignment(request).subscribe({
-        next: (res) => {
-          this.signalService.saveCreatedAssignment({
-            id: res.id,
-            collaboratorName: '',
-            collaboratorEmail: '',
-            deviceDescription: '',
-            deviceModel: '',
-            deviceSerialNumber: '',
-            period: {
-              initDate: new Date(request.periodDate.initDate),
-              finalDate: new Date(request.periodDate.finalDate)
-            }
-          });
-          this.cancel();
-        },
-        error: (err) => console.error('Erro ao criar assignment:', err)
-      });
+      if (formValue.useNewDevice) {
+        this.dataService.createAssignmentWithDevice({
+          collaboratorId: formValue.collaboratorId,
+          periodDate,
+          deviceDescription: formValue.deviceDescription,
+          deviceBrand: formValue.deviceBrand,
+          deviceModel: formValue.deviceModel,
+          deviceSerialNumber: formValue.deviceSerialNumber
+        }).subscribe({
+          next: (res) => {
+            this.signalService.saveCreatedAssignment(undefined); // só para disparar reload
+            this.cancel();
+          },
+          error: (err) => console.error('Erro ao criar assignment com dispositivo:', err)
+        });
+      } else {
+        const request: AssignmentCreateRequest = {
+          collaboratorId: formValue.collaboratorId,
+          deviceId: formValue.deviceId,
+          periodDate
+        };
+
+        this.dataService.createAssignment(request).subscribe({
+          next: (res) => {
+            this.signalService.saveCreatedAssignment({ id: res.id } as AssignmentViewModel);
+            this.cancel();
+          },
+          error: (err) => console.error('Erro ao criar assignment:', err)
+        });
+      }
     }
   }
 }
+

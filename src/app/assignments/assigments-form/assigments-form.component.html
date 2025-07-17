@@ -9,13 +9,6 @@
   </div>
 
   <div class="form-row">
-    <label>Dispositivo</label>
-    <select formControlName="deviceId" class="form-input">
-      <option *ngFor="let d of devices" [value]="d.id">{{ d.description }}</option>
-    </select>
-  </div>
-
-  <div class="form-row">
     <label>Data Início</label>
     <input type="date" formControlName="initDate" class="form-input" />
   </div>
@@ -24,6 +17,42 @@
     <label>Data Fim</label>
     <input type="date" formControlName="finalDate" class="form-input" />
   </div>
+
+  <div class="form-row">
+    <label>
+      <input type="checkbox" formControlName="useNewDevice" />
+      Criar novo dispositivo
+    </label>
+  </div>
+
+  @if (useNewDevice()) {
+    <div class="form-row">
+      <label>Descrição</label>
+      <input type="text" formControlName="deviceDescription" class="form-input" />
+    </div>
+
+    <div class="form-row">
+      <label>Marca</label>
+      <input type="text" formControlName="deviceBrand" class="form-input" />
+    </div>
+
+    <div class="form-row">
+      <label>Modelo</label>
+      <input type="text" formControlName="deviceModel" class="form-input" />
+    </div>
+
+    <div class="form-row">
+      <label>Serial Number</label>
+      <input type="text" formControlName="deviceSerialNumber" class="form-input" />
+    </div>
+  } @else {
+    <div class="form-row">
+      <label>Dispositivo existente</label>
+      <select formControlName="deviceId" class="form-input">
+        <option *ngFor="let d of devices" [value]="d.id">{{ d.description }}</option>
+      </select>
+    </div>
+  }
 
   <div class="actions">
     <button type="button" (click)="cancel()">Cancelar</button>

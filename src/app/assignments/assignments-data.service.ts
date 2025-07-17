@@ -22,4 +22,21 @@ export class AssignmentsDataService {
         );
     }
 
+    createAssignmentWithDevice(body: {
+        collaboratorId: string;
+        periodDate: {
+            initDate: string;
+            finalDate: string;
+        };
+        deviceDescription: string;
+        deviceBrand: string;
+        deviceModel: string;
+        deviceSerialNumber: string;
+    }) {
+        return this.http.post<Assignment>(
+            `http://localhost:5151/api/assignments/with-device`,
+            body
+        );
+    }
+
 }

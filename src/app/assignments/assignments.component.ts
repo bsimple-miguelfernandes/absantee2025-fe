@@ -1,10 +1,8 @@
 import { Component, effect, inject, signal } from '@angular/core';
 import { AssignmentsDataService } from './assignments-data.service';
-import { DevicesDataService } from '../devices/devices-data.service';
 import { toAssignmentViewModel } from '../collaborators/mappers/assignment.mapper';
 import { AssignmentViewModel } from './assignment.viewmodel';
 import { AssignmentsListComponent } from './assignments-list/assignments-list.component';
-import { forkJoin, map, switchMap } from 'rxjs';
 import { RouterOutlet } from '@angular/router';
 import { AssignmentSignalsService } from './assigments-signals.service';
 
@@ -26,7 +24,7 @@ export class AssignmentsComponent {
 
     effect(() => {
       const created = this.signalService.createdAssignment();
-      if (created) {
+      if (created !== undefined) {
         this.loadAssignments();
         this.signalService.clearCreatedAssignment();
       }
