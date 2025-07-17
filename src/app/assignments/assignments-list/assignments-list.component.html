@@ -1,3 +1,14 @@
+<app-filters
+  [fields]="[
+    { name: 'id', label: 'ID da Atribuição' },
+    { name: 'collaboratorEmail', label: 'Email do Colaborador' },
+    { name: 'deviceDescription', label: 'Descrição do Dispositivo' },
+    { name: 'initDate', label: 'Data Início', type: 'date' },
+    { name: 'finalDate', label: 'Data Fim', type: 'date' }
+  ]"
+  (filtersChanged)="applyFilters($event)"
+></app-filters>
+
 <table class="assignments-table">
   <thead>
     <tr>
@@ -12,7 +23,7 @@
     </tr>
   </thead>
   <tbody>
-    @for (assignment of assignments; track assignment.id) {
+@for (assignment of filteredAssignments; track assignment.id){
       <tr>
         <td>{{ assignment.collaboratorName }}</td>
         <td>{{ assignment.collaboratorEmail }}</td>
