@@ -9,7 +9,7 @@ export class TrainingSubjectDetailsResolver implements Resolve<TrainingSubject> 
     constructor(private service: TrainingSubjectDataService) { }
 
     resolve(route: ActivatedRouteSnapshot): Observable<TrainingSubject> {
-        return this.service.getTrainingSubjectById(route.paramMap.get('trainingSubjectId')!);
+        const subjectId = route.paramMap.get('trainingSubjectId')!;
+        return this.service.getTrainingSubjectById(subjectId);
     }
 }
-

@@ -62,8 +62,8 @@ export class ProjectFormComponent {
         this.projectDataService.createProject(project).subscribe({
           next: (createdProject) => {
             console.log("Created project: ", createdProject);
-        this.projectSignalsService.saveProject(project);
-        this.projectSignalsService.cancelCreateProject();
+            this.projectSignalsService.saveProject(project);
+            this.projectSignalsService.cancelCreateProject();
           }
         })
       } else if (this.isEditingProjectForm()) {
