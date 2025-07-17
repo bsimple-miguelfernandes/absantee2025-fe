@@ -4,6 +4,7 @@ import { DevicesDataService } from '../devices/devices-data.service';
 import { toAssignmentViewModel } from '../collaborators/mappers/assignment.mapper';
 import { AssignmentViewModel } from './assignment.viewmodel';
 import { AssignmentsListComponent } from './assignments-list/assignments-list.component';
+import { forkJoin, map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-assignments',
@@ -23,28 +24,25 @@ export class AssignmentsComponent {
   }
 
   private loadAssignments() {
-    this.assignmentsDataService.getAssignments().subscribe({
-      next: async (assignments) => {
-        const viewModels: AssignmentViewModel[] = [];
-
-        for (const a of assignments) {
-          try {
-            const device = await this.devicesDataService.getDeviceById(a.deviceId).toPromise();
-
-            const vm = toAssignmentViewModel(
-              a,
-              a.collaboratorId,
-              device!.description,
-              device!.brand,
-              device!.serialNumber
-            );
-
-            viewModels.push(vm);
-          } catch (err) {
-            console.warn('Erro ao carregar dados para Assignment:', err);
-          }
-        }
-
+    this.assignmentsDataService.getAssignments().pipe(
+      switchMap(assignments => {
+        const assignmentVM$ = assignments.map(a =>
+          this.devicesDataService.getDeviceById(a.deviceId).pipe(
+            map(device =>
+              toAssignmentViewModel(
+                a,
+                a.collaboratorId,
+                device.description,
+                device.brand,
+                device.serialNumber
+              )
+            )
+          )
+        );
+        return forkJoin(assignmentVM$);
+      })
+    ).subscribe({
+      next: (viewModels) => {
         this.assignments.set(viewModels);
         console.log('Loaded assignments:', viewModels);
       },
