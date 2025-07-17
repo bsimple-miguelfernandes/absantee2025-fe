@@ -7,6 +7,7 @@ import { DevicesDataService } from '../../devices/devices-data.service';
 import { AssignmentFormModel } from './assignment-form.model';
 import { CommonModule } from '@angular/common';
 import { AssignmentCreateRequest } from './assignment-create-request';
+import { AssignmentSignalsService } from '../assigments-signals.service';
 
 @Component({
   selector: 'app-assigments-form',
@@ -15,18 +16,20 @@ import { AssignmentCreateRequest } from './assignment-create-request';
   styleUrl: './assigments-form.component.css'
 })
 export class AssignmentsFormComponent implements OnInit {
-  private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private assignmentsService = inject(AssignmentsDataService);
+  private fb = inject(FormBuilder);
+  private dataService = inject(AssignmentsDataService);
+  private signalService = inject(AssignmentSignalsService);
   private collaboratorsService = inject(CollaboratorDataService);
   private devicesService = inject(DevicesDataService);
 
-  collaborators = signal<{ id: string; name: string }[]>([]);
-  devices = signal<{ id: string; description: string }[]>([]);
   assignmentForm!: FormGroup;
   isEditMode = false;
   assignmentId?: string;
+
+  collaborators: { id: string; name: string }[] = [];
+  devices: { id: string; description: string }[] = [];
 
   ngOnInit() {
     this.assignmentId = this.route.snapshot.params['assignmentId'];
@@ -43,25 +46,29 @@ export class AssignmentsFormComponent implements OnInit {
     this.loadDevices();
 
     if (this.isEditMode) {
-      // TODO: implementar lógica de edição futura
+      // TODO: carregar dados do assignment para edição
     }
   }
 
   private loadCollaborators() {
     this.collaboratorsService.getCollaborators().subscribe({
-      next: (res) =>
-        this.collaborators.set(res.map(c => ({
+      next: res => {
+        this.collaborators = res.map(c => ({
           id: c.collabId,
           name: `${c.names} ${c.surnames}`
-        }))),
-      error: err => console.error('Erro ao carregar colaboradores:', err)
+        }));
+      }
     });
   }
 
   private loadDevices() {
     this.devicesService.getDevices().subscribe({
-      next: (res) => this.devices.set(res.map(d => ({ id: d.id, description: d.description }))),
-      error: err => console.error('Erro ao carregar dispositivos:', err)
+      next: res => {
+        this.devices = res.map(d => ({
+          id: d.id,
+          description: d.description
+        }));
+      }
     });
   }
 
@@ -84,10 +91,24 @@ export class AssignmentsFormComponent implements OnInit {
     };
 
     if (this.isEditMode && this.assignmentId) {
-      // TODO: Implementar edição com PUT
+      // TODO: fazer update com PUT
     } else {
-      this.assignmentsService.createAssignment(request).subscribe({
-        next: () => this.cancel(),
+      this.dataService.createAssignment(request).subscribe({
+        next: (res) => {
+          this.signalService.saveCreatedAssignment({
+            id: res.id,
+            collaboratorName: '',
+            collaboratorEmail: '',
+            deviceDescription: '',
+            deviceModel: '',
+            deviceSerialNumber: '',
+            period: {
+              initDate: new Date(request.periodDate.initDate),
+              finalDate: new Date(request.periodDate.finalDate)
+            }
+          });
+          this.cancel();
+        },
         error: (err) => console.error('Erro ao criar assignment:', err)
       });
     }
