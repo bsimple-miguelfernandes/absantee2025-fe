@@ -1,0 +1,12 @@
+<form [formGroup]="technologyForm" (ngSubmit)="save()" class="form-card">
+  <h2>Add technologies</h2>
+
+  <div>
+    <label class="form-label">Description</label>
+    <input type="text" formControlName="description" class="form-input" />
+  </div>
+  <div class="actions">
+    <button type="button" (click)="cancel()">Cancel</button>
+    <button type="submit" [disabled]="technologyForm.invalid">Add</button>
+  </div>
+</form>

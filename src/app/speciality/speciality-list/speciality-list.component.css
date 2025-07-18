@@ -1,0 +1,71 @@
+/* Container da tabela */
+.speciality-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-family: Arial, sans-serif;
+}
+
+/* Cabeçalho da tabela */
+.speciality-table thead tr {
+  background-color: #007bff; /* Azul */
+  color: white;
+}
+
+.speciality-table th,
+.speciality-table td {
+  padding: 0.6rem 1rem;
+  border: 1px solid #ddd;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+/* Linhas alternadas para melhor leitura */
+.speciality-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Hover nas linhas */
+.speciality-table tbody tr:hover {
+  background-color: #e6f0ff;
+}
+
+/* Botões na tabela */
+.speciality-table button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background-color 0.3s ease;
+}
+
+.speciality-table button:hover {
+  background-color: #0056b3;
+}
+
+/* Botão criar */
+.create-button {
+  background-color: #28a745; /* Verde */
+  color: white;
+  border: none;
+  padding: 0.7rem 1.4rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.create-button:hover {
+  background-color: #1e7e34;
+}
+
+/* Ajuste no router-outlet dentro da tabela */
+.speciality-table tbody tr td[colspan="8"] {
+  padding: 1rem;
+  background-color: #f1f1f1;
+  border-top: 2px solid #007bff;
+}

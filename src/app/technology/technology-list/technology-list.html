@@ -1,0 +1,21 @@
+<table>
+  <thead>
+    <tr>
+      <th>id</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (technology of technology; track technology.id) {
+      <tr>
+        <td>{{ technology.id }}</td>
+        <td>{{ technology.description }}</td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+ <button type="button" [routerLink]="['/technology', 'create']">
+  Add technologies
+</button>
+

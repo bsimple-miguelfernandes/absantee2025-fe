@@ -1,0 +1,47 @@
+
+<app-filters
+  [fields]="[
+    { name: 'id', label: 'ID' },
+    { name: 'description', label: 'descrição' },
+    { name: 'collaboratorId', label: 'collaboratorId' },
+    { name: 'technologyId', label: 'technologyId' },
+    { name: 'initDate', label: 'Data Início', type: 'date' },
+    { name: 'finalDate', label: 'Data Fim', type: 'date' }
+  ]"
+  (filtersChanged)="applyFilters($event)"
+></app-filters>
+
+<table class="speciality-table">
+  <thead>
+    <tr>
+      <th>description</th>
+      <th>collaboratorId</th>
+      <th>technologyId</th>
+      <th>Start</th>
+      <th>End</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+  <ng-container *ngFor="let speciality of specialityfilter; trackBy: trackById">
+    <tr>
+      <td>{{ speciality.description }}</td>
+      <td>{{ speciality.collaboratorId }}</td>
+      <td>{{ speciality.technologyId }}</td>
+      <td>{{ speciality.period.initDate | date: 'yyyy-MM-dd' }}</td>
+      <td>{{ speciality.period.finalDate | date: 'yyyy-MM-dd' }}</td>
+      <td>
+        <button (click)="selectRoute('/speciality', speciality.id)">
+          Editar
+        </button>
+      </td>
+    </tr>
+  </ng-container>
+</tbody>
+</table>
+
+<br>
+
+<button (click)="selectRoute('/speciality', 'create')">
+  Criar Especialidade
+</button>

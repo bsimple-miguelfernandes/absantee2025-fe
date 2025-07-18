@@ -1,0 +1,12 @@
+<h2>Specialities</h2>
+
+<app-speciality-list [specialities]="specialities()"></app-speciality-list>
+
+<router-outlet></router-outlet>
+
+
+
+<div class="technology-section" *ngIf="showTechnology()">
+  <h2>Technology Speciality</h2>
+  <app-speciality-technologies-list></app-speciality-technologies-list>
+</div>

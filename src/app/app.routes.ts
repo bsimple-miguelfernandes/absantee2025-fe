@@ -12,13 +12,17 @@ import { ProjectComponent } from './projects/project/project.component';
 import { AssociationProjectResolver } from './association-project.resolver';
 import { ProjectFormComponent } from './projects/project-form/project-form.component';
 import { ProjectDetailsResolver } from './projects/resolvers/project-details.resolver';
-
+import { TechnologyComponent } from './technology/technology.component';
+import { TechnologyCreateComponent } from './technology/technology-create/technology-create';   
+import { SpecialitiesComponent } from './speciality/speciality.component';
+import { SpecialityFormComponent } from './speciality/speciality-form/speciality-form.component';
 export const routes: Routes = [
     {
         path: '',
         component: HomeComponent
     },
     {
+        
         path: 'projects',
         component: ProjectsComponent,
         children: [
@@ -75,5 +79,23 @@ export const routes: Routes = [
                 }
             }
         ]
-    }
+    },
+    {
+    path: 'technology',
+    component: TechnologyComponent,
+    children: [
+      {
+        path: 'create',
+        component: TechnologyCreateComponent
+      }
+    ]
+  },
+  {
+  path: 'speciality',
+  component: SpecialitiesComponent,
+  children: [
+    { path: 'create', component: SpecialityFormComponent, data: { reuse: false } },
+    { path: ':specialityId', component: SpecialityFormComponent, data: { reuse: false } }
+  ]
+}
 ];
