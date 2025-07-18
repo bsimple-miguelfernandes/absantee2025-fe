@@ -48,7 +48,7 @@ export class AssignmentsComponent {
   private loadAssignments() {
     this.dataService.getAssignmentsWithDetails().subscribe({
       next: (dtos) => this.assignments.set(dtos.map(toAssignmentViewModel)),
-      error: (err) => console.error('Erro ao carregar assignments:', err)
+      error: (err) => console.error('Error loadng assignments:', err)
     });
   }
 

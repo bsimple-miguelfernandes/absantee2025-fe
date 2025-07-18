@@ -2,19 +2,19 @@
   <h2>{{ isEditMode ? 'Editar Assignment' : 'Criar Assignment' }}</h2>
 
   <div class="form-row">
-    <label>Colaborador</label>
+    <label>Collaborator</label>
     <select formControlName="collaboratorId" class="form-input">
       <option *ngFor="let c of collaborators" [value]="c.id">{{ c.name }}</option>
     </select>
   </div>
 
   <div class="form-row">
-    <label>Data Início</label>
+    <label>Start Date</label>
     <input type="date" formControlName="initDate" class="form-input" />
   </div>
 
   <div class="form-row">
-    <label>Data Fim</label>
+    <label>End Date</label>
     <input type="date" formControlName="finalDate" class="form-input" />
   </div>
 
@@ -22,24 +22,24 @@
   <div class="form-row">
     <label>
       <input type="checkbox" formControlName="useNewDevice" />
-      Criar novo dispositivo
+      Create new device
     </label>
   </div>
 }
 
   @if (useNewDevice()) {
     <div class="form-row">
-      <label>Descrição</label>
+      <label>Description</label>
       <input type="text" formControlName="deviceDescription" class="form-input" />
     </div>
 
     <div class="form-row">
-      <label>Marca</label>
+      <label>Brand</label>
       <input type="text" formControlName="deviceBrand" class="form-input" />
     </div>
 
     <div class="form-row">
-      <label>Modelo</label>
+      <label>Model</label>
       <input type="text" formControlName="deviceModel" class="form-input" />
     </div>
 
@@ -49,7 +49,7 @@
     </div>
   } @else {
     <div class="form-row">
-      <label>Dispositivo existente</label>
+      <label>Existing Device</label>
       <select formControlName="deviceId" class="form-input">
         <option *ngFor="let d of devices" [value]="d.id">{{ d.description }}</option>
       </select>
@@ -57,9 +57,9 @@
   }
 
   <div class="actions">
-    <button type="button" (click)="cancel()">Cancelar</button>
+    <button type="button" (click)="cancel()">Cancel</button>
     <button type="submit" [disabled]="assignmentForm.invalid">
-      {{ isEditMode ? 'Guardar' : 'Criar' }}
+      {{ isEditMode ? 'Save' : 'Create' }}
     </button>
   </div>
 </form>

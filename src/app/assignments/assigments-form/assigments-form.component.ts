@@ -55,7 +55,7 @@ export class AssignmentsFormComponent implements OnInit {
 
 
     this.assignmentForm = this.fb.group({
-      collaboratorId: ['', Validators.required],
+      collaboratorId: [''],
       useNewDevice: [false],
       deviceId: [''],
       deviceDescription: [''],
@@ -82,7 +82,7 @@ export class AssignmentsFormComponent implements OnInit {
           name: `${c.names} ${c.surnames}`
         }));
       },
-      error: err => console.error('Erro ao carregar colaboradores', err)
+      error: err => console.error('Error loading collabs', err)
     });
   }
 
@@ -94,7 +94,7 @@ export class AssignmentsFormComponent implements OnInit {
           description: d.description
         }));
       },
-      error: err => console.error('Erro ao carregar dispositivos', err)
+      error: err => console.error('Erro loading devices', err)
     });
   }
 
@@ -138,10 +138,10 @@ export class AssignmentsFormComponent implements OnInit {
           deviceSerialNumber: formValue.deviceSerialNumber
         }).subscribe({
           next: (res) => {
-            this.signalService.saveCreatedAssignment(undefined); // só para disparar reload
+            this.signalService.saveCreatedAssignment(undefined);
             this.cancel();
           },
-          error: (err) => console.error('Erro ao criar assignment com dispositivo:', err)
+          error: (err) => console.error('Error creating assignment:', err)
         });
       } else {
         const request: AssignmentCreateRequest = {
@@ -155,7 +155,7 @@ export class AssignmentsFormComponent implements OnInit {
             this.signalService.saveCreatedAssignment({ id: res.id } as AssignmentViewModel);
             this.cancel();
           },
-          error: (err) => console.error('Erro ao criar assignment:', err)
+          error: (err) => console.error('Error creating assignment:', err)
         });
       }
     }

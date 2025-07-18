@@ -1,10 +1,10 @@
 <app-filters
   [fields]="[
-    { name: 'id', label: 'ID da Atribuição' },
-    { name: 'collaboratorEmail', label: 'Email do Colaborador' },
-    { name: 'deviceDescription', label: 'Descrição do Dispositivo' },
-    { name: 'initDate', label: 'Data Início', type: 'date' },
-    { name: 'finalDate', label: 'Data Fim', type: 'date' }
+    { name: 'id', label: 'Assignment ID' },
+    { name: 'collaboratorEmail', label: 'Email' },
+    { name: 'deviceDescription', label: 'Device Description' },
+    { name: 'initDate', label: 'Start Date', type: 'date' },
+    { name: 'finalDate', label: 'Final Date', type: 'date' }
   ]"
   (filtersChanged)="applyFilters($event)"
 ></app-filters>
@@ -53,5 +53,5 @@
 <br>
 
 <button class="create-button" [routerLink]="['/assignments/create']">
-  Criar Assignment
+  Create Assignment
 </button>

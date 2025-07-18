@@ -17,7 +17,7 @@ export class DevicesListComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['inputDevices'] && this.inputDevices) {
       this.devices = this.inputDevices;
-      console.log("📦 Devices recebidos:", this.devices); // AQUI!
+      console.log(" Devices received:", this.devices);
 
     }
   }
