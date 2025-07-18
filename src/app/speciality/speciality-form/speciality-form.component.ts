@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SpecialityDataService } from '../speciality-data.service'; // suposto serviço
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { TOOLTIP_PANEL_CLASS } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-speciality-form',
@@ -41,13 +42,14 @@ export class SpecialityFormComponent implements OnInit {
         console.log('speciality:', speciality);
 
           this.specialityForm.patchValue({
-            id: speciality.id,
-            description: speciality.description,
-            collaboratorId: speciality.collaboratorId,
-            technologyId: speciality.technologyId,
-            initDate: this.formatDateForInput(speciality.period.initDate),
-            finalDate: this.formatDateForInput(speciality.period.finalDate)
-          });
+    id: speciality.id,
+    description: speciality.description,
+    collaboratorId: speciality.collaboratorId,
+    technologyId: speciality.technologyId,
+    initDate: this.formatDateForInput(speciality.periodDate.initDate),
+    finalDate: this.formatDateForInput(speciality.periodDate.finalDate)
+  });
+
         },
         error: err => console.error('Erro ao carregar', err)
       });
@@ -74,8 +76,8 @@ export class SpecialityFormComponent implements OnInit {
       collaboratorId: formValue.collaboratorId,
       technologyId: formValue.technologyId,
       periodDate: {
-        initDate: new Date(formValue.initDate).toISOString(),
-        finalDate: new Date(formValue.finalDate).toISOString()
+        initDate: new Date(formValue.initDate).toISOString().split('T')[0],
+        finalDate: new Date(formValue.finalDate).toISOString().split('T')[0]
       }
     };
 

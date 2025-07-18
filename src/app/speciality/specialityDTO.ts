@@ -3,7 +3,7 @@ export interface specialityDTO {
     description:string;
     technologyId: string;
     collaboratorId: string;
-    period: {
+    periodDate: {
         initDate: Date;
         finalDate: Date;
     };

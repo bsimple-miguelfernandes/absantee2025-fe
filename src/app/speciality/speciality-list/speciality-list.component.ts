@@ -43,8 +43,8 @@ export class SpecialityListComponent {
     const finalDateSpeciality = filters['finalDate'] ? new Date(filters['finalDate']) : null;
 
     this.specialityfilter = this.specialities.filter((s: specialityDTO) => {
-      const specialiyInitDate = new Date(s.period.initDate);
-      const specialityFinalDate = new Date(s.period.finalDate);
+      const specialiyInitDate = new Date(s.periodDate.initDate);
+      const specialityFinalDate = new Date(s.periodDate.finalDate);
 
       return (
         (!id || s.id.toLowerCase().includes(id)) &&

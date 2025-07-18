@@ -11,7 +11,7 @@ import { specialityDTO } from './specialityDTO';
 export class SpecialityDataService {
     private http = inject(HttpClient);
       private readonly baseUrl = 'http://localhost:5031/api/specialities';
-
+private readonly baseUrlPost = 'http://localhost:5041/api/speciality';
     getAll(): Observable<Speciality[]> {
   return this.http.get<Speciality[]>(this.baseUrl);
 }
@@ -49,11 +49,11 @@ export class SpecialityDataService {
     }
 
     createSpeciality(dto: SpecialityCreateRequest): Observable<Speciality> {
-        return this.http.post<Speciality>(`${this.baseUrl}`, dto);
+        return this.http.post<Speciality>(`${this.baseUrlPost}`, dto);
     }
 
     updateSpeciality(dto: SpecialityCreateRequest): Observable<Speciality> {
-    return this.http.put<Speciality>(`${this.baseUrl}`, dto);
+    return this.http.put<Speciality>(`${this.baseUrlPost}`, dto);
 }
 
 }

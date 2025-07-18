@@ -8,7 +8,7 @@ export function toSpecialityDTO(dto: Speciality): specialityDTO {
         description:dto.description,
         technologyId: dto.technologyId,
         collaboratorId: dto.collaboratorId,
-        period: {
+        periodDate: {
             initDate: new Date(dto.periodDate.initDate),
             finalDate: new Date(dto.periodDate.finalDate),
         }
