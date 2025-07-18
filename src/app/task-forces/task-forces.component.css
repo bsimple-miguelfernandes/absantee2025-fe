@@ -1,0 +1,73 @@
+.taskforces-layout {
+    display: flex;
+    gap: 2rem;
+    padding: 1.5rem;
+    box-sizing: border-box;
+}
+
+/* Left panel (table): 2/3 */
+.taskforces-table {
+    flex: 2;
+    min-width: 0;
+}
+
+/* Right panel (form/details): 1/3 */
+.taskforces-panel {
+    flex: 1;
+    padding-left: 1.5rem;
+    border-left: 2px solid #e0e0e0;
+    background-color: #fafafa;
+}
+
+/* Search bar layout */
+.search-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+/* Each input group in the search bar */
+.search-bar .form-row {
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+    flex: 1;
+}
+
+/* Optional: standardize form input appearance */
+.search-bar input,
+.search-bar select {
+    padding: 0.5rem;
+    font-size: 0.95rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Optional: style buttons */
+.search-bar button {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.search-bar button.btn-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+}
+
+.search-bar button.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+}
+
+.search-bar button:hover {
+    opacity: 0.9;
+}

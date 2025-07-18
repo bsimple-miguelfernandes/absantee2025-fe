@@ -1,0 +1,18 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <label>
+        Init Date:
+        <input type="date" formControlName="initDate" />
+    </label>
+
+    <label>
+        End Date:
+        <input type="date" formControlName="endDate" />
+    </label>
+
+    <label>
+        Description:
+        <input type="text" formControlName="description" />
+    </label>
+
+    <button type="submit">Update Task Force</button>
+</form>

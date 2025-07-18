@@ -1,0 +1,93 @@
+<form [formGroup]="taskForceForm" (ngSubmit)="createTaskForce()" class="form-card">
+    <!-- Description -->
+    <div class="form-row">
+        <label class="form-label">Description</label>
+        <input type="text" formControlName="description" class="form-input" />
+        @if (description.touched && description.invalid) {
+        <div class="error">
+            @if (description.errors?.['required']) {
+            <div>Description is required.</div>
+            }
+            @if (description.errors?.['maxlength']) {
+            <div>Max 100 characters.</div>
+            }
+        </div>
+        }
+    </div>
+
+    <!-- Project -->
+    <div class="form-row">
+        <label class="form-label">Project</label>
+        <select formControlName="projectId" class="form-input">
+            <option value="">Select a project</option>
+            @for (p of projects; track p.id) {
+            <option [value]="p.id">{{ p.title }}</option>
+            }
+        </select>
+        @if (projectId.touched && projectId.invalid && projectId.errors?.['required']) {
+        <div class="error">
+            <div>Project is required.</div>
+        </div>
+        }
+    </div>
+
+    <!-- Subject -->
+    <div class="form-row">
+        <label class="form-label">Subject</label>
+        <select formControlName="subjectId" class="form-input">
+            <option value="">Select a subject</option>
+            @for (s of subjects; track s.id) {
+            <option [value]="s.id">{{ s.description }}</option>
+            }
+        </select>
+        @if (subjectId.touched && subjectId.invalid && subjectId.errors?.['required']) {
+        <div class="error">
+            <div>Subject is required.</div>
+        </div>
+        }
+    </div>
+
+    <!-- Period -->
+    <div class="form-row" style="display: flex; gap: 1rem;">
+        <div style="flex: 1;">
+            <label class="form-label">Init Date</label>
+            <input type="date" formControlName="initDate" class="form-input" />
+        </div>
+        <div style="flex: 1;">
+            <label class="form-label">End Date</label>
+            <input type="date" formControlName="endDate" class="form-input" />
+        </div>
+    </div>
+    @if (periodInvalid) {
+    <div class="error">
+        <div>Both start and end dates are required and end must be after start.</div>
+    </div>
+    }
+
+    <!-- Collaborators -->
+    <div class="form-row">
+        <label class="form-label">Collaborators (Select at least 2)</label>
+
+        <div class="checkbox-list scroll-box">
+            @for (c of collaborators; track c.id) {
+            <label class="checkbox-item">
+                <input type="checkbox" [value]="c.id" (change)="onCheckboxChange($event)"
+                    [checked]="collaboratorIds.value.includes(c.id)" />
+                {{ c.email }}
+            </label>
+            }
+        </div>
+
+        @if (collaboratorIds.touched && collaboratorIds.invalid && collaboratorIds.errors?.['minLength']) {
+        <div class="error">
+            <div>At least 2 collaborators required.</div>
+        </div>
+        }
+    </div>
+
+
+    <div class="actions">
+        <button type="submit" [disabled]="taskForceForm.invalid">Create Task Force</button>
+        <button type="button" routerLink='/taskforces'>Cancel</button>
+    </div>
+</form>

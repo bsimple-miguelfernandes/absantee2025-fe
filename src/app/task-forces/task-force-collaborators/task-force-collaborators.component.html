@@ -1,0 +1,40 @@
+<div class="collaborator-list-container">
+    <h3>Collaborators</h3>
+
+    @if (!showForm) {
+    <div class="mb-3">
+        <button class="btn btn-primary" (click)="switchAddCollaborator()">Add Collaborator</button>
+    </div>
+    } @else {
+    <div class="mb-3">
+        <button class="btn btn-primary" (click)="switchAddCollaborator()">Cancel</button>
+    </div>
+    <form [formGroup]="taskForceCollaboratorForm" (ngSubmit)="addCollaborator()">
+        <label class="form-label">Collaborator to add</label>
+        <input type="text" formControlName="collaborator" class="form-input" />
+    </form>
+    }
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Collaborator ID</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (collab of collaborators; track collab.id) {
+            <tr>
+                <td>{{ collab.collaboratorId }}</td>
+                <td>
+                    <button class="btn btn-edit" (click)="removeCollaborator(collab.collaboratorId)">Edit</button>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+
+    @if (collaborators.length === 0) {
+    <p class="empty-message">No collaborators assigned to this task force.</p>
+    }
+</div>

@@ -1,1 +1,72 @@
-<p>task-forces works!</p>
+<div class="taskforces-layout">
+    <div class="taskforces-table">
+        <h2>Task Forces</h2>
+
+        <div class="mb-3">
+            <button class="btn btn-primary" (click)="onCreateTaskForce()">Create New Task Force</button>
+        </div>
+
+        <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="search-bar">
+            <div class="form-row">
+                <label>Filter by:</label>
+                <select formControlName="filterType">
+                    <option value="description">Description</option>
+                    <option value="project">Project ID</option>
+                    <option value="subject">Subject ID</option>
+                    <option value="period">Period</option>
+                </select>
+            </div>
+
+            @if (searchForm.get('filterType')?.value !== 'period') {
+            <div class="form-row">
+                <input type="text" formControlName="filterValue" placeholder="Enter value..." />
+            </div>
+            }
+
+            @if (searchForm.get('filterType')?.value === 'period') {
+            <div class="form-row" style="display: flex; gap: 1rem;">
+                <input type="date" formControlName="periodStart" />
+                <input type="date" formControlName="periodEnd" />
+            </div>
+            }
+
+            <div class="form-row">
+                <button type="submit" class="btn btn-sm btn-primary">Search</button>
+                <button type="button" class="btn btn-sm btn-secondary" (click)="loadAll()">Reset</button>
+            </div>
+        </form>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Subject ID</th>
+                    <th>Project ID</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th class="actions-header">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for(taskForce of taskForces; track taskForce.id) {
+                <tr>
+                    <td>{{ taskForce.description }}</td>
+                    <td>{{ taskForce.subjectId }}</td>
+                    <td>{{ taskForce.projectId }}</td>
+                    <td>{{ taskForce.initDate | date:'longDate' }}</td>
+                    <td>{{ taskForce.endDate | date:'longDate' }}</td>
+                    <td class="actions-cell">
+                        <button class="btn btn-edit" (click)="onEdit(taskForce.id)">Edit</button>
+                        <button class="btn btn-collaborators"
+                            (click)="onViewCollaborators(taskForce.id)">Collaborators</button>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="taskforces-panel">
+        <router-outlet></router-outlet>
+    </div>
+</div>

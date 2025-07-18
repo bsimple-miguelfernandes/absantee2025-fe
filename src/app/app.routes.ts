@@ -14,6 +14,9 @@ import { ProjectFormComponent } from './projects/project-form/project-form.compo
 import { ProjectDetailsResolver } from './projects/resolvers/project-details.resolver';
 import { SubjectsComponent } from './subjects/subjects.component';
 import { TaskForcesComponent } from './task-forces/task-forces.component';
+import { TaskForceEditComponent } from './task-forces/task-force-edit/task-force-edit.component';
+import { TaskForceCollaboratorsComponent } from './task-forces/task-force-collaborators/task-force-collaborators.component';
+import { TaskForceCreateComponent } from './task-forces/task-force-create/task-force-create.component';
 
 export const routes: Routes = [
     {
@@ -84,6 +87,11 @@ export const routes: Routes = [
     },
     {
         path: 'taskforces',
-        component: TaskForcesComponent
+        component: TaskForcesComponent,
+        children: [
+            { path: 'create', component: TaskForceCreateComponent },
+            { path: 'edit/:taskForceId', component: TaskForceEditComponent },
+            { path: 'collaborators/:taskForceId', component: TaskForceCollaboratorsComponent }
+        ]
     }
 ];
