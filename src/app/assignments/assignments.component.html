@@ -4,14 +4,12 @@
 
 <router-outlet></router-outlet>
 
-<!-- Botão no fundo -->
 <div class="collaborators-toggle-container">
   <button (click)="toggleCollaborators()" class="toggle-btn">
     {{ showCollaborators() ? 'Esconder Colaboradores' : 'Mostrar Colaboradores' }}
   </button>
 </div>
 
-<!-- Lista no fundo -->
 <div class="collaborators-section" *ngIf="showCollaborators()">
   <h2>Collaborator Assignments</h2>
   <app-collaborators-assignments-list></app-collaborators-assignments-list>
