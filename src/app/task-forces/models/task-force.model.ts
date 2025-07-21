@@ -17,16 +17,16 @@ export interface CreateTaskForceDTO {
     subjectId: string;
     projectId: string;
     description: string;
-    initDate: Date;
-    endDate: Date;
-    projectInitDate: Date;
-    projectEndDate: Date;
+    initDate: string;
+    endDate: string;
+    projectInitDate: string;
+    projectEndDate: string;
     collaborators: string[];
 }
 
 export interface UpdateDTO {
-    initDate?: Date;
-    endDate?: Date;
+    initDate?: string;
+    endDate?: string;
     description?: string;
 }
 

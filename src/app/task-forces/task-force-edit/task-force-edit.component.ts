@@ -1,8 +1,9 @@
 import { Component, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TaskForceDataService } from '../services/task-force-data.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { UpdateDTO } from '../models/task-force.model';
+import { TaskForceSignalService } from '../services/task-force-signal.service';
 
 @Component({
   selector: 'app-task-force-edit',
@@ -12,8 +13,10 @@ import { UpdateDTO } from '../models/task-force.model';
 })
 export class TaskForceEditComponent {
   private fb = inject(FormBuilder);
+  private router = inject(Router);
   private route = inject(ActivatedRoute);
   private taskForceService = inject(TaskForceDataService);
+  private taskForceSignalService = inject(TaskForceSignalService);
 
   form!: FormGroup;
   taskForceId!: string;
@@ -39,7 +42,8 @@ export class TaskForceEditComponent {
       this.taskForceService.updateTaskForceDetails(this.taskForceId, update)
         .subscribe({
           next: (response) => {
-            console.log('Update successful:', response);
+            this.taskForceSignalService.updateTaskForce(response);
+            this.router.navigate(['../']);
           },
           error: (err) => {
             console.error('Update failed:', err);

@@ -11,28 +11,11 @@
         <div class="form-row">
             <label class="form-label">Description</label>
             <input type="text" formControlName="description" class="form-input" aria-describedby="descError" />
-            @if (subjectForm.controls.description.touched && subjectForm.controls.description.invalid) {
-            <div id="descError" class="error">
-                @if (subjectForm.controls.description.errors?.['required']) {
-                <div>Description is required.</div>
-                }
-                @if (subjectForm.controls.description.errors?.['maxlength']) {
-                <div>Description cannot exceed 50 characters.</div>
-                }
-            </div>
-            }
         </div>
 
         <div class="form-row">
             <label class="form-label">Details</label>
             <input type="text" formControlName="details" class="form-input" aria-describedby="detailsError" />
-            @if (subjectForm.controls.details.touched && subjectForm.controls.details.invalid) {
-            <div id="detailsError" class="error">
-                @if (subjectForm.controls.details.errors?.['maxlength']) {
-                <div>Details cannot exceed 500 characters.</div>
-                }
-            </div>
-            }
         </div>
 
         <div class="actions">

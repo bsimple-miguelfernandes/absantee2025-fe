@@ -3,16 +3,6 @@
     <div class="form-row">
         <label class="form-label">Description</label>
         <input type="text" formControlName="description" class="form-input" />
-        @if (description.touched && description.invalid) {
-        <div class="error">
-            @if (description.errors?.['required']) {
-            <div>Description is required.</div>
-            }
-            @if (description.errors?.['maxlength']) {
-            <div>Max 100 characters.</div>
-            }
-        </div>
-        }
     </div>
 
     <!-- Project -->
@@ -24,11 +14,6 @@
             <option [value]="p.id">{{ p.title }}</option>
             }
         </select>
-        @if (projectId.touched && projectId.invalid && projectId.errors?.['required']) {
-        <div class="error">
-            <div>Project is required.</div>
-        </div>
-        }
     </div>
 
     <!-- Subject -->
@@ -40,11 +25,6 @@
             <option [value]="s.id">{{ s.description }}</option>
             }
         </select>
-        @if (subjectId.touched && subjectId.invalid && subjectId.errors?.['required']) {
-        <div class="error">
-            <div>Subject is required.</div>
-        </div>
-        }
     </div>
 
     <!-- Period -->
@@ -58,11 +38,6 @@
             <input type="date" formControlName="endDate" class="form-input" />
         </div>
     </div>
-    @if (periodInvalid) {
-    <div class="error">
-        <div>Both start and end dates are required and end must be after start.</div>
-    </div>
-    }
 
     <!-- Collaborators -->
     <div class="form-row">
@@ -77,14 +52,7 @@
             </label>
             }
         </div>
-
-        @if (collaboratorIds.touched && collaboratorIds.invalid && collaboratorIds.errors?.['minLength']) {
-        <div class="error">
-            <div>At least 2 collaborators required.</div>
-        </div>
-        }
     </div>
-
 
     <div class="actions">
         <button type="submit" [disabled]="taskForceForm.invalid">Create Task Force</button>

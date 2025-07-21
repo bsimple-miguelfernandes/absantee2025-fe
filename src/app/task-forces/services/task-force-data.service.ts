@@ -11,19 +11,18 @@ export class TaskForceDataService {
   constructor(private http: HttpClient) { }
 
   // ---- Methods for testing ----
-  getSubjects() {
-    return [{ id: '1', description: 'Subject A' }, { id: '2', description: 'Subject B' }, { id: '3', description: 'Subject C' }];
-  }
-
   getProjects() {
-    return [{ id: '1', title: 'Project A' }, { id: '2', title: 'Project B' }, { id: '3', title: 'Project C' }]
+    return [
+      { id: '69ed76c4-b927-4c3e-b56f-d05e780d29b1', title: 'Project A', initDate: "2025-06-17", endDate: "2027-06-17" },
+      { id: '31808c80-5319-4c59-9de4-0202ff499e2f', title: 'Project B', initDate: "2025-06-17", endDate: "2027-06-17" },
+    ]
   }
 
   getCollaborators() {
     return [
-      { id: '1', email: 'Alice@email.com' },
-      { id: '2', email: 'Bob@email.com' },
-      { id: '3', email: 'Charlie@email.com' },
+      { id: 'ffdc5192-4ec3-4f3f-9b84-497729645bc3', email: 'Alice@email.com', initDate: '2025-07-20 15:18:48.108+01', endDate: '2025-12-17 14:18:48.108+00' },
+      { id: '72d3eac4-5e00-4c3f-849e-67b6e94b4bfc', email: 'Bob@email.com', initDate: '2025-07-20 15:18:48.108+01', endDate: '2025-12-17 14:18:48.108+00' },
+      { id: 'b6ed3ff9-b80b-4e2e-9e52-e2b3c6e92ad2', email: 'Charlie@email.com', initDate: '2025-07-20 15:18:48.108+01', endDate: '2025-12-17 14:18:48.108+00' },
     ]
   }
 

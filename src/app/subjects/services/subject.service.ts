@@ -11,7 +11,11 @@ export class SubjectService {
   constructor(private http: HttpClient) { }
 
   getSubjects(pageIndex: number, pageSize: number): Observable<SubjectPageDTO> {
-    return this.http.get<SubjectPageDTO>(`http://localhost:5007/api/subjects?pageIndex=${pageIndex}&pageSize=${pageSize}`);
+    return this.http.get<SubjectPageDTO>(`http://localhost:5007/api/subjects/by-page?pageIndex=${pageIndex}&pageSize=${pageSize}`);
+  }
+
+  getAllSubjects(): Observable<SubjectPageDTO> {
+    return this.http.get<SubjectPageDTO>(`http://localhost:5007/api/subjects`);
   }
 
   addSubject(description: string, details: string): Observable<Subject> {
