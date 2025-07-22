@@ -12,6 +12,8 @@ import { Project } from "./models/project.model";
 export class ProjectsDataService {
   private readonly baseUrl = environment.apiBaseUrl;
 
+  private readonly associationsProjectCollaboratorBaseUrl = environment.associationsProjectCollaboratorApiBaseUrl;
+
   constructor(private http: HttpClient) { }
 
   getProjects(): Observable<Project[]> {
@@ -23,7 +25,7 @@ export class ProjectsDataService {
   }
 
   getAssociations(id: string): Observable<AssociationProjectCollaborators[]> {
-    return this.http.get<AssociationProjectCollaboratorsDTO[]>(`${this.baseUrl}/Project/${id}/associations`);
+    return this.http.get<AssociationProjectCollaboratorsDTO[]>(`${this.associationsProjectCollaboratorBaseUrl}/project/${id}/details`);
   }
 
   createProject(newProject: ProjectCreateRequest): Observable<Project> {

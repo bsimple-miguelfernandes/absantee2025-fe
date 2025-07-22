@@ -14,6 +14,7 @@ import { AssociationCollaboratorProjectCreateRequest } from '../associations-pro
 export class CollaboratorDataService {
   private httpClient = inject(HttpClient);
   private readonly baseUrl = environment.apiBaseUrl;
+  private readonly associationsProjectCollaboratorBaseUrl = environment.associationsProjectCollaboratorApiBaseUrl;
 
 
   constructor() {
@@ -49,7 +50,7 @@ export class CollaboratorDataService {
   }
 
   getAssociations(id: string): Observable<AssociationProjectCollaborators[]> {
-    return this.httpClient.get<AssociationProjectCollaboratorsDTO[]>(`${this.baseUrl}/collaborators/${id}/associations`).pipe(
+    return this.httpClient.get<AssociationProjectCollaboratorsDTO[]>(`${this.baseUrl}/collaborator/${id}/details`).pipe(
       map(dtoList => dtoList.map(dto => mapToAssociationProjectCollaborators(dto)))
     );
   }
