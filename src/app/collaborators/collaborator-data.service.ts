@@ -6,7 +6,7 @@ import { HolidayPeriod, HolidayPeriodDTO } from './collaborator-holidays/holiday
 import { Collaborator } from './collaborator';
 import { CollaboratorCreateRequest } from './collaborators-create/create-collaborator';
 import { environment } from '../../environments/environment';
-import { AssociationCollaboratorProjectCreateRequest } from '../associations-project-collaborator/add-collaborator-project/add-association';
+import { AssociationProjectCollaboratorCreateRequest } from '../associations-project-collaborator/add-collaborator-project/add-association';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,8 @@ import { AssociationCollaboratorProjectCreateRequest } from '../associations-pro
 export class CollaboratorDataService {
   private httpClient = inject(HttpClient);
   private readonly baseUrl = environment.apiBaseUrl;
-  private readonly associationsProjectCollaboratorBaseUrl = environment.associationsProjectCollaboratorApiBaseUrl;
+  private readonly associationsProjectCollaboratorQueryBaseUrl = environment.associationsProjectCollaboratorQueryBaseUrl;
+  private readonly associationsProjectCollaboratorCmdBaseUrl = environment.associationsProjectCollaboratorCMDBaseUrl;
 
 
   constructor() {
@@ -50,15 +51,15 @@ export class CollaboratorDataService {
   }
 
   getAssociations(id: string): Observable<AssociationProjectCollaborators[]> {
-    return this.httpClient.get<AssociationProjectCollaboratorsDTO[]>(`${this.baseUrl}/collaborator/${id}/details`).pipe(
+    return this.httpClient.get<AssociationProjectCollaboratorsDTO[]>(`${this.associationsProjectCollaboratorQueryBaseUrl}/collaborator/${id}/details`).pipe(
       map(dtoList => dtoList.map(dto => mapToAssociationProjectCollaborators(dto)))
     );
   }
 
-  createAssociation(id: string, newAssoc: AssociationCollaboratorProjectCreateRequest): Observable<AssociationProjectCollaborators> {
-    return this.httpClient.post<AssociationProjectCollaboratorsDTO>(`${this.baseUrl}/collaborators/${id}/projects`, newAssoc).pipe(
-      map(dto => mapToAssociationProjectCollaborators(dto))
-    );
+  createAssociation(request: AssociationProjectCollaboratorCreateRequest): Observable<AssociationProjectCollaborators> {
+    return this.httpClient
+      .post<AssociationProjectCollaboratorsDTO>(`${this.associationsProjectCollaboratorCmdBaseUrl}`, request)
+      .pipe(map((dto: AssociationProjectCollaboratorsDTO) => mapToAssociationProjectCollaborators(dto)));
   }
 
 }

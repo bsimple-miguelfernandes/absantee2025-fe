@@ -6,13 +6,16 @@ import { ProjectCreateRequest } from "./models/create-project.model";
 import { Injectable } from "@angular/core";
 import { AssociationProjectCollaboratorCreateRequest } from "../associations-project-collaborator/add-collaborator-project/add-association";
 import { Project } from "./models/project.model";
+import { AssociationsProjectCollaboratorComponent } from "../associations-project-collaborator/associations-project-collaborator.component";
+import { map } from "rxjs/operators";
 
 @Injectable({ providedIn: 'root' })
 
 export class ProjectsDataService {
   private readonly baseUrl = environment.apiBaseUrl;
 
-  private readonly associationsProjectCollaboratorBaseUrl = environment.associationsProjectCollaboratorApiBaseUrl;
+  private readonly associationsProjectCollaboratorQueryBaseUrl = environment.associationsProjectCollaboratorQueryBaseUrl;
+  private readonly associationsProjectCollaboratorCmdBaseUrl = environment.associationsProjectCollaboratorCMDBaseUrl;
 
   constructor(private http: HttpClient) { }
 
@@ -25,7 +28,7 @@ export class ProjectsDataService {
   }
 
   getAssociations(id: string): Observable<AssociationProjectCollaborators[]> {
-    return this.http.get<AssociationProjectCollaboratorsDTO[]>(`${this.associationsProjectCollaboratorBaseUrl}/project/${id}/details`);
+    return this.http.get<AssociationProjectCollaboratorsDTO[]>(`${this.associationsProjectCollaboratorQueryBaseUrl}/project/${id}/details`);
   }
 
   createProject(newProject: ProjectCreateRequest): Observable<Project> {
@@ -36,7 +39,10 @@ export class ProjectsDataService {
     return this.http.put<Project>(`${this.baseUrl}/Project`, updatedProject);
   }
 
-  createAssociation(id: string, newAssoc: AssociationProjectCollaboratorCreateRequest): Observable<AssociationProjectCollaborators> {
-    return this.http.post<AssociationProjectCollaboratorsDTO>(`${this.baseUrl}/Project/${id}/collaborators`, newAssoc);
+  createAssociation(request: AssociationProjectCollaboratorCreateRequest): Observable<AssociationProjectCollaborators> {
+    return this.http
+      .post<AssociationProjectCollaboratorsDTO>(`${this.associationsProjectCollaboratorCmdBaseUrl}`, request)
+      .pipe(map((dto: AssociationProjectCollaboratorsDTO) => mapToAssociationProjectCollaborators(dto)));
   }
+
 }

@@ -1,14 +1,14 @@
 import { Component, inject } from '@angular/core';
 import { ProjectsDataService } from '../projects/projects-data.service';
 import { CollaboratorDataService } from '../collaborators/collaborator-data.service';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { AssociationProjectCollaborators } from './association-project-collaborator.model';
 import { AddCollaboratorProjectComponent } from "./add-collaborator-project/add-collaborator-project.component";
 import { ActivatedRoute, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-associations-project-collaborator',
-  imports: [DatePipe, RouterModule],
+  imports: [DatePipe, RouterModule, CommonModule],
   standalone: true,
   templateUrl: './associations-project-collaborator.component.html',
   styleUrl: './associations-project-collaborator.component.css'

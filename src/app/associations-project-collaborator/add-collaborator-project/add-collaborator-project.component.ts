@@ -2,7 +2,7 @@ import { Component, inject, input } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { ProjectsDataService } from '../../projects/projects-data.service';
 import { CollaboratorDataService } from '../../collaborators/collaborator-data.service';
-import { AssociationCollaboratorProjectCreateRequest, AssociationProjectCollaboratorCreateRequest } from './add-association';
+import { AssociationProjectCollaboratorCreateRequest } from './add-association';
 import { ProjectsSignalsService } from '../../projects/projects-signals.service';
 import { CollaboratorSignalService } from '../../collaborators/collaborator-signal.service';
 
@@ -71,49 +71,28 @@ export class AddCollaboratorProjectComponent {
 
     const formValue = this.form.getRawValue();
 
-    if (this.collaboratorId()) {
-      const newAssoc: AssociationCollaboratorProjectCreateRequest = {
-        projectId: formValue.projectId,
-        periodDate: {
-          initDate: formValue.periodDate.initDate,
-          finalDate: formValue.periodDate.finalDate
-        }
+    const newAssoc: AssociationProjectCollaboratorCreateRequest = {
+      collaboratorId: this.collaboratorId() ?? formValue.collaboratorId,
+      projectId: this.projectId() ?? formValue.projectId,
+      periodDate: {
+        initDate: formValue.periodDate.initDate,
+        finalDate: formValue.periodDate.finalDate
       }
-      this.collabDataService.createAssociation(this.collaboratorId()!, newAssoc).subscribe({
-        next: (createdAssoc) => {
-          console.log('Created assoc:', createdAssoc);
-          this.collabSignalService.cancelCreateAssociation();
-          this.collabSignalService.createAssociation(createdAssoc);
-          this.form.reset();
-        },
-        error: (error) => {
-          alert('Error creating association!');
-          console.log('Error creating association:', error);
-        }
-      })
-    } else if (this.projectId()) {
-      const newAssoc: AssociationProjectCollaboratorCreateRequest = {
-        collaboratorId: formValue.collaboratorId,
-        periodDate: {
-          initDate: formValue.periodDate.initDate,
-          finalDate: formValue.periodDate.finalDate
-        }
-      }
-      this.projectDataService.createAssociation(this.projectId()!, newAssoc).subscribe({
-        next: (createdAssoc) => {
-          console.log('Created assoc:', createdAssoc);
-          this.projectSignalService.cancelCreateAssociation();
-          this.projectSignalService.createAssociation(createdAssoc);
-          this.form.reset();
-        },
-        error: (error) => {
-          alert('Error creating association!');
-          console.log('Error creating association:', error);
-        }
-      });
+    };
 
-    }
+    this.projectDataService.createAssociation(newAssoc).subscribe({
+      next: (createdAssoc) => {
+        this.projectSignalService.cancelCreateAssociation();
+        this.projectSignalService.createAssociation(createdAssoc);
+        this.form.reset();
+      },
+      error: (error) => {
+        alert('Error creating association!');
+        console.log('Error creating association:', error);
+      }
+    });
   }
+
 
   onCancel() {
     if (this.collaboratorId()) {

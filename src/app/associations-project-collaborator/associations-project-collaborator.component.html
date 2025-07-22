@@ -1,29 +1,25 @@
-<table>
-    <tr>
-        @if (isInProject) {
-        <th>Email</th>
-        } @else {
-        <th>Acronym</th>
-        }
-        <th>Init Date</th>
-        <th>Final Date</th>
-        <th>Actions</th>
-    </tr>
-    @for (assoc of associations; track $index) {
-    <tr>
-        @if (isInProject) {
-        <td>{{assoc.collaboratorEmail}}</td>
-        } @else {
-        <td>{{assoc.projectAcronym}}</td>
-        }
-        <td>{{assoc.periodDate.initDate | date:'yyyy-MM-dd'}} </td>
-        <td>{{assoc.periodDate.finalDate | date:'yyyy-MM-dd'}} </td>
-
-        @if (isInProject) {
-        <td><button [routerLink]="['/collaborators/details', assoc.collaboratorId]">Collaborator Details</button> </td>
-        } @else {
-        <td><button [routerLink]="['/projects/details', assoc.projectId]">Project Details</button> </td>
-        }
-    </tr>
-    }
+<table *ngIf="associations && associations.length > 0; else noAssociations">
+  <tr>
+    <th *ngIf="isInProject">Email</th>
+    <th *ngIf="!isInProject">Acronym</th>
+    <th>Init Date</th>
+    <th>Final Date</th>
+    <th>Actions</th>
+  </tr>
+  <tr *ngFor="let assoc of associations; index as i">
+    <td *ngIf="isInProject">{{ assoc.collaboratorEmail }}</td>
+    <td *ngIf="!isInProject">{{ assoc.projectAcronym }}</td>
+    <td>{{ assoc.periodDate.initDate | date: 'yyyy-MM-dd' }}</td>
+    <td>{{ assoc.periodDate.finalDate | date: 'yyyy-MM-dd' }}</td>
+    <td *ngIf="isInProject">
+      <button [routerLink]="['/collaborators/details', assoc.collaboratorId]">Collaborator Details</button>
+    </td>
+    <td *ngIf="!isInProject">
+      <button [routerLink]="['/projects/details', assoc.projectId]">Project Details</button>
+    </td>
+  </tr>
 </table>
+
+<ng-template #noAssociations>
+  <p style="margin-top: 1rem;">No associations found.</p>
+</ng-template>
