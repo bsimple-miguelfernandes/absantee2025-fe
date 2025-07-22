@@ -8,7 +8,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-associations-project-collaborator',
-  imports: [DatePipe, RouterModule, CommonModule],
+  imports: [DatePipe, RouterModule, CommonModule, AddCollaboratorProjectComponent],
   standalone: true,
   templateUrl: './associations-project-collaborator.component.html',
   styleUrl: './associations-project-collaborator.component.css'
@@ -31,4 +31,15 @@ export class AssociationsProjectCollaboratorComponent {
       this.associations = data["AssociationData"]
     });
   }
+
+  showCreateForm = false;
+
+  onStartCreate() {
+    this.showCreateForm = true;
+  }
+
+  onCancelCreate() {
+    this.showCreateForm = false;
+  }
+
 }

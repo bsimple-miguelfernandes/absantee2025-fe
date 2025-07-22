@@ -5,16 +5,19 @@ import { CollaboratorDataService } from '../../collaborators/collaborator-data.s
 import { AssociationProjectCollaboratorCreateRequest } from './add-association';
 import { ProjectsSignalsService } from '../../projects/projects-signals.service';
 import { CollaboratorSignalService } from '../../collaborators/collaborator-signal.service';
+import { Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-add-collaborator-project',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, AddCollaboratorProjectComponent],
   templateUrl: './add-collaborator-project.component.html',
   styleUrl: './add-collaborator-project.component.css'
 })
 export class AddCollaboratorProjectComponent {
   collaboratorId = input<string | undefined>(undefined);
   projectId = input<string | undefined>(undefined);
+
+  @Output() cancel = new EventEmitter<void>();
 
   fb = inject(FormBuilder);
 
@@ -97,12 +100,13 @@ export class AddCollaboratorProjectComponent {
   onCancel() {
     if (this.collaboratorId()) {
       this.collabSignalService.cancelCreateAssociation();
-      this.form.reset();
     } else if (this.projectId()) {
       this.projectSignalService.cancelCreateAssociation();
-      this.form.reset();
     }
+    this.form.reset();
+    this.cancel.emit();
   }
+
 
   get collabId() {
     return this.form.get('collaboratorId') as FormControl;
