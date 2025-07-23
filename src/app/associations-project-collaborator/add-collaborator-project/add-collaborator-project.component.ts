@@ -6,16 +6,22 @@ import { AssociationProjectCollaboratorCreateRequest } from './add-association';
 import { ProjectsSignalsService } from '../../projects/projects-signals.service';
 import { CollaboratorSignalService } from '../../collaborators/collaborator-signal.service';
 import { Output, EventEmitter } from '@angular/core';
+import { Project } from '../../projects/models/project.model';
+import { Collaborator } from '../../collaborators/collaborator';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-add-collaborator-project',
-  imports: [ReactiveFormsModule, AddCollaboratorProjectComponent],
+  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './add-collaborator-project.component.html',
   styleUrl: './add-collaborator-project.component.css'
 })
 export class AddCollaboratorProjectComponent {
   collaboratorId = input<string | undefined>(undefined);
   projectId = input<string | undefined>(undefined);
+  projects: Project[] = [];
+  collaborators: Collaborator[] = [];
+
 
   @Output() cancel = new EventEmitter<void>();
 
@@ -31,7 +37,14 @@ export class AddCollaboratorProjectComponent {
 
   ngOnInit() {
     this.initForm();
+
+    if (this.collaboratorId()) {
+      this.projectDataService.getProjects().subscribe(projects => this.projects = projects);
+    } else if (this.projectId()) {
+      this.collabDataService.getCollabs().subscribe(collabs => this.collaborators = collabs);
+    }
   }
+
 
   initForm() {
     this.form = new FormGroup({

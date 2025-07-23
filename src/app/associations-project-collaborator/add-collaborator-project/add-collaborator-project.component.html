@@ -2,14 +2,30 @@
     <div>
         @if (projectId()) {
         <label>
-            Collaborator:
-            <input type="text" formControlName="collaboratorId" />
-        </label>
+  Collaborator:
+  <select formControlName="collaboratorId">
+    <option value="" disabled selected>-- Select a collaborator --</option>
+    <option *ngIf="collaborators.length === 0" disabled>No collaborators available</option>
+    <option *ngFor="let collab of collaborators" [value]="collab.collabId">
+      {{ collab.email }}
+    </option>
+  </select>
+</label>
+
+
         } @else if (collaboratorId()) {
         <label>
-            Project:
-            <input type="text" formControlName="projectId" />
-        </label>
+  Project:
+  <select formControlName="projectId">
+    <option value="" disabled selected>-- Select a project --</option>
+    <option *ngIf="projects.length === 0" disabled>No projects available</option>
+    <option *ngFor="let project of projects" [value]="project.id">
+      {{ project.acronym }}
+    </option>
+  </select>
+</label>
+
+
         }
     </div>
     <fieldset formGroupName="periodDate">
@@ -32,5 +48,5 @@
         </div>
     </fieldset>
     <button type="submit">Create Association</button>
-    <button type="button" [disabled]="form.invalid" (click)="onCancel()">Cancel</button>
+<button type="button" (click)="onCancel()">Cancel</button>
 </form>
