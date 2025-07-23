@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { Routes } from '@angular/router'
 import { ProjectsComponent } from './projects/projects.component';
 import { HomeComponent } from './home/home.component';
 import { CollaboratorsComponent } from './collaborators/collaborators.component';
@@ -12,6 +12,12 @@ import { ProjectComponent } from './projects/project/project.component';
 import { AssociationProjectResolver } from './association-project.resolver';
 import { ProjectFormComponent } from './projects/project-form/project-form.component';
 import { ProjectDetailsResolver } from './projects/resolvers/project-details.resolver';
+import { TrainingSubjectFormComponent } from './training-subjects/training-subject-form/training-subject-form.component';
+import { TrainingSubjectsComponent } from './training-subjects/training-subjects.component';
+import { TrainingSubjectDetailsResolver } from './training-subjects/training-subject.resolver';
+import { TrainingModulesComponent } from './training-modules/training-modules.component';
+import { resolverTrainingModule, TrainingModuleDetailsComponent } from './training-modules/training-module-details/training-module-details.component';
+import { TrainingSubjectDetailsComponent } from './training-subjects/training-subject-details/training-subject-details.component';
 
 export const routes: Routes = [
     {
@@ -75,5 +81,44 @@ export const routes: Routes = [
                 }
             }
         ]
-    }
+    },
+    {
+    path: 'training-modules',
+    component: TrainingModulesComponent,
+    children: [
+      {
+        path: 'subjects/create',
+        component: TrainingSubjectFormComponent
+      },
+      {
+        path: ':trainingModuleId',
+        component: TrainingModuleDetailsComponent,
+        resolve: { trainingModule: resolverTrainingModule }
+      }
+    ]
+  },
+  {
+    path: 'training-subjects',
+    component: TrainingSubjectsComponent,
+    children: [
+      {
+        path: 'create',
+        component: TrainingSubjectFormComponent,
+      },
+      {
+        path: ':trainingSubjectId',
+        component: TrainingSubjectDetailsComponent,
+        resolve: {
+          trainingSubject: TrainingSubjectDetailsResolver,
+        }
+      },
+      {
+        path: ':trainingSubjectId/edit',
+        component: TrainingSubjectFormComponent,
+        resolve: {
+          trainingSubject: TrainingSubjectDetailsResolver
+        }
+      }
+    ]
+  }
 ];
