@@ -16,15 +16,18 @@ export class ProjectsDataService {
 
   private readonly associationsProjectCollaboratorQueryBaseUrl = environment.associationsProjectCollaboratorQueryBaseUrl;
   private readonly associationsProjectCollaboratorCmdBaseUrl = environment.associationsProjectCollaboratorCMDBaseUrl;
+  private readonly baseUrlProjectCommand = environment.projectCMDBaseUrl;
+  private readonly baseUrlProjectQuery = environment.projectQueryBaseUrl;
+
 
   constructor(private http: HttpClient) { }
 
   getProjects(): Observable<Project[]> {
-    return this.http.get<Project[]>(`${this.baseUrl}/Project`)
+    return this.http.get<Project[]>(`${this.baseUrlProjectQuery}/Project`)
   }
 
   getProjectById(id: string): Observable<Project> {
-    return this.http.get<Project>(`${this.baseUrl}/Project/${id}`);
+    return this.http.get<Project>(`${this.baseUrlProjectQuery}/Project/${id}`);
   }
 
   getAssociations(id: string): Observable<AssociationProjectCollaborators[]> {
@@ -32,11 +35,11 @@ export class ProjectsDataService {
   }
 
   createProject(newProject: ProjectCreateRequest): Observable<Project> {
-    return this.http.post<Project>(`${this.baseUrl}/Project`, newProject);
+    return this.http.post<Project>(`${this.baseUrlProjectCommand}/Project`, newProject);
   }
 
   updateProject(updatedProject: Project): Observable<Project> {
-    return this.http.put<Project>(`${this.baseUrl}/Project`, updatedProject);
+    return this.http.put<Project>(`${this.baseUrlProjectCommand}/Project`, updatedProject);
   }
 
   createAssociation(request: AssociationProjectCollaboratorCreateRequest): Observable<AssociationProjectCollaborators> {
