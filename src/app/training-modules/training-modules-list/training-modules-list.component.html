@@ -10,6 +10,7 @@
         <td>{{trainingModule.trainingSubjectId}}</td>
         <td>
             <button [routerLink]='[trainingModule.id]'>Details</button>
+            <button [routerLink]="['associations-trainingmodule', trainingModule.id]">Collaborators Assigned</button>
         </td>
     </tr>
     }

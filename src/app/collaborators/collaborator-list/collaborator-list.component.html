@@ -1,5 +1,5 @@
 @if(this.showFilters) {
-    <form [formGroup]="searchForm" class="search-form">
+<form [formGroup]="searchForm" class="search-form">
     <label>
         Name:
         <input formControlName="name" type="text" placeholder="Search by name">
@@ -9,7 +9,7 @@
         Email:
         <input formControlName="email" type="email" placeholder="Search by email">
     </label>
-    </form>
+</form>
 }
 <button (click)="this.toggleFilters()">Show Filters</button>
 
@@ -31,6 +31,9 @@
             </button>
             <button [routerLink]='["associations", collab.collabId]' data-testid="projects-btn">
                 Collaborator Projects
+            </button>
+            <button [routerLink]="['associations-trainingmodule', collab.collabId]" data-testid="training-modules-btn">
+                Training Modules
             </button>
         </td>
     </tr>

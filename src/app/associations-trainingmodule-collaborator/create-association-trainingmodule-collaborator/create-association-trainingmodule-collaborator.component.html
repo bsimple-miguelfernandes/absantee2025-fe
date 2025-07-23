@@ -1,0 +1,52 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div>
+        @if (trainingModuleId()) {
+        <label>
+            Collaborator:
+            <select formControlName="collaboratorId">
+                <option value="">-- Select Collaborator --</option>
+                @for (collab of collaborators; track collab.collabId) {
+                <option [value]="collab.collabId">{{collab.names}} {{collab.surnames}} ({{collab.email}})</option>
+                }
+            </select>
+        </label>
+        @if (form.get('collaboratorId')?.invalid && form.get('collaboratorId')?.touched) {
+        <div class="error">Collaborator is required.</div>
+        }
+        } @else if (collaboratorId()) {
+        <label>
+            Training Module:
+            <select formControlName="trainingModuleId">
+                <option value="">-- Select Training Module --</option>
+                @for (tm of trainingModules; track tm.id) {
+                <option [value]="tm.id">{{tm.trainingSubjectId}}</option>
+                }
+            </select>
+        </label>
+        @if (form.get('trainingModuleId')?.invalid && form.get('trainingModuleId')?.touched) {
+        <div class="error">Training Module is required.</div>
+        }
+        }
+    </div>
+    <fieldset formGroupName="periodDate">
+        @if (collaboratorId()) {
+        <legend>Collaborator Period</legend>
+        } @else if(trainingModuleId()) {
+        <legend>Training Module Period</legend>
+        }
+        <div>
+            <label>
+                Init Date:
+                <input type="date" formControlName="initDate" />
+            </label>
+        </div>
+        <div>
+            <label>
+                Final Date:
+                <input type="date" formControlName="finalDate" />
+            </label>
+        </div>
+    </fieldset>
+    <button type="submit" [disabled]="form.invalid">Create Association</button>
+    <button type="button" (click)="onCancel()">Cancel</button>
+</form>

@@ -1,0 +1,99 @@
+/* General Body and Container Styling */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+h2 {
+    color: #5a5a5a;
+    text-align: center;
+    margin-top: 50px;
+}
+
+/* Button Styling */
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button[routerLink] {
+    background-color: #28a745;
+    margin-right: 10px;
+}
+
+button[routerLink]:hover {
+    background-color: #218838;
+}
+
+button.remove-button {
+    /* You might want to add this class to your remove button for specific styling */
+    background-color: #dc3545;
+}
+
+button.remove-button:hover {
+    background-color: #c82333;
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+th,
+td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #e9ecef;
+    color: #495057;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+tr:hover {
+    background-color: #e2e6ea;
+}
+
+/* Specific button in table cell positioning */
+td button {
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+/* Styles for the create component, assuming it needs some spacing */
+app-create-association-trainingmodule-collaborator {
+    display: block;
+    /* Ensures it takes up its own block space */
+    margin-bottom: 30px;
+    /* Space below the form when visible */
+    padding: 20px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    background-color: #fefefe;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
