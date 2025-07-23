@@ -21,6 +21,8 @@ export class CollaboratorDataService {
   private readonly collaboratorQueryBaseUrl = environment.collaboratorQueryBaseURL;
   private readonly userQueryBaseUrl = environment.userQueryBaseUrl;
   private readonly userCmdBaseUrl = environment.userCmdBaseUrl;
+  private readonly holidaysCmdBaseUrl = environment.holidaysCmdBaseUrl;
+  private readonly holidaysQueryBaseUrl = environment.holidaysQueryBaseUrl;
 
 
   constructor() {
@@ -56,15 +58,15 @@ export class CollaboratorDataService {
 
   getCollaboratorHolidays(collaboratorId: string): Observable<HolidayPeriodDTO[]> {
     return this.httpClient
-      .get<HolidayPeriodDTO[]>(`${this.baseUrl}/collaborators/${collaboratorId}/holidayplan/holidayperiod`);
+      .get<HolidayPeriodDTO[]>(`${this.holidaysQueryBaseUrl}/${collaboratorId}`);
   }
 
-  addHoliday(collabId: string, initDate: string, finalDate: string) {
-    return this.httpClient.post<HolidayPeriod>(`${this.baseUrl}/collaborators/${collabId}/holidayplan/holidayperiod`, { initDate: initDate, finalDate: finalDate });
+  addHoliday(collaboratorId: string, initDate: string, finalDate: string) {
+    return this.httpClient.post<HolidayPeriod>(`${this.holidaysCmdBaseUrl}/${collaboratorId}/holidayperiod`, { initDate: initDate, finalDate: finalDate });
   }
 
   editHoliday(collaboratorId: string, updatedPeriod: HolidayPeriod) {
-    return this.httpClient.put<HolidayPeriod>(`${this.baseUrl}/collaborators/${collaboratorId}/holidayplan/holidayperiod`, updatedPeriod);
+    return this.httpClient.put<HolidayPeriod>(`${this.holidaysCmdBaseUrl}/${collaboratorId}/holidayperiod`, updatedPeriod);
   }
 
   getAssociations(id: string): Observable<AssociationProjectCollaborators[]> {
