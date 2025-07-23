@@ -1,11 +1,11 @@
-// collaborator-create-request.ts
-
 import { PeriodDateTime } from "../../PeriodDate";
 
 export interface CollaboratorCreateRequest {
+  userId?: string; 
   names: string;
   surnames: string;
   email: string;
-  deactivationDate: Date;
+  finalDate: Date; 
   periodDateTime: PeriodDateTime;
 }
+

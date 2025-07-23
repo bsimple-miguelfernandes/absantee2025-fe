@@ -16,25 +16,27 @@ export class CollaboratorDataService {
   private readonly baseUrl = environment.apiBaseUrl;
   private readonly associationsProjectCollaboratorQueryBaseUrl = environment.associationsProjectCollaboratorQueryBaseUrl;
   private readonly associationsProjectCollaboratorCmdBaseUrl = environment.associationsProjectCollaboratorCMDBaseUrl;
+  private readonly collaboratorCMDBaseUrl = environment.collaboratorCMDBaseURL;
+  private readonly collaboratorQueryBaseUrl = environment.collaboratorQueryBaseURL;
 
 
   constructor() {
   }
 
   getCollabs(): Observable<Collaborator[]> {
-    return this.httpClient.get<Collaborator[]>(`${this.baseUrl}/collaborators/details`);
+    return this.httpClient.get<Collaborator[]>(`${this.collaboratorQueryBaseUrl}/details`);
   }
 
   getCollabById(id: string): Observable<Collaborator> {
-    return this.httpClient.get<Collaborator>(`${this.baseUrl}/collaborators/${id}/details`);
+    return this.httpClient.get<Collaborator>(`${this.collaboratorQueryBaseUrl}/${id}/details`);
   }
 
   createCollaborator(newCollaborator: CollaboratorCreateRequest): Observable<Collaborator> {
-    return this.httpClient.post<Collaborator>(`${this.baseUrl}/collaborators`, newCollaborator)
+    return this.httpClient.post<Collaborator>(`${this.collaboratorCMDBaseUrl}`, newCollaborator)
   }
 
   updateCollaborator(updatedCollaborator: Collaborator) {
-    return this.httpClient.put<Collaborator>(`${this.baseUrl}/collaborators`, updatedCollaborator);
+    return this.httpClient.put<Collaborator>(`${this.baseUrl}`, updatedCollaborator);
   }
 
   getCollaboratorHolidays(collaboratorId: string): Observable<HolidayPeriodDTO[]> {
