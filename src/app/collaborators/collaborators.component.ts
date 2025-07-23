@@ -29,7 +29,7 @@ export class CollaboratorsComponent {
    constructor(
     private collaboratorDataService: CollaboratorDataService,
     private dialog: MatDialog
-  ) {
+    ) {
     this.collaboratorDataService.getCollabs().subscribe({
       next: (collaborators) => {
         const collabVM = collaborators.map(toCollaboratorViewModel);

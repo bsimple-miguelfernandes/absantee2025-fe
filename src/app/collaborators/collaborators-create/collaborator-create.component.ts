@@ -20,8 +20,8 @@ export class CollaboratorCreateComponent {
     names: new FormControl('', Validators.required),
     surnames: new FormControl('', Validators.required),
     email: new FormControl('', Validators.required),
-    deactivationDate: new FormControl(this.formatDate(new Date()), Validators.required),
-    collaboratorPeriod: new FormGroup({
+    finalDate: new FormControl(this.formatDate(new Date()), Validators.required),
+    periodDateTime: new FormGroup({
       initDate: new FormControl(this.formatDate(new Date()), Validators.required),
       finalDate: new FormControl(this.formatDate(new Date()), Validators.required)
     }),
@@ -41,16 +41,16 @@ export class CollaboratorCreateComponent {
 
     const formValue = this.form.getRawValue();
 
-    if (!formValue.collaboratorPeriod) return;
+    if (!formValue.periodDateTime) return;
 
     const newCollaborator: CollaboratorCreateRequest = {
       names: formValue.names!,
       surnames: formValue.surnames!,
       email: formValue.email!,
-      deactivationDate: new Date(formValue.deactivationDate!),
+      finalDate: new Date(formValue.finalDate!),
       periodDateTime: {
-        _initDate: new Date(formValue.collaboratorPeriod!.initDate!),
-        _finalDate: new Date(formValue.collaboratorPeriod!.finalDate!)
+        _initDate: new Date(formValue.periodDateTime!.initDate!),
+        _finalDate: new Date(formValue.periodDateTime!.finalDate!)
       }
     };
 
