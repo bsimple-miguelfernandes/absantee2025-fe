@@ -89,6 +89,12 @@ export class CollaboratorDetailsComponent {
 
     const updatedCollaborator = fromCollaboratorViewModel(updatedCollaboratorVM);
 
+    this.collaboratorDataService.updateUser(updatedCollaborator).subscribe({
+      error: (error) => {
+        console.log("Error updating user: ", error)
+      }
+    });
+
     this.collaboratorDataService.updateCollaborator(updatedCollaborator).subscribe({
       next: (updated) => {
         this.collaboratorService.updateCollaborator(updated);

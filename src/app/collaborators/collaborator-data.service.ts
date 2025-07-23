@@ -7,6 +7,7 @@ import { Collaborator } from './collaborator';
 import { CollaboratorCreateRequest } from './collaborators-create/create-collaborator';
 import { environment } from '../../environments/environment';
 import { AssociationProjectCollaboratorCreateRequest } from '../associations-project-collaborator/add-collaborator-project/add-association';
+import { User } from './user';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,8 @@ export class CollaboratorDataService {
   private readonly associationsProjectCollaboratorCmdBaseUrl = environment.associationsProjectCollaboratorCMDBaseUrl;
   private readonly collaboratorCMDBaseUrl = environment.collaboratorCMDBaseURL;
   private readonly collaboratorQueryBaseUrl = environment.collaboratorQueryBaseURL;
+  private readonly userQueryBaseUrl = environment.userQueryBaseUrl;
+  private readonly userCmdBaseUrl = environment.userCmdBaseUrl;
 
 
   constructor() {
@@ -35,8 +38,20 @@ export class CollaboratorDataService {
     return this.httpClient.post<Collaborator>(`${this.collaboratorCMDBaseUrl}`, newCollaborator)
   }
 
+  updateUser(updatedCollaborator: Collaborator) {
+    var updatedUser: User = {
+      id: updatedCollaborator.userId,
+      names: updatedCollaborator.names,
+      surnames: updatedCollaborator.surnames,
+      email: updatedCollaborator.email,
+      Period: updatedCollaborator.userPeriod
+    }
+
+    return this.httpClient.patch<User>(`${this.userCmdBaseUrl}/${updatedCollaborator.userId}`, updatedUser);
+  }
+
   updateCollaborator(updatedCollaborator: Collaborator) {
-    return this.httpClient.put<Collaborator>(`${this.baseUrl}`, updatedCollaborator);
+    return this.httpClient.put<Collaborator>(`${this.collaboratorCMDBaseUrl}`, updatedCollaborator);
   }
 
   getCollaboratorHolidays(collaboratorId: string): Observable<HolidayPeriodDTO[]> {

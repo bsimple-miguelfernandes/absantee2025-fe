@@ -1,6 +1,8 @@
 export const environment = {
   production: false,
   apiBaseUrl: 'http://localhost:5073/api',
+  userQueryBaseUrl: 'http://localhost:5000/api/users',
+  userCmdBaseUrl: 'http://localhost:5001/api/users',
   associationsProjectCollaboratorQueryBaseUrl: 'http://localhost:5046/api/associationsPC',
   associationsProjectCollaboratorCMDBaseUrl: 'http://localhost:5011/api/associationsPC',
   collaboratorCMDBaseURL:'http://localhost:5021/api/collaborators',
