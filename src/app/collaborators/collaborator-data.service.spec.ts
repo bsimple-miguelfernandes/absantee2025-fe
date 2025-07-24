@@ -3,15 +3,25 @@ import { CollaboratorDataService } from './collaborator-data.service';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { Collaborator } from './collaborator';
+import { Collaborator, UpdateCollab } from './collaborator';
 import { CollaboratorCreateRequest } from './collaborators-create/create-collaborator';
-import { HolidayPeriod } from './collaborator-holidays/holiday-period';
-import { AssociationProjectCollaborators } from '../associations-project-collaborator/association-project-collaborator.model';
+import { HolidayPeriod, HolidayPeriodDTO } from './collaborator-holidays/holiday-period';
+import { AssociationProjectCollaborators, AssociationProjectCollaboratorsDTO } from '../associations-project-collaborator/association-project-collaborator.model';
+import { User } from './user';
+import { AssociationProjectCollaboratorCreateRequest } from '../associations-project-collaborator/add-collaborator-project/add-association';
 
 describe('CollaboratorDataService', () => {
   let service: CollaboratorDataService;
   let httpMock: HttpTestingController;
-  const baseUrl = environment.apiBaseUrl;
+
+  const associationsProjectCollaboratorQueryBaseUrl = environment.associationsProjectCollaboratorQueryBaseUrl;
+  const associationsProjectCollaboratorCmdBaseUrl = environment.associationsProjectCollaboratorCMDBaseUrl;
+  const collaboratorCMDBaseUrl = environment.collaboratorCMDBaseURL;
+  const collaboratorQueryBaseUrl = environment.collaboratorQueryBaseURL;
+  const userQueryBaseUrl = environment.userQueryBaseUrl;
+  const userCmdBaseUrl = environment.userCmdBaseUrl;
+  const holidaysCmdBaseUrl = environment.holidaysCmdBaseUrl;
+  const holidaysQueryBaseUrl = environment.holidaysQueryBaseUrl;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -27,7 +37,7 @@ describe('CollaboratorDataService', () => {
 
   afterEach(() => httpMock.verify());
 
-  it('should fetch all collaborators', (() => {
+  it('should fetch all collaborators with details', (() => {
     const mockCollaborators: Collaborator[] = [
       {
         collabId: '1',
@@ -51,11 +61,10 @@ describe('CollaboratorDataService', () => {
     
     service.getCollabs().subscribe(r => (result = r));
     
-    const req = httpMock.expectOne(`${baseUrl}/collaborators/details`);
+    const req = httpMock.expectOne(`${collaboratorQueryBaseUrl}/details`);
     expect(req.request.method).toBe('GET');
     req.flush(mockCollaborators);
 
-    
     expect(result).toEqual(mockCollaborators);
   }));
 
@@ -81,20 +90,19 @@ describe('CollaboratorDataService', () => {
 
     service.getCollabById(collabId).subscribe(r => (result = r));
 
-    const req = httpMock.expectOne(`${baseUrl}/collaborators/${collabId}/details`);
+    const req = httpMock.expectOne(`${collaboratorQueryBaseUrl}/${collabId}/details`);
     expect(req.request.method).toBe('GET');
     req.flush(mockCollaborator);
-
     
     expect(result).toEqual(mockCollaborator);
   }));
 
-    it('should create collaborator given a request object', (() => {
+  it('should create collaborator given a request object', (() => {
     const mockCollaboratorCreateRequest: CollaboratorCreateRequest = {
       names: "John",
       surnames: "Doe",
       email: "johnDoe@email.com",
-      deactivationDate: new Date("2025-09-12"),
+      finalDate: new Date("2025-09-12"),
       periodDateTime: {
         _initDate: new Date("2024-01-01"),
         _finalDate: new Date("2027-05-05")
@@ -114,134 +122,182 @@ describe('CollaboratorDataService', () => {
     let result: Collaborator | undefined;
     service.createCollaborator(mockCollaboratorCreateRequest).subscribe(p => (result = p));
 
-    const req = httpMock.expectOne(`${baseUrl}/collaborators`);
+    const req = httpMock.expectOne(`${collaboratorCMDBaseUrl}`);
     expect(req.request.method).toBe('POST');
     expect(req.request.body).toEqual(mockCollaboratorCreateRequest);
 
     req.flush(createdCollaborator);
-
     
     expect(result).toEqual(createdCollaborator);
   }));
 
-
-  it('should update a collaborator when passing a collaborator with existing id', (() => {
-    const mockCollaborator: Collaborator = {
+  it('should update a user given a collaborator', (() => {
+    const updatedCollaborator: Collaborator = {
       collabId: '1',
-      userId: '1',
-      names: "John",
-      surnames: 'Doe',
-      email: "JohnDoe@email.com",
+      userId: '123',
+      names: "Alice",
+      surnames: "Smith",
+      email: "alice.smith@example.com",
+      userPeriod: {
+        _initDate: new Date('2024-01-01'),
+        _finalDate: new Date('2024-12-31')
+      },
+      collaboratorPeriod: {
+        _initDate: new Date('2024-01-01'),
+        _finalDate: new Date('2024-12-31')
+      }
+    };
+
+  const expectedUser: User = {
+      id: updatedCollaborator.userId,
+      names: updatedCollaborator.names,
+      surnames: updatedCollaborator.surnames,
+      email: updatedCollaborator.email,
+      Period: updatedCollaborator.userPeriod
+    };
+
+    let result: User | undefined;
+
+    service.updateUser(updatedCollaborator).subscribe(r => (result = r));
+
+    const req = httpMock.expectOne(`${userCmdBaseUrl}/${updatedCollaborator.userId}`);
+    expect(req.request.method).toBe('PATCH');
+    expect(req.request.body).toEqual(expectedUser);
+
+    req.flush(expectedUser);
+
+    expect(result).toEqual(expectedUser);
+  }));
+
+  it('should update collaborator period given a collaborator', (() => {
+    const updatedCollaborator: Collaborator = {
+      collabId: '1',
+      userId: '123',
+      names: "Alice",
+      surnames: "Smith",
+      email: "alice.smith@example.com",
       userPeriod: {
         _initDate: new Date('2024-01-01'),
         _finalDate: new Date('2024-12-31')
       },
       collaboratorPeriod: {
         _initDate: new Date('2024-02-01'),
-        _finalDate: new Date('2024-11-31')
+        _finalDate: new Date('2024-11-30')
       }
     };
 
-    let result!: Collaborator;
-    service.updateCollaborator(mockCollaborator).subscribe(p => (result = p));
+    const expectedUpdate: UpdateCollab = {
+      Id: updatedCollaborator.collabId,
+      PeriodDateTime: updatedCollaborator.collaboratorPeriod
+    };
 
-    const req = httpMock.expectOne(`${baseUrl}/collaborators`);
+    let result: UpdateCollab | undefined;
+
+    service.updateCollaborator(updatedCollaborator).subscribe(r => (result = r));
+
+    const req = httpMock.expectOne(`${collaboratorCMDBaseUrl}`);
     expect(req.request.method).toBe('PUT');
-    expect(req.request.body).toEqual(mockCollaborator);
+    expect(req.request.body).toEqual(expectedUpdate);
 
-    req.flush(mockCollaborator);
+    req.flush(expectedUpdate);
 
-    expect(result).toEqual(mockCollaborator);
+    expect(result).toEqual(expectedUpdate);
   }));
 
-  it("should fetch collaborator's holiday periods", (() => {
-    const collab = '1';
-    const mockHolidayPeriods: HolidayPeriod[] = [
+  it('should fetch holidays for a given collaborator ID', (() => {
+    const collaboratorId = '1';
+
+    const mockHolidays: HolidayPeriodDTO[] = [
       {
-        id: '1',
+        id: 'h1',
         periodDate: {
-          initDate: "2025-09-09",
-          finalDate: "2025-10-09"
+          initDate: '2024-07-01',
+          finalDate: '2024-07-15'
         }
       },
       {
-        id: '2',
+        id: 'h2',
         periodDate: {
-          initDate: "2025-11-09",
-          finalDate: "2025-12-09"
+          initDate: '2024-08-10',
+          finalDate: '2024-08-20'
         }
       }
     ];
 
-    let result!: HolidayPeriod[];
-    service.getCollaboratorHolidays(collab).subscribe(p => (result = p));
+    let result: HolidayPeriodDTO[] = [];
 
-    const req = httpMock.expectOne(`${baseUrl}/collaborators/${collab}/holidayplan/holidayperiod`);
+    service.getCollaboratorHolidays(collaboratorId).subscribe(r => (result = r));
+
+    const req = httpMock.expectOne(`${holidaysQueryBaseUrl}/${collaboratorId}`);
     expect(req.request.method).toBe('GET');
+    req.flush(mockHolidays);
 
-    req.flush(mockHolidayPeriods);
-
-    
-    expect(result).toEqual(mockHolidayPeriods);
+    expect(result).toEqual(mockHolidays);
   }));
 
-  it("should add a new holiday period to a user's holiday plan", (() => {
-    const collabId = '1';
-    const initDate = '2025-09-09';
-    const finalDate = '2025-10-10';
-    const mockHolidayPeriod: HolidayPeriod = {
-      id: '1',
+  it('should add a holiday for a given collaborator ID', (() => {
+    const collaboratorId = '1';
+    const initDate = '2024-12-20';
+    const finalDate = '2025-01-05';
+
+    const mockResponse: HolidayPeriod = {
+      id: 'h123',
       periodDate: {
         initDate: initDate,
         finalDate: finalDate
       }
     };
 
-    let result;
-    service.addHoliday(collabId, initDate, finalDate).subscribe(p => (result = p));
-    const req = httpMock.expectOne(`${baseUrl}/collaborators/${collabId}/holidayplan/holidayperiod`);
+    let result: HolidayPeriod | undefined;
+
+    service.addHoliday(collaboratorId, initDate, finalDate).subscribe(r => (result = r));
+
+    const req = httpMock.expectOne(`${holidaysCmdBaseUrl}/${collaboratorId}/holidayperiod`);
     expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual({ initDate, finalDate });
+    expect(req.request.body).toEqual({ initDate: initDate, finalDate: finalDate });
 
-    req.flush(mockHolidayPeriod);
+    req.flush(mockResponse);
 
-    
-    expect(result!.periodDate).toEqual(mockHolidayPeriod.periodDate);
+    expect(result).toEqual(mockResponse);
   }));
 
-  it("should update the edited holiday period", (() => {
-    const collabId = '1';
-    const initDate = '2025-09-09';
-    const finalDate = '2025-10-10';
-    const mockHolidayPeriod: HolidayPeriod = {
-      id: '1',
+
+  it('should edit a holiday period for a given collaborator ID', (() => {
+    const collaboratorId = '1';
+
+    const updatedPeriod: HolidayPeriod = {
+      id: 'h123',
       periodDate: {
-        initDate: initDate,
-        finalDate: finalDate
+        initDate: '2024-12-20',
+        finalDate: '2025-01-05'
       }
     };
 
-    let result: any;
-    service.editHoliday(collabId, mockHolidayPeriod).subscribe(p => (result = p));
-    const req = httpMock.expectOne(`${baseUrl}/collaborators/${collabId}/holidayplan/holidayperiod`);
+    let result: HolidayPeriod | undefined;
+
+    service.editHoliday(collaboratorId, updatedPeriod).subscribe(r => (result = r));
+
+    const req = httpMock.expectOne(`${holidaysCmdBaseUrl}/${collaboratorId}/holidayperiod`);
     expect(req.request.method).toBe('PUT');
-    expect(req.request.body).toEqual(mockHolidayPeriod);
+    expect(req.request.body).toEqual(updatedPeriod);
 
-    req.flush(mockHolidayPeriod);
+    req.flush(updatedPeriod);
 
-    
-    expect(result).toEqual(mockHolidayPeriod);
+    expect(result).toEqual(updatedPeriod);
   }));
 
-  it('should fetch associations by id', (() => {
-    const collabId = '1';
-    const mockAssociations: AssociationProjectCollaborators[] = [
+  it('should fetch associations for a given collaborator and map the DTOs', (() => {
+    const collaboratorId = '1';
+
+    const mockDtoList: AssociationProjectCollaboratorsDTO[] = [
       {
-        id: "1",
-        projectId: "1",
-        projectAcronym: "T1",
-        collaboratorId: collabId,
-        collaboratorEmail: "test1@example.com",
+        id: 'a1',
+        projectId: 'p1',
+        projectTitle: 'Project One',
+        projectAcronym: 'P1',
+        collaboratorId: collaboratorId,
+        collaboratorName: 'Alice Smith',
+        collaboratorEmail: 'alice@example.com',
         periodDate: {
           initDate: new Date('2024-01-01'),
           finalDate: new Date('2024-12-31')
@@ -249,14 +305,65 @@ describe('CollaboratorDataService', () => {
       }
     ];
 
-    let result!: AssociationProjectCollaborators[];
-    service.getAssociations(collabId).subscribe(p => (result = p));
+    const expectedMappedList: AssociationProjectCollaborators[] = mockDtoList.map(dto => ({
+      ...dto,
+      periodDate: dto.periodDate
+    }));
 
-    const req = httpMock.expectOne(`${baseUrl}/collaborators/${collabId}/associations`);
+    let result: AssociationProjectCollaborators[] = [];
+
+    service.getAssociations(collaboratorId).subscribe(r => (result = r));
+
+    const req = httpMock.expectOne(`${associationsProjectCollaboratorQueryBaseUrl}/collaborator/${collaboratorId}/details`);
     expect(req.request.method).toBe('GET');
-    req.flush(mockAssociations);
 
-    
-    expect(result).toEqual(mockAssociations);
+    req.flush(mockDtoList);
+
+    expect(result).toEqual(expectedMappedList);
   }));
+
+  it('should create an association and return mapped AssociationProjectCollaborators', (() => {
+    const createRequest: AssociationProjectCollaboratorCreateRequest = {
+      collaboratorId: '1',
+      projectId: '101',
+      periodDate: {
+        initDate: '2024-05-01',
+        finalDate: '2024-10-31'
+      }
+    };
+
+    const mockDtoResponse: AssociationProjectCollaboratorsDTO = {
+      id: 'assoc1',
+      projectId: createRequest.projectId,
+      projectTitle: 'Awesome Project',
+      projectAcronym: 'AP',
+      collaboratorId: createRequest.collaboratorId,
+      collaboratorName: 'John Doe',
+      collaboratorEmail: 'john@example.com',
+      periodDate: {
+        initDate: new Date('2024-05-01'),
+        finalDate: new Date('2024-10-31')
+      }
+    };
+
+    const expectedMappedResult: AssociationProjectCollaborators = {
+      ...mockDtoResponse,
+      periodDate: mockDtoResponse.periodDate
+    };
+
+    let result: AssociationProjectCollaborators | undefined;
+
+    service.createAssociation(createRequest).subscribe(r => (result = r));
+
+    const req = httpMock.expectOne(`${associationsProjectCollaboratorCmdBaseUrl}`);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(createRequest);
+
+    req.flush(mockDtoResponse);
+
+    expect(result).toEqual(expectedMappedResult);
+  }));
+
+
+
 });

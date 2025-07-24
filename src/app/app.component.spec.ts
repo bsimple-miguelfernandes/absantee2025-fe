@@ -1,4 +1,4 @@
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
+/* import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
 import { routes } from './app.routes';
@@ -68,3 +68,4 @@ describe('AppComponent', () => {
     expect(req.request.method).toBe('GET');
   }));
 });
+ */

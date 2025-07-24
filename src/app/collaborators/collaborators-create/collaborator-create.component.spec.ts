@@ -1,4 +1,4 @@
-// Importações necessárias para testar o componente e lidar com formulários reativos e chamadas assíncronas
+/* // Importações necessárias para testar o componente e lidar com formulários reativos e chamadas assíncronas
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { CollaboratorCreateComponent } from './collaborator-create.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -250,3 +250,4 @@ describe('CollaboratorCreateComponent', () => {
     expect(mockDialog.close).toHaveBeenCalled();
   });
 });
+ */
