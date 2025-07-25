@@ -1,14 +1,3 @@
-<div style="margin-bottom: 1rem;" *ngIf="!showCreateForm">
-  <button (click)="onStartCreate()">Add {{ isInProject ? 'Collaborator to Project' : 'Project to Collaborator' }}</button>
-</div>
-
-<app-add-collaborator-project
-  *ngIf="showCreateForm"
-  [projectId]="isInProject ? selectedId : undefined"
-  [collaboratorId]="!isInProject ? selectedId : undefined"
-  (cancel)="onCancelCreate()">
-</app-add-collaborator-project>
-
 <table *ngIf="associations && associations.length > 0; else noAssociations">
   <tr>
     <th *ngIf="isInProject">Email</th>
@@ -31,3 +20,14 @@
 <ng-template #noAssociations>
   <p style="margin-top: 1rem;">No associations found.</p>
 </ng-template>
+
+<app-add-collaborator-project
+  *ngIf="showCreateForm"
+  [projectId]="isInProject ? selectedId : undefined"
+  [collaboratorId]="!isInProject ? selectedId : undefined"
+  (cancel)="onCancelCreate()">
+</app-add-collaborator-project>
+
+<div style="margin-bottom: 1rem;" *ngIf="!showCreateForm">
+  <button (click)="onStartCreate()">Add {{ isInProject ? 'Collaborator to Project' : 'Project to Collaborator' }}</button>
+</div>
