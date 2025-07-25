@@ -16,23 +16,34 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 export class AssociationsProjectCollaboratorComponent {
   collaboratorDataService = inject(CollaboratorDataService);
   projectsDataService = inject(ProjectsDataService);
-  associations!: AssociationProjectCollaborators[];
+  associations: AssociationProjectCollaborators[] = [];
 
   selectedId!: string;
   isInProject!: boolean;
+  showCreateForm = false;
 
-  constructor(private route: ActivatedRoute) {
-    this.selectedId = this.route.snapshot.paramMap.get("selectedId")!;
-    this.isInProject = this.route.parent!.snapshot.toString().includes("projects");
-  }
+  constructor(private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.route.data.subscribe(data => {
-      this.associations = data["AssociationData"]
+    this.route.paramMap.subscribe(params => {
+      this.selectedId = params.get("selectedId")!;
+      this.isInProject = this.route.parent?.snapshot.toString().includes("projects") ?? false;
+
+      this.loadAssociations();
     });
   }
 
-  showCreateForm = false;
+  loadAssociations() {
+    if (this.isInProject) {
+      this.projectsDataService.getAssociations(this.selectedId).subscribe(data => {
+        this.associations = data;
+      });
+    } else {
+      this.collaboratorDataService.getAssociations(this.selectedId).subscribe(data => {
+        this.associations = data;
+      });
+    }
+  }
 
   onStartCreate() {
     this.showCreateForm = true;
@@ -40,6 +51,6 @@ export class AssociationsProjectCollaboratorComponent {
 
   onCancelCreate() {
     this.showCreateForm = false;
+    this.loadAssociations();
   }
-
 }

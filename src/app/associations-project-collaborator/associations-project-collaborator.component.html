@@ -15,16 +15,13 @@
     <th *ngIf="!isInProject">Acronym</th>
     <th>Init Date</th>
     <th>Final Date</th>
-    <th>Actions</th>
+    <th *ngIf="!isInProject">Actions</th>
   </tr>
   <tr *ngFor="let assoc of associations; index as i">
     <td *ngIf="isInProject">{{ assoc.collaboratorEmail }}</td>
     <td *ngIf="!isInProject">{{ assoc.projectAcronym }}</td>
     <td>{{ assoc.periodDate.initDate | date: 'yyyy-MM-dd' }}</td>
     <td>{{ assoc.periodDate.finalDate | date: 'yyyy-MM-dd' }}</td>
-    <td *ngIf="isInProject">
-      <button [routerLink]="['/collaborators/details', assoc.collaboratorId]">Collaborator Details</button>
-    </td>
     <td *ngIf="!isInProject">
       <button [routerLink]="['/projects/details', assoc.projectId]">Project Details</button>
     </td>
