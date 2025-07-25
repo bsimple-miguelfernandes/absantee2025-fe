@@ -65,14 +65,14 @@ export class TrainingModuleDataService {
             tap(() => this.loadTrainingSubjects())
         );
     }
-    addTrainingModule(trainingSubject: TrainingSubject) {
-        return this.httpClient.post<TrainingSubject>(`${this.trainingSujectandModelCmdBaseUrl}/trainingmodules`, trainingSubject).pipe(
-            tap(() => this.loadTrainingSubjects())
+    addTrainingModule(trainingModule: TrainingModule) {
+        return this.httpClient.post<TrainingModule>(`${this.trainingSujectandModelCmdBaseUrl}/trainingmodules`, trainingModule).pipe(
+            tap(() => this.loadTrainingModules())
         );
     }
-updateTrainingModule(subject: TrainingSubject) {
-        return this.httpClient.put<TrainingSubject>(`${this.trainingSujectandModelCmdBaseUrl}/trainingmodules`, subject).pipe(tap(() => this.loadTrainingSubjects()));
-    }
+    updateTrainingModule(module: TrainingModule) {
+            return this.httpClient.put<TrainingModule>(`${this.trainingSujectandModelCmdBaseUrl}/trainingmodules`, module).pipe(tap(() => this.loadTrainingModules()));
+        }
 
     getAssociations(id: string): Observable<AssociationTrainingModuleCollaborator[]> {
         return this.httpClient.get<AssociationTrainingModuleCollaborator[]>(`${this.trainingSujectandModelQueryBaseUrl}/trainingModules/${id}/associations`);

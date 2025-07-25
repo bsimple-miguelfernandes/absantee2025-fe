@@ -16,9 +16,10 @@ import { TrainingSubjectFormComponent } from './training-subjects/training-subje
 import { TrainingSubjectsComponent } from './training-subjects/training-subjects.component';
 import { TrainingSubjectDetailsResolver } from './training-subjects/training-subject.resolver';
 import { TrainingModulesComponent } from './training-modules/training-modules.component';
-import { resolverTrainingModule, TrainingModuleDetailsComponent } from './training-modules/training-module-details/training-module-details.component';
+import { TrainingModuleDetailsComponent } from './training-modules/training-module-details/training-module-details.component';
 import { TrainingSubjectDetailsComponent } from './training-subjects/training-subject-details/training-subject-details.component';
-
+import { resolverTrainingModule } from './training-modules/resolverTrainingModule';
+import { TrainingModuleFormComponent } from './training-modules/training-Module-form/training-module-form.component';
 export const routes: Routes = [
     {
         path: '',
@@ -87,8 +88,8 @@ export const routes: Routes = [
     component: TrainingModulesComponent,
     children: [
       {
-        path: 'subjects/create',
-        component: TrainingSubjectFormComponent
+        path: 'create',
+        component: TrainingModuleFormComponent
       },
       {
         path: ':trainingModuleId',

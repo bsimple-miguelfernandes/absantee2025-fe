@@ -1,16 +1,32 @@
+<app-filters
+  [fields]="[
+    { name: 'period', label: 'Period' },
+    { name: 'initDate', label: 'Init Date', type: 'date' },
+    { name: 'finalDate', label: 'Final Date', type: 'date' }
+  ]"
+  (filtersChanged)="applyFilters($event)">
+</app-filters>
 <table>
+  <thead>
     <tr>
-        <th>Module ID</th>
-        <th>Subject ID</th>
-        <th>Actions</th>
+      <th>Module ID</th>
+      <th>Subject ID</th>
+      <th>Actions</th>
     </tr>
+  </thead>
+  <tbody>
     @for (trainingModule of trainingModules(); track trainingModule.id) {
-    <tr>
-        <td>{{trainingModule.id}}</td>
-        <td>{{trainingModule.trainingSubjectId}}</td>
+      <tr>
+        <td>{{ trainingModule.id }}</td>
+        <td>{{ trainingModule.trainingSubjectId }}</td>
         <td>
-            <button [routerLink]='[trainingModule.id]'>Details</button>
+          <button (click)="showDetails(trainingModule.id)">Details</button>
         </td>
-    </tr>
+      </tr>
     }
+  </tbody>
 </table>
+
+ <button type="button" [routerLink]="['/training-modules', 'create']">
+  Add Training Module
+</button>

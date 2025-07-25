@@ -1,3 +1,19 @@
+<div class="details-card">
+  <h3>Training Module Details - ID: {{ trainingModule.id }}</h3>
 
-    <p>training-module-details of {{trainingModule.id}} works!</p>
+  <div class="detail-row">
+    <span class="label">Subject ID:</span>
+    <span class="value">{{ trainingModule.trainingSubjectId }}</span>
+  </div>
 
+  <div class="periods" *ngIf="trainingModule.periods?.length">
+    <h4>Periods:</h4>
+    <ul>
+      <li *ngFor="let period of trainingModule.periods">
+        {{ period._initDate | date: 'shortDate' }} - {{ period._finalDate | date: 'shortDate' }}
+      </li>
+    </ul>
+  </div>
+
+  <button (click)="close()">Close</button>
+</div>

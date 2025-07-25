@@ -1,0 +1,33 @@
+<form [formGroup]="trainingModuleForm" (ngSubmit)="save()" class="form-card">
+  <h2>{{ isEditMode ? 'Edit Training Module' : 'Add Training Module' }}</h2>
+
+  <div>
+    <label class="form-label">Module ID</label>
+    <input type="text" formControlName="id" class="form-input" />
+  </div>
+
+  <div>
+    <label class="form-label">Subject ID</label>
+    <input type="text" formControlName="trainingSubjectId" class="form-input" />
+  </div>
+
+  <div formArrayName="periods">
+    <div *ngFor="let period of periods.controls; let i = index" [formGroupName]="i" class="form-group">
+      <label>Init Date</label>
+      <input type="date" formControlName="_initDate" class="form-input" />
+
+      <label>Final Date</label>
+      <input type="date" formControlName="_finalDate" class="form-input" />
+
+      <button type="button" (click)="removePeriod(i)">Remove</button>
+    </div>
+    <button type="button" (click)="addPeriod()">Add Period</button>
+  </div>
+
+  <div class="actions">
+    <button type="button" (click)="cancel()">Cancel</button>
+    <button type="submit" [disabled]="trainingModuleForm.invalid">
+      {{ isEditMode ? 'Save' : 'Add' }}
+    </button>
+  </div>
+</form>
