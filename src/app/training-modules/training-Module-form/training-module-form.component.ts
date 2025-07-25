@@ -35,7 +35,6 @@ export class TrainingModuleFormComponent implements OnInit {
     this.trainingModuleId = this.route.snapshot.params['trainingModuleID'];
 
     this.trainingModuleForm = this.fb.group({
-      id: [resolved?.id ?? '', Validators.required],
       trainingSubjectId: [resolved?.trainingSubjectId ?? '', Validators.required],
       periods: this.fb.array(
         resolved?.periods?.length
@@ -44,6 +43,14 @@ export class TrainingModuleFormComponent implements OnInit {
         Validators.required
       )
     });
+
+    // ❗ Apenas para edição, atualiza o form se for preciso
+    if (this.isEditMode && resolved) {
+      this.trainingModuleForm.patchValue({
+        trainingSubjectId: resolved.trainingSubjectId,
+        // periods já está feito acima
+      });
+    }
   }
 
   createPeriodGroup(period: any = {}): FormGroup {
@@ -66,38 +73,41 @@ export class TrainingModuleFormComponent implements OnInit {
   }
 
   save() {
-  if (this.trainingModuleForm.invalid) return;
+    if (this.trainingModuleForm.invalid) return;
 
-  const formValue = this.trainingModuleForm.value;
+    const formValue = this.trainingModuleForm.value;
 
-  const payload: TrainingModule = {
-    id: formValue.id,
-    trainingSubjectId: formValue.trainingSubjectId,
-    periods: formValue.periods.map((p: any) => ({
-      _initDate: new Date(p._initDate).toISOString(),
-      _finalDate: new Date(p._finalDate).toISOString()
-    }))
-  };
+    const payload: TrainingModule = {
+      trainingSubjectId: formValue.trainingSubjectId,
+      periods: formValue.periods.map((p: any) => ({
+        _initDate: new Date(p._initDate).toISOString(),
+        _finalDate: new Date(p._finalDate).toISOString()
+      }))
+    };
 
-  if (this.isEditMode && this.trainingModuleId) {
-    this.dataService.updateTrainingModule(payload).subscribe({
-      next: (res) => {
-        this.signalService.clearUpdatedModule();
-        this.signalService.updateTrainingModule(res);
-        this.cancel()
-      },
-      error: (err) => console.error('Update failed:', err)
-    });
+    if (this.isEditMode && this.trainingModuleId) {
+      // Atualização
+      this.dataService.updateTrainingModule({
+        ...payload,
+        id: this.trainingModuleId // Aqui passas o id explicitamente só em modo de edição
+      }).subscribe({
+        next: (res) => {
+          this.signalService.clearUpdatedModule();
+          this.signalService.updateTrainingModule(res);
+          this.cancel()
+        },
+        error: (err) => console.error('Update failed:', err)
+      });
 
-  } else {
-    this.dataService.addTrainingModule(payload).subscribe({
-      next: (res) => {
-        this.signalService.saveTrainingModule(res);
-        this.cancel()
-      },
-      error: (err) => console.error('Add failed:', err)
-      // aqui você verá se foi resolvido corretamente
-    });
+    } else {
+      // Criação — ID será gerado no backend
+      this.dataService.addTrainingModule(payload).subscribe({
+        next: (res) => {
+          this.signalService.saveTrainingModule(res);
+          this.cancel()
+        },
+        error: (err) => console.error('Add failed:', err)
+      });
+    }
   }
-}
 }
