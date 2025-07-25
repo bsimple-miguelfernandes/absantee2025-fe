@@ -71,10 +71,6 @@ export class TrainingModuleDataService {
         );
     }
     updateTrainingModule(module: TrainingModule) {
-            return this.httpClient.put<TrainingModule>(`${this.trainingSujectandModelCmdBaseUrl}/trainingmodules`, module).pipe(tap(() => this.loadTrainingModules()));
-        }
-
-    getAssociations(id: string): Observable<AssociationTrainingModuleCollaborator[]> {
-        return this.httpClient.get<AssociationTrainingModuleCollaborator[]>(`${this.trainingSujectandModelQueryBaseUrl}/trainingModules/${id}/associations`);
+        return this.httpClient.put<TrainingModule>(`${this.trainingSujectandModelCmdBaseUrl}/trainingmodules`, module).pipe(tap(() => this.loadTrainingModules()));
     }
 }

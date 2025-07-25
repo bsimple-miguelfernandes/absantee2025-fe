@@ -54,12 +54,18 @@ export class CreateAssociationTrainingmoduleCollaboratorComponent {
     if (this.collaboratorId()) {
       this.trainingModuleService.getTrainingModules().subscribe({
         next: (tms) => this.trainingModules = tms,
-        error: (err) => console.error('Error fetching training modules:', err)
+        error: (err) => {
+          console.error('Error fetching training modules:', err);
+          alert("Coulnd't fetch Collaborator!");
+        }
       });
     } else if (this.trainingModuleId()) {
       this.collaboratorService.getCollabs().subscribe({
         next: (collabs) => this.collaborators = collabs,
-        error: (err) => console.error('Error fetching collaborators:', err)
+        error: (err) => {
+          console.error('Error fetching collaborators:', err);
+          alert("Coulnd't fetch Training Module!");
+        }
       });
     }
   }
@@ -78,8 +84,8 @@ export class CreateAssociationTrainingmoduleCollaboratorComponent {
         collaboratorId: this.collaboratorId()!,
         trainingModuleId: formValue.trainingModuleId,
         periodDate: {
-          initDate: formValue.periodDate.initDate,
-          finalDate: formValue.periodDate.finalDate
+          initDate: new Date(formValue.periodDate.initDate),
+          finalDate: new Date(formValue.periodDate.finalDate)
         }
       };
     } else if (this.trainingModuleId()) {
@@ -87,8 +93,8 @@ export class CreateAssociationTrainingmoduleCollaboratorComponent {
         collaboratorId: formValue.collaboratorId,
         trainingModuleId: this.trainingModuleId()!,
         periodDate: {
-          initDate: formValue.periodDate.initDate,
-          finalDate: formValue.periodDate.finalDate
+          initDate: new Date(formValue.periodDate.initDate),
+          finalDate: new Date(formValue.periodDate.finalDate)
         }
       }
     } else {
@@ -130,15 +136,19 @@ export class CreateAssociationTrainingmoduleCollaboratorComponent {
 
   private dateRangeValidator(): ValidatorFn {
     return (group: AbstractControl): ValidationErrors | null => {
-      const init = group.get('initDate')?.value;
-      const final = group.get('finalDate')?.value;
+      const periodGroup = group.get('periodDate');
+      if (!periodGroup) return null;
+
+      const init = periodGroup.get('initDate')?.value;
+      const final = periodGroup.get('finalDate')?.value;
 
       if (!init || !final) return null;
 
       const initDate = new Date(init);
       const finalDate = new Date(final);
 
-      return initDate < finalDate ? null : { dateRangeInvalid: true };
+      return initDate <= finalDate ? null : { dateRangeInvalid: true };
     };
   }
+
 }

@@ -20,7 +20,7 @@
         @if (isInTrainingModule) {
         <th>Collaborator Email</th>
         } @else {
-        <th>Training Module Subject</th>
+        <th>Training Module</th>
         }
         <th>Init Date</th>
         <th>Final Date</th>
@@ -36,14 +36,22 @@
         <td>{{assoc.periodDate.initDate | date:'yyyy-MM-dd'}} </td>
         <td>{{assoc.periodDate.finalDate | date:'yyyy-MM-dd'}} </td>
 
-        @if (isInTrainingModule) {
-        <td><button [routerLink]="['/collaborators/details', assoc.collaboratorId]">Collaborator Details</button> </td>
-        } @else {
-        <td><button [routerLink]="['/trainingModules/details', assoc.trainingModuleId]">Training Module Details</button>
+        <td>
+            @if (isInTrainingModule) {
+            <button [routerLink]="['/collaborators']">Collaborators</button>
+            } @else {
+            <button [routerLink]="['/training-modules', assoc.trainingModuleId]">Training Module
+                Details</button>
+            }
+            <button (click)="removeAssociation(assoc.id)">Remove</button>
         </td>
-        }
-        <button (click)="removeAssociation(assoc.id)">Remove</button>
     </tr>
     }
 </table>
+
+@if(associations.length === 0){
+<div>
+    <p>There are no associations.</p>
+</div>
+}
 }

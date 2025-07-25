@@ -32,7 +32,7 @@ export class AssociationsTrainingmoduleCollaboratorComponent {
 
   ngOnInit() {
     const routeSelectedId = this.route.snapshot.paramMap.get("selectedId");
-    const routePathIncludesTrainingModule = this.route.snapshot.url.some(segment => segment.path === "training-modules");
+    const parentRouteSegments = this.route.parent?.snapshot.url.map(segment => segment.path);
 
     if (routeSelectedId === null) {
       console.error("Selected Id does not exist!");
@@ -41,7 +41,24 @@ export class AssociationsTrainingmoduleCollaboratorComponent {
     }
 
     this.selectedId = routeSelectedId;
-    this.isInTrainingModule = routePathIncludesTrainingModule;
+
+    if (parentRouteSegments && parentRouteSegments.length > 0) {
+      const primaryParentSegment = parentRouteSegments[0];
+
+      if (primaryParentSegment === "training-modules") {
+        this.isInTrainingModule = true;
+      } else if (primaryParentSegment === "collaborators") {
+        this.isInTrainingModule = false;
+      } else {
+        console.error("Could not determine association perspective. Unexpected parent segment:", primaryParentSegment);
+        this.isLoading = false;
+        return;
+      }
+    } else {
+      console.error("Parent route segments not found. Cannot determine association perspective.");
+      this.isLoading = false;
+      return;
+    }
 
     this.loadAndPopulateAssociations();
   }

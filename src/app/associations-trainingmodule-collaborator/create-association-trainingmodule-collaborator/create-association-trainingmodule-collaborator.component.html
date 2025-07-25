@@ -19,7 +19,7 @@
             <select formControlName="trainingModuleId">
                 <option value="">-- Select Training Module --</option>
                 @for (tm of trainingModules; track tm.id) {
-                <option [value]="tm.id">{{tm.trainingSubjectId}}</option>
+                <option [value]="tm.id">{{tm.id}}</option>
                 }
             </select>
         </label>
