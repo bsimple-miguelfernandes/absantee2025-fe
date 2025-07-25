@@ -19,7 +19,7 @@ import { TrainingModulesComponent } from './training-modules/training-modules.co
 import { TrainingModuleDetailsComponent } from './training-modules/training-module-details/training-module-details.component';
 import { TrainingSubjectDetailsComponent } from './training-subjects/training-subject-details/training-subject-details.component';
 import { resolverTrainingModule } from './training-modules/resolverTrainingModule';
-import { TrainingModuleFormComponent } from './training-modules/training-Module-form/training-module-form.component';
+import { TrainingModuleFormComponent } from './training-modules/training-module-form/training-module-form.component';
 import { AssociationsTrainingmoduleCollaboratorComponent } from './associations-trainingmodule-collaborator/associations-trainingmodule-collaborator.component';
 import { AssociationCollaboratorTrainingModuleResolver } from './associations-trainingmodule-collaborator/resolvers/association-collaborator-trainingmodule.resolver';
 import { AssociationTrainingModuleCollaboratorResolver } from './associations-trainingmodule-collaborator/resolvers/association-trainingmodule-collaborator.resolver';
