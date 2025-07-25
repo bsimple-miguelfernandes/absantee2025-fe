@@ -1,0 +1,49 @@
+@if (isLoading) {
+<h2>Loading associations...</h2>
+} @else {
+@if (isInTrainingModule) {
+<button (click)="switchCreatingState(true)">Add New Collaborator</button>
+} @else {
+<button (click)="switchCreatingState(true)">Add New Training Module</button>
+}
+
+@if(isCreating()){
+@if(isInTrainingModule){
+<app-create-association-trainingmodule-collaborator [trainingModuleId]="selectedId" />
+} @else {
+<app-create-association-trainingmodule-collaborator [collaboratorId]="selectedId" />
+}
+}
+
+<table>
+    <tr>
+        @if (isInTrainingModule) {
+        <th>Collaborator Email</th>
+        } @else {
+        <th>Training Module Subject</th>
+        }
+        <th>Init Date</th>
+        <th>Final Date</th>
+        <th>Actions</th>
+    </tr>
+    @for (assoc of associations; track $index) {
+    <tr>
+        @if (isInTrainingModule) {
+        <td>{{assoc.collaboratorEmail}}</td>
+        } @else {
+        <td>{{assoc.trainingModuleId}}</td>
+        }
+        <td>{{assoc.periodDate.initDate | date:'yyyy-MM-dd'}} </td>
+        <td>{{assoc.periodDate.finalDate | date:'yyyy-MM-dd'}} </td>
+
+        @if (isInTrainingModule) {
+        <td><button [routerLink]="['/collaborators/details', assoc.collaboratorId]">Collaborator Details</button> </td>
+        } @else {
+        <td><button [routerLink]="['/trainingModules/details', assoc.trainingModuleId]">Training Module Details</button>
+        </td>
+        }
+        <button (click)="removeAssociation(assoc.id)">Remove</button>
+    </tr>
+    }
+</table>
+}

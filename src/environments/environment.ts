@@ -12,5 +12,10 @@ export const environment = {
   projectCMDBaseUrl: 'http://localhost:5087/api',
   projectQueryBaseUrl: 'http://localhost:5061/api',
   trainingSujectandModelCmdBaseUrl: 'http://localhost:5027/api',
-  trainingSujectandModelQueryBaseUrl: 'http://localhost:5031/api'}
+  trainingSujectandModelQueryBaseUrl: 'http://localhost:5031/api',
+  associationTrainingModuleCollaboratorCMDBaseUrl: 'http://localhost:5009/api',
+  associationTrainingModuleCollaboratorQUERYBaseUrl: 'http://localhost:5013/api',
+}
+
+
 

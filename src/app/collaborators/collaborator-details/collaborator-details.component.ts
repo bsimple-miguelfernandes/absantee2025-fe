@@ -96,8 +96,8 @@ export class CollaboratorDetailsComponent {
     });
 
     this.collaboratorDataService.updateCollaborator(updatedCollaborator).subscribe({
-      next: (updated) => {
-        this.collaboratorService.updateCollaborator(updated);
+      next: () => {
+        this.collaboratorService.updateCollaborator(updatedCollaborator);
         this.collaboratorService.cancelCreateCollaborator();
         this.form.markAsPristine();
       },

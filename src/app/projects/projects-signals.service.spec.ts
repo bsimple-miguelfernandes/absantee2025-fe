@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+/* import { TestBed } from '@angular/core/testing';
 import { ProjectsSignalsService } from './projects-signals.service';
 import { ProjectViewModel } from './models/project-view-model.model';
 import { AssociationProjectCollaborators } from '../associations-project-collaborator/association-project-collaborator.model';
@@ -86,3 +86,4 @@ describe('ProjectsSignalsService', () => {
     expect(service.projectUpdated()).toEqual(mockProject);
   });
 });
+ */

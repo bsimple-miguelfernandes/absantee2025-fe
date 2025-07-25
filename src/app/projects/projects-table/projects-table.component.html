@@ -1,21 +1,24 @@
 <table>
+  <tr>
+    <th>Title</th>
+    <th>Acronym</th>
+    <th>Actions</th>
+  </tr>
+  @for (proj of projects(); track proj.acronym) {
     <tr>
-        <th>Title</th>
-        <th>Acronym</th>
-        <th>Actions</th>
+      <td>{{proj.title}}</td>
+      <td>{{proj.acronym}}</td>
+      <td>
+        <button (click)="selectRoute('details', proj.id!)" data-testid="details-btn">Details</button>
+        <button (click)="selectRoute('associations', proj.id!)" data-testid="collabs-btn">Collaborators</button>
+      </td>
     </tr>
-    @for (proj of projects(); track proj.acronym) {
-    <tr>
-        <td>{{proj.title}}</td>
-        <td>{{proj.acronym}}</td>
-        <td><button (click)="selectRoute('details', proj.id!)" data-testid="details-btn">Details</button>
-            <button (click)="selectRoute('associations', proj.id!)" data-testid="collabs-btn">Collaborators</button>
+    @if (currentSelectedProject() === proj.id) {
+      <tr>
+        <td colspan="3">
+          <router-outlet></router-outlet>
         </td>
-    </tr>
-    <tr>
-        @if (currentSelectedProject() === proj.id) {
-        <router-outlet />
-        }
-    </tr>
+      </tr>
     }
+  }
 </table>

@@ -11,6 +11,11 @@ export interface Collaborator {
     collaboratorPeriod : PeriodDateTime
 }
 
+export interface UpdateCollab {
+    Id : string
+    PeriodDateTime : PeriodDateTime
+}
+
 export type CollaboratorDetailsForm = {
     names: FormControl<string | null>,
     surnames: FormControl<string | null>,

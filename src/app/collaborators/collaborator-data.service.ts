@@ -3,7 +3,7 @@ import { BehaviorSubject, map, Observable, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { AssociationProjectCollaborators, AssociationProjectCollaboratorsDTO, mapToAssociationProjectCollaborators } from '../associations-project-collaborator/association-project-collaborator.model';
 import { HolidayPeriod, HolidayPeriodDTO } from './collaborator-holidays/holiday-period';
-import { Collaborator } from './collaborator';
+import { Collaborator, UpdateCollab } from './collaborator';
 import { CollaboratorCreateRequest } from './collaborators-create/create-collaborator';
 import { environment } from '../../environments/environment';
 import { AssociationProjectCollaboratorCreateRequest } from '../associations-project-collaborator/add-collaborator-project/add-association';
@@ -53,7 +53,11 @@ export class CollaboratorDataService {
   }
 
   updateCollaborator(updatedCollaborator: Collaborator) {
-    return this.httpClient.put<Collaborator>(`${this.collaboratorCMDBaseUrl}`, updatedCollaborator);
+    var newCollabPeriod : UpdateCollab = {
+      Id : updatedCollaborator.collabId, 
+      PeriodDateTime : updatedCollaborator.collaboratorPeriod,
+    }
+    return this.httpClient.put<UpdateCollab>(`${this.collaboratorCMDBaseUrl}`, newCollabPeriod);
   }
 
   getCollaboratorHolidays(collaboratorId: string): Observable<HolidayPeriodDTO[]> {

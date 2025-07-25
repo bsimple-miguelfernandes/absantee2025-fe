@@ -101,6 +101,8 @@ export class AddCollaboratorProjectComponent {
         this.projectSignalService.cancelCreateAssociation();
         this.projectSignalService.createAssociation(createdAssoc);
         this.form.reset();
+
+        this.cancel.emit()
       },
       error: (error) => {
         alert('Error creating association!');

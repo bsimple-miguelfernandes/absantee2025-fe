@@ -20,70 +20,81 @@ import { TrainingModuleDetailsComponent } from './training-modules/training-modu
 import { TrainingSubjectDetailsComponent } from './training-subjects/training-subject-details/training-subject-details.component';
 import { resolverTrainingModule } from './training-modules/resolverTrainingModule';
 import { TrainingModuleFormComponent } from './training-modules/training-Module-form/training-module-form.component';
+import { AssociationsTrainingmoduleCollaboratorComponent } from './associations-trainingmodule-collaborator/associations-trainingmodule-collaborator.component';
+import { AssociationCollaboratorTrainingModuleResolver } from './associations-trainingmodule-collaborator/resolvers/association-collaborator-trainingmodule.resolver';
+import { AssociationTrainingModuleCollaboratorResolver } from './associations-trainingmodule-collaborator/resolvers/association-trainingmodule-collaborator.resolver';
+
 export const routes: Routes = [
-    {
-        path: '',
-        component: HomeComponent
-    },
-    {
-        path: 'projects',
-        component: ProjectsComponent,
-        children: [
-            {
-                path: 'details/:projectId',
-                component: ProjectComponent,
-                resolve: {
-                    ProjectData: ProjectDetailsResolver
-                }
-            },
-            {
-                path: 'create',
-                component: ProjectFormComponent
-            },
-            {
-                path: 'edit/:projectId',
-                component: ProjectFormComponent,
-                resolve: {
-                    ProjectData: ProjectDetailsResolver
-                }
-            },
-            {
-                path: 'associations/:selectedId',
-                component: AssociationsProjectCollaboratorComponent,
-                resolve: {
-                    AssociationData: AssociationProjectResolver
-                }
-            }
-        ]
-    },
-    {
-        path: 'collaborators',
-        component: CollaboratorsComponent,
-        children: [
-            {
-                path: 'details/:collabId',
-                component: CollaboratorDetailsComponent,
-                resolve: {
-                    DetailsData: CollaboratorDetailsResolver
-                }
-            },
-            {
-                path: 'holidays/:collabId',
-                component: CollaboratorHolidaysComponent,
-                resolve: {
-                    HolidaysData: CollaboratorHolidaysResolver
-                }
-            },
-            {
-                path: 'associations/:selectedId',
-                component: AssociationsProjectCollaboratorComponent,
-                resolve: {
-                    AssociationData: AssociationCollaboratorResolver
-                }
-            }
-        ]
-    },
-    {
+  {
+    path: '',
+    component: HomeComponent
+  },
+  {
+    path: 'projects',
+    component: ProjectsComponent,
+    children: [
+      {
+        path: 'details/:projectId',
+        component: ProjectComponent,
+        resolve: {
+          ProjectData: ProjectDetailsResolver
+        }
+      },
+      {
+        path: 'create',
+        component: ProjectFormComponent
+      },
+      {
+        path: 'edit/:projectId',
+        component: ProjectFormComponent,
+        resolve: {
+          ProjectData: ProjectDetailsResolver
+        }
+      },
+      {
+        path: 'associations/:selectedId',
+        component: AssociationsProjectCollaboratorComponent,
+        resolve: {
+          AssociationData: AssociationProjectResolver
+        }
+      }
+    ]
+  },
+  {
+    path: 'collaborators',
+    component: CollaboratorsComponent,
+    children: [
+      {
+        path: 'details/:collabId',
+        component: CollaboratorDetailsComponent,
+        resolve: {
+          DetailsData: CollaboratorDetailsResolver
+        }
+      },
+      {
+        path: 'holidays/:collabId',
+        component: CollaboratorHolidaysComponent,
+        resolve: {
+          HolidaysData: CollaboratorHolidaysResolver
+        }
+      },
+      {
+        path: 'associations/:selectedId',
+        component: AssociationsProjectCollaboratorComponent,
+        resolve: {
+          AssociationData: AssociationCollaboratorResolver
+        }
+      },
+      {
+        path: 'associations-trainingmodule/:selectedId',
+        component: AssociationsTrainingmoduleCollaboratorComponent,
+        resolve: {
+          AssociationData: AssociationCollaboratorTrainingModuleResolver
+        }
+      }
+    ]
+  },
+  {
     path: 'training-modules',
     component: TrainingModulesComponent,
     children: [
@@ -95,6 +106,13 @@ export const routes: Routes = [
         path: ':trainingModuleId',
         component: TrainingModuleDetailsComponent,
         resolve: { trainingModule: resolverTrainingModule }
+      },
+      {
+        path: 'associations-trainingmodule/:selectedId',
+        component: AssociationsTrainingmoduleCollaboratorComponent,
+        resolve: {
+          AssociationData: AssociationTrainingModuleCollaboratorResolver
+        }
       }
     ]
   },

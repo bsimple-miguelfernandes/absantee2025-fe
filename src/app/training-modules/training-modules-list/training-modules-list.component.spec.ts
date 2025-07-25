@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+/* import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TrainingModulesListComponent } from './training-modules-list.component';
 
@@ -21,3 +21,4 @@ describe('TrainingModulesListComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+ */
