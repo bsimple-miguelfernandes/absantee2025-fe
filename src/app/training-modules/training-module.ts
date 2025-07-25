@@ -1,7 +1,7 @@
 import { PeriodDateTime } from "../PeriodDate"
 
 export interface TrainingModule{
-    id: string,
+    id?: string,
     trainingSubjectId: string,
     periods: PeriodDateTime[]
 }
