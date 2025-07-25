@@ -114,6 +114,7 @@ describe('CollaboratorDetailsComponent', () => {
     component.collaborator = collaborator;
     component.form.get('names')?.setValue('João Alterado');
     component.form.markAsDirty();
+    spyOn(component, 'closeDialog');
 
     const formValue = component.form.value;
 
@@ -161,6 +162,8 @@ describe('CollaboratorDetailsComponent', () => {
     expect(mockCollaboratorSignalService.updateCollaborator).toHaveBeenCalledWith(jasmine.any(Object));
     expect(mockCollaboratorSignalService.cancelCreateCollaborator).toHaveBeenCalled();
     expect(component.form.pristine).toBeTrue();
+    expect(component.closeDialog).toHaveBeenCalled();
+
   });
 
   it('should call closeDialog() when close button is clicked', () => {

@@ -105,6 +105,8 @@ export class CollaboratorDetailsComponent {
         console.log("Error updating collaborator: ", error)
       }
     });
+
+    this.closeDialog();
   }
 
   closeDialog() {

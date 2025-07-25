@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { CollaboratorListComponent } from "./collaborator-list/collaborator-list.component";
 import { CollaboratorDataService } from './collaborator-data.service';
 import { CollaboratorCreateComponent } from './collaborators-create/collaborator-create.component';
@@ -9,6 +9,7 @@ import { RouterOutlet } from '@angular/router';
 import { Collaborator } from './collaborator';
 import { CollaboratorDetailsComponent } from './collaborator-details/collaborator-details.component';
 import { MatDialog } from '@angular/material/dialog';
+import { CollaboratorSignalService } from './collaborator-signal.service';
 
 @Component({
   selector: 'app-collaborators',
@@ -22,22 +23,32 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./collaborators.component.css']
 })
 export class CollaboratorsComponent {
-  
-
   collaborators = signal<CollaboratorViewModel[]>([]);
 
-   constructor(
-    private collaboratorDataService: CollaboratorDataService,
-    private dialog: MatDialog
-    ) {
-    this.collaboratorDataService.getCollabs().subscribe({
+  constructor(private collaboratorDataService: CollaboratorDataService, private dialog: MatDialog, private collabSignalService : CollaboratorSignalService) {
+    this.collaboratorDataService.getCollabs().subscribe(
+    {
       next: (collaborators) => {
-        const collabVM = collaborators.map(toCollaboratorViewModel);
-        this.collaborators.set(collabVM);
-      },
-      error: (err) => {
-        alert('Error loading collaborators');
-        console.error('Error loading collaborators', err);
+      const collabVM = collaborators.map(toCollaboratorViewModel);
+      this.collaborators.set(collabVM);
+    }, 
+    error: (err) => {
+      alert('Error loading collaborators');
+      console.error('Error loading collaborators', err);
+      }
+    });
+
+    effect(() => {
+      const updatedCollab = this.collabSignalService.updatedCollaborator();
+
+      if(updatedCollab){
+        this.collaborators.update(currentCollabs => {
+            const index = currentCollabs.findIndex(c => c.collabId === updatedCollab.collabId);
+            if (index !== -1) {
+              currentCollabs[index] = updatedCollab;
+            }
+            return [...currentCollabs]; 
+          });
       }
     });
   }
