@@ -1,19 +1,10 @@
 @if (isLoading) {
 <h2>Loading associations...</h2>
 } @else {
-@if (isInTrainingModule) {
-<button (click)="switchCreatingState(true)">Add New Collaborator</button>
-} @else {
-<button (click)="switchCreatingState(true)">Add New Training Module</button>
-}
 
-@if(isCreating()){
-@if(isInTrainingModule){
-<app-create-association-trainingmodule-collaborator [trainingModuleId]="selectedId" />
+@if(associations.length === 0){
+<p style="margin-top: 1rem;">No associations found.</p>
 } @else {
-<app-create-association-trainingmodule-collaborator [collaboratorId]="selectedId" />
-}
-}
 
 <table>
     <tr>
@@ -48,10 +39,21 @@
     </tr>
     }
 </table>
+}
 
-@if(associations.length === 0){
-<div>
-    <p>There are no associations.</p>
-</div>
+@if (isInTrainingModule) {
+<button (click)="switchCreatingState(true)">Add New Collaborator</button>
+<button type="button" [routerLink]="['/training-modules']" data-testid="close-btn">Close</button>
+} @else {
+<button (click)="switchCreatingState(true)">Add New Training Module</button>
+<button type="button" [routerLink]="['/collaborators']" data-testid="close-btn">Close</button>
+}
+
+@if(isCreating()){
+@if(isInTrainingModule){
+<app-create-association-trainingmodule-collaborator [trainingModuleId]="selectedId" />
+} @else {
+<app-create-association-trainingmodule-collaborator [collaboratorId]="selectedId" />
+}
 }
 }
