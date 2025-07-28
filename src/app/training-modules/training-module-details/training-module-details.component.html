@@ -1,11 +1,5 @@
 <div class="details-card">
-  <h3>Training Module Details - ID: {{ trainingModule.id }}</h3>
-
-  <div class="detail-row">
-    <span class="label">Subject ID:</span>
-    <span class="value">{{ trainingModule.trainingSubjectId }}</span>
-  </div>
-
+  
   <div class="periods" *ngIf="trainingModule.periods?.length">
     <h4>Periods:</h4>
     <ul>

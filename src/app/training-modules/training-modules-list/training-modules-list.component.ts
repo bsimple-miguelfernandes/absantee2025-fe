@@ -4,6 +4,7 @@ import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { TrainingModule } from '../training-module';
 import { FiltersComponent } from '../../filters/filters.component';
 import { TrainingModuleSignalService } from '../training-modules-signals.service';
+import { TrainingSubject } from '../../training-subjects/training-subject';
 
 @Component({
   selector: 'app-training-modules-list',
@@ -18,6 +19,7 @@ export class TrainingModulesListComponent {
   trainingModules = input.required<TrainingModule[]>();
   filteredModules: TrainingModule[] = [];
   selectedTrainingModule!: string;
+trainingSubjects = input.required<TrainingSubject[]>();
 
   router = inject(Router);
   route = inject(ActivatedRoute);
@@ -41,6 +43,10 @@ export class TrainingModulesListComponent {
    addTrainingModule() {
     this.signalsService.addTrainingModule();
   }
+getSubjectById(id: string): string {
+  const subject = this.trainingSubjects().find(s => s.id === id);
+  return subject ? subject.subject : 'Unknown';
+}
 
   applyFilters(filters: Record<string, string>) {
   const periodFilter = filters['period']?.toLowerCase() ?? '';
