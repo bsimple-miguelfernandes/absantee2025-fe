@@ -39,7 +39,15 @@ export class CollaboratorsComponent {
     });
 
     effect(() => {
+      const createdCollab = this.collabSignalService.createdCollaborator();
       const updatedCollab = this.collabSignalService.updatedCollaborator();
+
+       if (createdCollab) {
+    this.collaborators.update(currentCollabs => [
+      ...currentCollabs,
+      createdCollab
+    ]);
+  }
 
       if(updatedCollab){
         this.collaborators.update(currentCollabs => {
