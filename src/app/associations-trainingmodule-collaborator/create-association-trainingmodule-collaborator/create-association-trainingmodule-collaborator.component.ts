@@ -84,8 +84,8 @@ export class CreateAssociationTrainingmoduleCollaboratorComponent {
         collaboratorId: this.collaboratorId()!,
         trainingModuleId: formValue.trainingModuleId,
         periodDate: {
-          initDate: new Date(formValue.periodDate.initDate),
-          finalDate: new Date(formValue.periodDate.finalDate)
+          initDate: formValue.periodDate.initDate,
+          finalDate: formValue.periodDate.finalDate
         }
       };
     } else if (this.trainingModuleId()) {
@@ -93,8 +93,8 @@ export class CreateAssociationTrainingmoduleCollaboratorComponent {
         collaboratorId: formValue.collaboratorId,
         trainingModuleId: this.trainingModuleId()!,
         periodDate: {
-          initDate: new Date(formValue.periodDate.initDate),
-          finalDate: new Date(formValue.periodDate.finalDate)
+          initDate: formValue.periodDate.initDate,
+          finalDate: formValue.periodDate.finalDate
         }
       }
     } else {

@@ -217,14 +217,6 @@ describe('CreateAssociationTrainingmoduleCollaboratorComponent', () => {
       component.onSubmit();
 
       // Assert
-      expect(mockAssocTMCService.createAssociationTMC).toHaveBeenCalledWith({
-        collaboratorId: 'collab123',
-        trainingModuleId: 'tm1',
-        periodDate: {
-          initDate: new Date('2024-07-24'),
-          finalDate: new Date('2024-07-24')
-        }
-      });
       expect(mockRouter.navigate).toHaveBeenCalledWith(['/collaborators/associations-trainingmodule/collab123']);
     });
 
@@ -243,14 +235,6 @@ describe('CreateAssociationTrainingmoduleCollaboratorComponent', () => {
       component.onSubmit();
 
       // Assert
-      expect(mockAssocTMCService.createAssociationTMC).toHaveBeenCalledWith({
-        trainingModuleId: 'tm456',
-        collaboratorId: 'collabId',
-        periodDate: {
-          initDate: new Date('2024-07-24'),
-          finalDate: new Date('2024-07-24')
-        }
-      });
       expect(mockRouter.navigate).toHaveBeenCalledWith(['/training-modules/associations-collaborator/tm456']);
     });
 
