@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TrainingModulesListComponent } from './training-modules-list.component';
 import { TrainingModule } from '../training-module';
+import { TrainingSubject } from '../../training-subjects/training-subject';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 import { TrainingModuleSignalService } from '../training-modules-signals.service';
@@ -35,6 +36,11 @@ describe('TrainingModulesListComponent', () => {
     }
   ];
 
+  const mockSubjects: TrainingSubject[] = [
+    { id: 'sub1', subject: 'Math', description:'jsjs' },
+    { id: 'sub2', subject: 'Science', description:'jsjs' }
+  ];
+
   beforeEach(async () => {
     signalsService = jasmine.createSpyObj('TrainingModuleSignalService', ['addTrainingModule']);
 
@@ -46,7 +52,7 @@ describe('TrainingModulesListComponent', () => {
           provide: ActivatedRoute,
           useValue: {
             paramMap: of(new Map().set('trainingModuleId', 'tm1')),
-            snapshot: {},
+            snapshot: {}
           }
         },
         { provide: TrainingModuleSignalService, useValue: signalsService }
@@ -57,10 +63,13 @@ describe('TrainingModulesListComponent', () => {
     component = fixture.componentInstance;
     router = TestBed.inject(Router);
 
-    // Cria um WritableSignal e atribui
+    // Configurar signals para trainingModules e trainingSubjects
     const trainingModulesSignal: WritableSignal<TrainingModule[]> = signal(mockModules);
-    component.trainingModules = trainingModulesSignal as unknown as any; 
-    // Usamos "as unknown as any" para contornar o problema de tipos em testes, que geralmente não impacta a execução.
+    const trainingSubjectsSignal: WritableSignal<TrainingSubject[]> = signal(mockSubjects);
+
+    // Atribuir os signals ao componente (contornando tipos)
+    component.trainingModules = trainingModulesSignal as unknown as any;
+    component.trainingSubjects = trainingSubjectsSignal as unknown as any;
 
     fixture.detectChanges();
   });
@@ -68,8 +77,6 @@ describe('TrainingModulesListComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  // ... resto dos testes continua igual
 
   it('should initialize filteredModules on init', () => {
     expect(component.filteredModules.length).toBe(2);
@@ -110,17 +117,22 @@ describe('TrainingModulesListComponent', () => {
     expect(component.filteredModules.length).toBe(2);
   });
 
-  it('should render a table with all training modules', () => {
+  it('should return correct subject name with getSubjectById()', () => {
+    expect(component.getSubjectById('sub1')).toBe('Math');
+    expect(component.getSubjectById('sub2')).toBe('Science');
+    expect(component.getSubjectById('unknown')).toBe('Unknown');
+  });
+
+  it('should render a table with subjects instead of subject ids', () => {
     const rows = fixture.nativeElement.querySelectorAll('tbody tr');
     expect(rows.length).toBe(2);
 
-    expect(rows[0].textContent).toContain('tm1');
-    expect(rows[0].textContent).toContain('sub1');
+    expect(rows[0].textContent).toContain('Math');
+    expect(rows[0].textContent).not.toContain('sub1');
 
-    expect(rows[1].textContent).toContain('tm2');
-    expect(rows[1].textContent).toContain('sub2');
+    expect(rows[1].textContent).toContain('Science');
+    expect(rows[1].textContent).not.toContain('sub2');
   });
-
 
   it('should emit filtersChanged when <app-filters> is interacted (simulated)', () => {
     const spy = spyOn(component, 'applyFilters');

@@ -8,24 +8,23 @@
 </app-filters>
 <table>
   <thead>
+  <tr>
+    <th>Subject</th>
+    <th>Actions</th>
+  </tr>
+</thead>
+<tbody>
+  @for (trainingModule of trainingModules(); track trainingModule.id) {
     <tr>
-      <th>Module ID</th>
-      <th>Subject ID</th>
-      <th>Actions</th>
+      <td>{{ getSubjectById(trainingModule.trainingSubjectId) }}</td>
+      <td>
+        <button (click)="showDetails(trainingModule.id!)">Details</button>
+        <button [routerLink]="['associations-trainingmodule', trainingModule.id]">Collaborators Assigned</button>
+      </td>
     </tr>
-  </thead>
-  <tbody>
-    @for (trainingModule of trainingModules(); track trainingModule.id) {
-      <tr>
-        <td>{{ trainingModule.id }}</td>
-        <td>{{ trainingModule.trainingSubjectId }}</td>
-        <td>
-          <button (click)="showDetails(trainingModule.id!)">Details</button>
-            <button [routerLink]="['associations-trainingmodule', trainingModule.id]">Collaborators Assigned</button>
-        </td>
-      </tr>
-    }
-  </tbody>
+  }
+</tbody>
+
 </table>
 
  <button type="button" [routerLink]="['/training-modules', 'create']">
