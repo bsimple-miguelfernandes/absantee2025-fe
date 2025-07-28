@@ -55,9 +55,9 @@ export class AddCollaboratorProjectComponent {
     }, { validators: this.dateRangeValidator() });
 
     if (this.collaboratorId()) {
-      this.form.addControl('projectId', this.fb.control('', Validators.required)); // <-- INPUT
+      this.form.addControl('projectId', this.fb.control('', Validators.required));
     } else if (this.projectId()) {
-      this.form.addControl('collaboratorId', this.fb.control('', Validators.required)); // <-- INPUT
+      this.form.addControl('collaboratorId', this.fb.control('', Validators.required));
     }
   }
 
@@ -70,7 +70,7 @@ export class AddCollaboratorProjectComponent {
       const init = group.get('initDate')?.value;
       const final = group.get('finalDate')?.value;
 
-      if (!init || !final) return null; // Don't validate if either date is missing
+      if (!init || !final) return null;
 
       const initDate = new Date(init);
       const finalDate = new Date(final);
