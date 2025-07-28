@@ -11,6 +11,7 @@ import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
 import { of, throwError } from "rxjs";
 import { AssociationTrainingModuleCollaboratorCreateRequest } from "./models/add-association-trainingmodule-collaborator.model";
 import { AssociationTrainingModuleCollaborators } from "../models/association-trainingmodule-collaborator.model";
+import { TrainingSubjectDataService } from "../../training-subjects/training-subjects-data.service";
 
 describe('CreateAssociationTrainingmoduleCollaboratorComponent', () => {
   let component: CreateAssociationTrainingmoduleCollaboratorComponent;
@@ -20,6 +21,7 @@ describe('CreateAssociationTrainingmoduleCollaboratorComponent', () => {
   let mockAssocTMCSignalService: jasmine.SpyObj<AssociationTrainingmoduleCollaboratorSignalService>;
   let mockCollaboratorService: jasmine.SpyObj<CollaboratorDataService>;
   let mockTrainingModuleService: jasmine.SpyObj<TrainingModuleDataService>;
+  let mockTrainingSubjectService: jasmine.SpyObj<TrainingSubjectDataService>;
 
   const mockTrainingModules: TrainingModule[] = [
     { id: 'tm1', trainingSubjectId: 'Test Module', periods: [] }
@@ -55,6 +57,7 @@ describe('CreateAssociationTrainingmoduleCollaboratorComponent', () => {
     mockAssocTMCSignalService = jasmine.createSpyObj('AssociationTrainingmoduleCollaboratorSignalService', ['isCreatingAssociationTMC', 'createAssociationTMC', 'changeAssociationTMCCreationState']);
     mockCollaboratorService = jasmine.createSpyObj('CollaboratorDataService', ['getCollabs']);
     mockTrainingModuleService = jasmine.createSpyObj('TrainingModuleDataService', ['getTrainingModules']);
+    mockTrainingSubjectService = jasmine.createSpyObj('TrainingSubjectDataService', ['getTrainingSubjects']);
 
     mockAssocTMCSignalService.isCreatingAssociationTMC.and.returnValue(false);
 
@@ -67,6 +70,7 @@ describe('CreateAssociationTrainingmoduleCollaboratorComponent', () => {
         { provide: AssociationTrainingmoduleCollaboratorSignalService, useValue: mockAssocTMCSignalService },
         { provide: CollaboratorDataService, useValue: mockCollaboratorService },
         { provide: TrainingModuleDataService, useValue: mockTrainingModuleService },
+        { provide: TrainingSubjectDataService, useValue: mockTrainingSubjectService }
       ],
     }).compileComponents();
 

@@ -19,7 +19,12 @@
             <select formControlName="trainingModuleId">
                 <option value="">-- Select Training Module --</option>
                 @for (tm of trainingModules; track tm.id) {
-                <option [value]="tm.id">{{tm.id}}</option>
+                <option [value]="tm.id">{{getSubjectForModule(tm.trainingSubjectId)}} (
+                    @if (tm.periods &&
+                    tm.periods.length > 0) {
+                    ({{tm.periods[0]._initDate | date:'yyyy-MM-dd'}} - {{tm.periods[0]._finalDate| date:'yyyy-MM-dd'}},
+                    ...)
+                    } ...)</option>
                 }
             </select>
         </label>
