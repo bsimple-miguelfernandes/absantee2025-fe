@@ -11,6 +11,7 @@ import { MatDialogRef } from "@angular/material/dialog";
   standalone: true,
   imports: [ReactiveFormsModule],
   templateUrl: './collaborator-create.component.html',
+  styleUrl: './collaborator-create.component.css'
 })
 export class CollaboratorCreateComponent {
   collaboratorSignalService = inject(CollaboratorSignalService);
