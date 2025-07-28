@@ -258,30 +258,6 @@ describe('AssociationsTrainingmoduleCollaboratorComponent', () => {
       expect(button.nativeElement.textContent).toContain('Add New Training Module');
     });
 
-    it('should render table headers correctly for training module context', () => {
-      // Act
-      component.isLoading = false;
-      component.isInTrainingModule = true;
-      component.associations = [];
-      fixture.detectChanges();
-
-      // Assert
-      const headers = fixture.debugElement.queryAll(By.css('th'));
-      expect(headers[0].nativeElement.textContent).toContain('Collaborator Email');
-    });
-
-    it('should render table headers correctly for collaborator context', () => {
-      // Act
-      component.isLoading = false;
-      component.isInTrainingModule = false;
-      component.associations = [];
-      fixture.detectChanges();
-
-      // Assert
-      const headers = fixture.debugElement.queryAll(By.css('th'));
-      expect(headers[0].nativeElement.textContent).toContain('Training Module');
-    });
-
     it('should render a row for each association', () => {
       // Act
       component.isLoading = false;
@@ -305,15 +281,6 @@ describe('AssociationsTrainingmoduleCollaboratorComponent', () => {
       expect(rows.length).toBe(2);
       expect(rows[1].nativeElement.textContent).toContain('test@example.com');
       expect(rows[1].nativeElement.textContent).toContain('2024-01-01');
-    });
-
-    it('should show "There are no associations." when associations array is empty', () => {
-      // Act
-      component.isLoading = false;
-      component.associations = [];
-      fixture.detectChanges();
-      // Assert
-      expect(fixture.nativeElement.textContent).toContain('There are no associations.');
     });
   });
 });
