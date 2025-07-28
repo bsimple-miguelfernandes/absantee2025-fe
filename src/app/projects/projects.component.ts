@@ -33,7 +33,6 @@ export class ProjectsComponent {
         this.filteredList = projectVM;
       },
       error: (error) => {
-        alert('Error loading projects');
         console.error('Error loading projects', error);
       }
     });

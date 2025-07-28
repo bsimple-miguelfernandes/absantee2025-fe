@@ -3,7 +3,7 @@ import { CollaboratorSignalService } from '../collaborator-signal.service';
 import { CollaboratorDataService } from '../collaborator-data.service';
 import { AbstractControl, FormArray, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
 import { HolidayPeriod, mapHolidayPeriodDtoToHolidayPeriod } from './holiday-period';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 
 function dateRangeValidator(group: AbstractControl): ValidationErrors | null {
@@ -24,7 +24,7 @@ export enum ButtonType {
 
 @Component({
   selector: 'app-collaborator-holidays',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './collaborator-holidays.component.html',
   styleUrl: './collaborator-holidays.component.css'
 })
@@ -34,6 +34,7 @@ export class CollaboratorHolidaysComponent {
 
   collabId!: string;
 
+  ButtonType = ButtonType;
   collaboratorHolidays!: HolidayPeriod[];
 
   form = new FormGroup({
@@ -78,7 +79,7 @@ export class CollaboratorHolidaysComponent {
     if (!this.form.dirty) {
       window.alert("No changes made to this holiday. ");
     }
-    if(this.holidaysForm.length > 0) {
+    if (this.holidaysForm.length > 0) {
       const holidayGroup = this.holidaysForm.at(index);
       if (holidayGroup.valid) {
         if (holidayGroup.value.buttonText == ButtonType.Save) {
@@ -88,7 +89,7 @@ export class CollaboratorHolidaysComponent {
             .subscribe({
               next: h => {
                 holidayGroup.get('buttonText')?.setValue(ButtonType.Edit),
-                console.log(h);
+                  console.log(h);
                 this.collaboratorHolidays.push(h);
               },
               error: e => {
@@ -112,6 +113,10 @@ export class CollaboratorHolidaysComponent {
         window.alert("Final Date must be after Innit Date");
       }
     }
+  }
+
+  cancelNewHoliday(index: number) {
+    this.holidaysForm.removeAt(index);
   }
 
   createEmptyHoliday() {

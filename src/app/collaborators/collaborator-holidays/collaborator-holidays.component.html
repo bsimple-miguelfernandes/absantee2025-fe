@@ -1,24 +1,37 @@
 <form [formGroup]="form">
+    @if (holidaysForm.length === 0) {
+    <tr>
+        <td colspan="3" style="text-align: center; font-style: italic; color: grey;">
+            The collaborator has no holidays
+        </td>
+    </tr>
+    } @else {
     <table>
         <thead>
-        <tr>
-            <th>Init Date</th>
-            <th>Final Date</th>
-            <th>Actions</th>
-        </tr>
+            <tr>
+                <th>Init Date</th>
+                <th>Final Date</th>
+                <th>Actions</th>
+            </tr>
         </thead>
         <tbody formArrayName="holidays">
             @for (holiday of holidaysForm.controls; track $index; let i= $index) {
-                <tr [formGroupName]="i">
-                    <td><input type="date" formControlName="initDate" /></td>
-                    <td><input type="date" formControlName="finalDate" /></td>
-                    <td><button (click)="editHoliday(i)">
-                      {{getButtonText(holiday.get('buttonText')!.value)}}
-                    </button></td>
-                </tr>
+            <tr [formGroupName]="i">
+                <td><input type="date" formControlName="initDate" /></td>
+                <td><input type="date" formControlName="finalDate" /></td>
+                <td><button (click)="editHoliday(i)">
+                        {{getButtonText(holiday.get('buttonText')!.value)}}
+                    </button>
+                    @if (holiday.get('buttonText')!.value === this.ButtonType.Save) {
+                    <button type="button" (click)="cancelNewHoliday(i)">Cancel</button>
+                    }
+                </td>
+            </tr>
             }
         </tbody>
     </table>
+    }
 </form>
 <br>
 <button type="button" (click)="createEmptyHoliday()" data-testid="add-btn">Add Holiday</button>
+<button type="button" [routerLink]="['/collaborators']" data-testid="cancel-btn">Cancel</button>
