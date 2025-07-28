@@ -1,21 +1,19 @@
-    <div class="details-card">
-      <h2>Training Subject Details</h2>
+<div class="details-card">
+  <h2>Training Subject Details</h2>
 
 
-      <div class="detail-row">
-        <span class="label">Subject Name:</span>
-        <span class="value">{{ trainingSubject.subject }}</span>
-      </div>
+  <div class="detail-row">
+    <span class="label">Subject Name:</span>
+    <span class="value">{{ trainingSubject.subject }}</span>
+  </div>
 
-      <div class="detail-row">
-        <span class="label">Description:</span>
-        <span class="value">{{ trainingSubject.description }}</span>
-      </div>
+  <div class="detail-row">
+    <span class="label">Description:</span>
+    <span class="value">{{ trainingSubject.description }}</span>
+  </div>
 
-      <div class="actions">
-        <button (click)="close()">Close</button>
-        <button [routerLink]="['/training-subjects', trainingSubject.id, 'edit']">Edit</button>
-      </div>
-    </div>
-
-
+  <div class="actions">
+    <button [routerLink]="['/training-subjects', trainingSubject.id, 'edit']">Edit</button>
+    <button (click)="close()">Close</button>
+  </div>
+</div>

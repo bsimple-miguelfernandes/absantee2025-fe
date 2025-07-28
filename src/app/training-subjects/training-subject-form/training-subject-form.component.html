@@ -12,9 +12,9 @@
   </div>
 
   <div class="actions">
-    <button type="button" (click)="cancel()">Cancel</button>
     <button type="submit" [disabled]="trainingSubjectForm.invalid">
       {{ isEditMode ? 'Save' : 'Add' }}
     </button>
+    <button type="button" (click)="cancel()">Cancel</button>
   </div>
 </form>
