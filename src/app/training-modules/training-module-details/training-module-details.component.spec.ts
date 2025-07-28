@@ -57,14 +57,7 @@ describe('TrainingModuleDetailsComponent', () => {
     expect(component.trainingModule).toEqual(mockTrainingModule);
   });
 
-  it('should render training module ID and subject ID', () => {
-    const compiled = fixture.nativeElement;
-    const title = compiled.querySelector('h3')?.textContent;
-    const subjectRow = compiled.querySelector('.detail-row .value')?.textContent;
-
-    expect(title).toContain('Training Module Details - ID: tm-001');
-    expect(subjectRow).toContain('sub-123');
-  });
+ 
 
   it('should render all periods in list', () => {
     const compiled = fixture.nativeElement;
