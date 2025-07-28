@@ -10,7 +10,7 @@ export const environment = {
   holidaysCmdBaseUrl: 'http://localhost:5101/api/holidays',
   holidaysQueryBaseUrl: 'http://localhost:5111/api/holidays',
   projectCMDBaseUrl: 'http://localhost:5087/api',
-  projectQueryBaseUrl: 'http://localhost:5061/api',
+  projectQueryBaseUrl: 'http://localhost:5088/api',
   trainingSujectandModelCmdBaseUrl: 'http://localhost:5027/api',
   trainingSujectandModelQueryBaseUrl: 'http://localhost:5037/api',
   associationTrainingModuleCollaboratorCMDBaseUrl: 'http://localhost:5009/api',
