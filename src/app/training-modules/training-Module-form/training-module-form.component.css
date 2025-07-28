@@ -62,7 +62,7 @@ button:hover {
   opacity: 0.9;
 }
 
-
+/* FORM CARD */
 .form-card {
   max-width: 500px;
   margin: 40px auto;
@@ -92,15 +92,28 @@ button:hover {
   margin-bottom: 6px;
 }
 
-.form-input {
+/* INPUT E SELECT */
+input.form-input,
+select.form-input {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 6px;
   font-size: 14px;
+  background-color: #fff;
+  color: #000;
+  font-family: 'Segoe UI', sans-serif;
 }
 
-.form-input:focus {
+input.form-input:focus,
+select.form-input:focus {
   border-color: #007bff;
   outline: none;
   box-shadow: 0 0 0 1px #007bff30;
+}
+
+/* ESTILO PARA OPTIONS (dropdown) */
+select.form-input option {
+  background-color: #fff;
+  color: #000;
+  font-size: 14px;
 }

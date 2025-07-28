@@ -6,51 +6,63 @@ import { TrainingModule } from '../training-module';
 import { TrainingModuleDataService } from '../training-modules-data.service';
 import { TrainingModuleSignalService } from '../training-modules-signals.service';
 import { PeriodDateTime } from '../../PeriodDate';
+import { TrainingSubjectDataService } from '../../training-subjects/training-subjects-data.service';
+import { TrainingSubject } from '../../training-subjects/training-subject'; // Importa a interface correta
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-training-module-form',
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './training-module-form.component.html',
-  styleUrl: './training-module-form.component.css'
+  styleUrls: ['./training-module-form.component.css']
 })
 export class TrainingModuleFormComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private fb = inject(FormBuilder);
   private dataService = inject(TrainingModuleDataService);
-  private signalService = inject(TrainingModuleSignalService)
+  private signalService = inject(TrainingModuleSignalService);
+  private trainingSubjectService = inject(TrainingSubjectDataService);
 
   trainingModuleForm!: FormGroup;
   isEditMode = false;
   trainingModuleId?: string;
+
+  // Usa o tipo correto com 'subject'
+  trainingSubjects: TrainingSubject[] = [];
 
   get periods(): FormArray {
     return this.trainingModuleForm.get('periods') as FormArray;
   }
 
   ngOnInit() {
-    const resolved = this.route.snapshot.data['trainingModule'];
-    this.isEditMode = !!resolved;
-    this.trainingModuleId = this.route.snapshot.params['trainingModuleID'];
-
-    this.trainingModuleForm = this.fb.group({
-      trainingSubjectId: [resolved?.trainingSubjectId ?? '', Validators.required],
-      periods: this.fb.array(
-        resolved?.periods?.length
-          ? resolved.periods.map((p: PeriodDateTime) => this.createPeriodGroup(p))
-          : [this.createPeriodGroup()],
-        Validators.required
+    this.trainingSubjectService.getTrainingSubjects()
+      .pipe(
+        catchError(err => {
+          console.error('Erro ao carregar subjects:', err);
+          return of([]); // evita quebra do fluxo
+        })
       )
-    });
+      .subscribe(subjects => {
+        console.log('Subjects carregados:', subjects);
+        this.trainingSubjects = subjects;
 
-    // ❗ Apenas para edição, atualiza o form se for preciso
-    if (this.isEditMode && resolved) {
-      this.trainingModuleForm.patchValue({
-        trainingSubjectId: resolved.trainingSubjectId,
-        // periods já está feito acima
+        const resolved = this.route.snapshot.data['trainingModule'];
+        this.isEditMode = !!resolved;
+        this.trainingModuleId = this.route.snapshot.params['trainingModuleID'];
+
+        this.trainingModuleForm = this.fb.group({
+          trainingSubjectId: [resolved?.trainingSubjectId ?? '', Validators.required],
+          periods: this.fb.array(
+            resolved?.periods?.length
+              ? resolved.periods.map((p: PeriodDateTime) => this.createPeriodGroup(p))
+              : [this.createPeriodGroup()],
+            Validators.required
+          )
+        });
       });
-    }
   }
 
   createPeriodGroup(period: any = {}): FormGroup {
@@ -86,25 +98,23 @@ export class TrainingModuleFormComponent implements OnInit {
     };
 
     if (this.isEditMode && this.trainingModuleId) {
-      // Atualização
       this.dataService.updateTrainingModule({
         ...payload,
-        id: this.trainingModuleId // Aqui passas o id explicitamente só em modo de edição
+        id: this.trainingModuleId
       }).subscribe({
         next: (res) => {
           this.signalService.clearUpdatedModule();
           this.signalService.updateTrainingModule(res);
-          this.cancel()
+          this.cancel();
         },
         error: (err) => console.error('Update failed:', err)
       });
 
     } else {
-      // Criação — ID será gerado no backend
       this.dataService.addTrainingModule(payload).subscribe({
         next: (res) => {
           this.signalService.saveTrainingModule(res);
-          this.cancel()
+          this.cancel();
         },
         error: (err) => console.error('Add failed:', err)
       });
