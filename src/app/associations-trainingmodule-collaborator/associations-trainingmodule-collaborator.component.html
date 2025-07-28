@@ -11,7 +11,7 @@
         @if (isInTrainingModule) {
         <th>Collaborator Email</th>
         } @else {
-        <th>Training Module</th>
+        <th>Training Module Subject</th>
         }
         <th>Init Date</th>
         <th>Final Date</th>
@@ -22,7 +22,7 @@
         @if (isInTrainingModule) {
         <td>{{assoc.collaboratorEmail}}</td>
         } @else {
-        <td>{{assoc.trainingModuleId}}</td>
+        <td>{{assoc.trainingSubject}}</td>
         }
         <td>{{assoc.periodDate.initDate | date:'yyyy-MM-dd'}} </td>
         <td>{{assoc.periodDate.finalDate | date:'yyyy-MM-dd'}} </td>
