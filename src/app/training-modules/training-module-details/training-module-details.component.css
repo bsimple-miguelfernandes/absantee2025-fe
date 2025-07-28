@@ -1,0 +1,60 @@
+.details-card {
+  width: 50%;
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 16px 24px;
+  background-color: #fafafa;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.periods {
+  margin-bottom: 20px;
+}
+
+.periods h4 {
+  color: #0d47a1;
+  font-weight: bold;
+  border-bottom: 2px solid #e3f2fd;
+  padding-bottom: 6px;
+  margin-bottom: 12px;
+}
+
+.periods ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.periods li {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  margin-bottom: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.periods li:nth-child(even) {
+  background-color: #e3f2fd;
+}
+
+.periods li:hover {
+  background-color: #c5d9f8;
+}
+
+button {
+  padding: 8px 16px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
