@@ -1,50 +1,24 @@
-<form
-  *ngIf="trainingModuleForm"
-  [formGroup]="trainingModuleForm"
-  (ngSubmit)="save()"
-  class="form-card"
->
+<form *ngIf="trainingModuleForm" [formGroup]="trainingModuleForm" (ngSubmit)="save()" class="form-card">
   <h2>{{ isEditMode ? 'Edit Training Module' : 'Add Training Module' }}</h2>
 
   <div>
     <label class="form-label" for="trainingSubjectId">Subject</label>
-    <select
-  id="trainingSubjectId"
-  formControlName="trainingSubjectId"
-  class="form-input"
-  required
->
-  <option value="" disabled>-- Select Subject --</option>
-  <option *ngFor="let subject of trainingSubjects" [value]="subject.id">
-    {{ subject.subject }}
-  </option>
-</select>
+    <select id="trainingSubjectId" formControlName="trainingSubjectId" class="form-input" required>
+      <option value="" disabled>-- Select Subject --</option>
+      <option *ngFor="let subject of trainingSubjects" [value]="subject.id">
+        {{ subject.subject }}
+      </option>
+    </select>
 
   </div>
 
   <div formArrayName="periods" class="periods-container">
-    <div
-      *ngFor="let period of periods.controls; let i = index"
-      [formGroupName]="i"
-      class="form-group period-group"
-    >
+    <div *ngFor="let period of periods.controls; let i = index" [formGroupName]="i" class="form-group period-group">
       <label for="initDate-{{ i }}">Init Date</label>
-      <input
-        id="initDate-{{ i }}"
-        type="date"
-        formControlName="_initDate"
-        class="form-input"
-        required
-      />
+      <input id="initDate-{{ i }}" type="date" formControlName="_initDate" class="form-input" required />
 
       <label for="finalDate-{{ i }}">Final Date</label>
-      <input
-        id="finalDate-{{ i }}"
-        type="date"
-        formControlName="_finalDate"
-        class="form-input"
-        required
-      />
+      <input id="finalDate-{{ i }}" type="date" formControlName="_finalDate" class="form-input" required />
 
       <button type="button" (click)="removePeriod(i)">Remove</button>
     </div>
@@ -52,9 +26,9 @@
   </div>
 
   <div class="actions">
-    <button type="button" (click)="cancel()">Cancel</button>
     <button type="submit" [disabled]="trainingModuleForm.invalid">
       {{ isEditMode ? 'Save' : 'Add' }}
     </button>
+    <button type="button" (click)="cancel()">Cancel</button>
   </div>
 </form>
