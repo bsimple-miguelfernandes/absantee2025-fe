@@ -16,7 +16,6 @@ import { CollaboratorSignalService } from './collaborator-signal.service';
   imports: [
     CommonModule,
     CollaboratorListComponent,
-    CollaboratorCreateComponent,
     RouterOutlet
   ],
   templateUrl: './collaborators.component.html',
@@ -25,30 +24,30 @@ import { CollaboratorSignalService } from './collaborator-signal.service';
 export class CollaboratorsComponent {
   collaborators = signal<CollaboratorViewModel[]>([]);
 
-  constructor(private collaboratorDataService: CollaboratorDataService, private dialog: MatDialog, private collabSignalService : CollaboratorSignalService) {
+  constructor(private collaboratorDataService: CollaboratorDataService, private dialog: MatDialog, private collabSignalService: CollaboratorSignalService) {
     this.collaboratorDataService.getCollabs().subscribe(
-    {
-      next: (collaborators) => {
-      const collabVM = collaborators.map(toCollaboratorViewModel);
-      this.collaborators.set(collabVM);
-    }, 
-    error: (err) => {
-      alert('Error loading collaborators');
-      console.error('Error loading collaborators', err);
-      }
-    });
+      {
+        next: (collaborators) => {
+          const collabVM = collaborators.map(toCollaboratorViewModel);
+          this.collaborators.set(collabVM);
+        },
+        error: (err) => {
+          alert('Error loading collaborators');
+          console.error('Error loading collaborators', err);
+        }
+      });
 
     effect(() => {
       const updatedCollab = this.collabSignalService.updatedCollaborator();
 
-      if(updatedCollab){
+      if (updatedCollab) {
         this.collaborators.update(currentCollabs => {
-            const index = currentCollabs.findIndex(c => c.collabId === updatedCollab.collabId);
-            if (index !== -1) {
-              currentCollabs[index] = updatedCollab;
-            }
-            return [...currentCollabs]; 
-          });
+          const index = currentCollabs.findIndex(c => c.collabId === updatedCollab.collabId);
+          if (index !== -1) {
+            currentCollabs[index] = updatedCollab;
+          }
+          return [...currentCollabs];
+        });
       }
     });
   }
