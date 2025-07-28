@@ -38,17 +38,21 @@ export class ProjectsComponent {
     });
 
     effect(() => {
-      const projectCreated = this.projectCreatedSignal();
-      const projectEdited = this.projectUpdatedSignal();
+  const projectCreated = this.projectCreatedSignal();
+  const projectEdited = this.projectUpdatedSignal();
 
-      if (projectCreated) {
-        this.filteredList = [...this.filteredList, projectCreated];
-      }
+  if (projectCreated) {
+    const alreadyExists = this.filteredList.some(p => p.id === projectCreated.id);
+    if (!alreadyExists) {
+      this.filteredList = [...this.filteredList, projectCreated];
+    }
+  }
 
-      if (projectEdited) {
-        this.filteredList = this.filteredList.map(p => p.id === projectEdited.id ? projectEdited : p);
-      }
-    });
+  if (projectEdited) {
+    this.filteredList = this.filteredList.map(p => p.id === projectEdited.id ? projectEdited : p);
+  }
+});
+
   }
 
   isCreatingProject(): boolean {
