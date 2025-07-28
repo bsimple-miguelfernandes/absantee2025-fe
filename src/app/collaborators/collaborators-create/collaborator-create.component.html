@@ -1,49 +1,51 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-<div>
-  <label>
-    Names:
-    <input formControlName="names" />
-  </label>
+
+<div class="dialog-overlay">
+  <form class="collaborator-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div>
+      <label>
+        Names:
+        <input formControlName="names" />
+      </label>
+    </div>
+
+    <div>
+      <label>
+        Surnames:
+        <input formControlName="surnames" />
+      </label>
+    </div>
+
+    <div>
+      <label>
+        Email:
+        <input formControlName="email" type="email" />
+      </label>
+    </div>
+
+    <div>
+      <label>
+        Deactivation Date:
+        <input type="date" formControlName="finalDate" />
+      </label>
+    </div>
+
+    <fieldset formGroupName="periodDateTime" class="period-group">
+      <legend>Collaborator Period</legend>
+      <div>
+        <label>
+          Init Date:
+          <input type="date" formControlName="initDate" />
+        </label>
+      </div>
+      <div>
+        <label>
+          Final Date:
+          <input type="date" formControlName="finalDate" />
+        </label>
+      </div>
+    </fieldset>
+
+    <button type="submit" class="button">Create Collaborator</button>
+    <button type="button" class="button" (click)="onCancel()">Cancel</button>
+  </form>
 </div>
-
-<div>
-  <label>
-    Surnames:
-    <input formControlName="surnames" />
-  </label>
-</div>
-
-<div>
-  <label>
-    Email:
-    <input formControlName="email" type="email" />
-  </label>
-</div>
-
-<div>
-  <label>
-    Deactivation Date:
-    <input type="date" formControlName="finalDate" />
-  </label>
-</div>
-
-  <fieldset formGroupName="periodDateTime">
-    <legend>Collaborator Period</legend>
-  <div>
-    <label>
-      Init Date:
-      <input type="date" formControlName="initDate" />
-    </label>
-  </div>
-  <div>
-    <label>
-      Final Date:
-      <input type="date" formControlName="finalDate" />
-    </label>
-  </div>
-  </fieldset>
-
-  <button type="submit">Create Collaborator</button>
-  <button type="button" (click)="onCancel()">Cancel</button>
-
-</form>
