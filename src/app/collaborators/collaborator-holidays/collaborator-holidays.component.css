@@ -1,0 +1,71 @@
+table {
+    width: 50%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-family: Arial, sans-serif;
+}
+
+th,
+td {
+    border: 1px solid #ddd;
+    padding: 12px 16px;
+    text-align: left;
+}
+
+th {
+    background-color: #e3f2fd;
+    font-weight: bold;
+    color: #0d47a1;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+input[type="date"] {
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+button {
+    padding: 6px 12px;
+    margin-right: 5px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button[type="button"]:nth-child(2) {
+    background-color: #6c757d;
+}
+
+button[type="button"]:nth-child(2):hover {
+    background-color: #495057;
+}
+
+td[colspan="3"] {
+    font-style: italic;
+    color: #888;
+    text-align: center;
+    padding: 20px;
+}
+
+button[data-testid="add-btn"],
+button[data-testid="cancel-btn"] {
+    margin-top: 16px;
+}

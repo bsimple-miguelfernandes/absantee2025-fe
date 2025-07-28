@@ -1,12 +1,18 @@
-<table *ngIf="associations && associations.length > 0; else noAssociations">
+<app-filters [fields]="[
+    { name: 'initDate', label: 'Initial Date', type: 'date' },
+    { name: 'finalDate', label: 'Final Date', type: 'date' }
+  ]" (filtersChanged)="onFilterChanged($event)">
+</app-filters>
+
+<table *ngIf="filteredAssociations && filteredAssociations.length > 0; else noAssociations">
   <tr>
     <th *ngIf="isInProject">Email</th>
     <th *ngIf="!isInProject">Acronym</th>
-    <th>Init Date</th>
+    <th>Initial Date</th>
     <th>Final Date</th>
     <th *ngIf="!isInProject">Actions</th>
   </tr>
-  <tr *ngFor="let assoc of associations; index as i">
+  <tr *ngFor="let assoc of filteredAssociations; index as i">
     <td *ngIf="isInProject">{{ assoc.collaboratorEmail }}</td>
     <td *ngIf="!isInProject">{{ assoc.projectAcronym }}</td>
     <td>{{ assoc.periodDate.initDate | date: 'yyyy-MM-dd' }}</td>
@@ -21,13 +27,14 @@
   <p style="margin-top: 1rem;">No associations found.</p>
 </ng-template>
 
-<app-add-collaborator-project
-  *ngIf="showCreateForm"
-  [projectId]="isInProject ? selectedId : undefined"
-  [collaboratorId]="!isInProject ? selectedId : undefined"
-  (cancel)="onCancelCreate()">
+<app-add-collaborator-project *ngIf="showCreateForm" [projectId]="isInProject ? selectedId : undefined"
+  [collaboratorId]="!isInProject ? selectedId : undefined" (cancel)="onCancelCreate()">
 </app-add-collaborator-project>
 
 <div style="margin-bottom: 1rem;" *ngIf="!showCreateForm">
-  <button (click)="onStartCreate()">Add {{ isInProject ? 'Collaborator to Project' : 'Project to Collaborator' }}</button>
+  <button (click)="onStartCreate()">Add {{ isInProject ? 'Collaborator to Project' : 'Project to Collaborator'
+    }}</button>
+  <button type="button" [routerLink]="isInProject ? ['/projects'] : ['/collaborators']" data-testid="close-btn">
+    Close
+  </button>
 </div>

@@ -8,6 +8,9 @@ import { Collaborator } from '../collaborators/collaborator';
 import { CreateAssociationTrainingmoduleCollaboratorComponent } from "./create-association-trainingmodule-collaborator/create-association-trainingmodule-collaborator.component";
 import { AssociationTrainingmoduleCollaboratorService } from './services/association-trainingmodule-collaborator.service';
 import { AssociationTrainingmoduleCollaboratorSignalService } from './services/association-trainingmodule-collaborator-signal.service';
+import { TrainingSubjectDataService } from '../training-subjects/training-subjects-data.service';
+import { TrainingModuleDataService } from '../training-modules/training-modules-data.service';
+import { TrainingModule } from '../training-modules/training-module';
 
 @Component({
   selector: 'app-associations-trainingmodule-collaborator',
@@ -20,6 +23,8 @@ export class AssociationsTrainingmoduleCollaboratorComponent {
   private collaboratorDataService = inject(CollaboratorDataService);
   private associationTMCDataService = inject(AssociationTrainingmoduleCollaboratorService);
   private associationTMCSignalService = inject(AssociationTrainingmoduleCollaboratorSignalService);
+  private trainingSubjectDataService = inject(TrainingSubjectDataService);
+  private trainingModuleDataService = inject(TrainingModuleDataService);
   private route = inject(ActivatedRoute);
 
   // --- Parameters
@@ -111,10 +116,22 @@ export class AssociationsTrainingmoduleCollaboratorComponent {
                 })
               );
             } else {
-              detailsFetchedCount++;
-              if (detailsFetchedCount === totalAssociationsToDetail) {
-                this.isLoading = false;
-              }
+              this.subscriptions.add(
+                this.trainingModuleDataService.getTrainingModuleById(assoc.trainingModuleId).subscribe({
+                  next: (tm: TrainingModule) => {
+                    this.trainingSubjectDataService.getTrainingSubjectById(tm.trainingSubjectId).subscribe({
+                      next: (subject) => {
+                        this.associations[index] = { ...this.associations[index], trainingSubject: subject.subject };
+                        detailsFetchedCount++;
+                        if (detailsFetchedCount === totalAssociationsToDetail) {
+                          this.isLoading = false;
+                        }
+                      }
+                    });
+                  }
+                })
+              );
+
             }
           });
         },
@@ -150,8 +167,20 @@ export class AssociationsTrainingmoduleCollaboratorComponent {
               })
             );
           } else {
-            this.associations.push(assocCreated);
-            this.isLoading = false;
+            this.subscriptions.add(
+              this.trainingModuleDataService.getTrainingModuleById(assocCreated.trainingModuleId).subscribe({
+                next: (tm: TrainingModule) => {
+                  this.trainingSubjectDataService.getTrainingSubjectById(tm.trainingSubjectId).subscribe({
+                    next: (subject) => {
+                      const newAssocWithDetails = { ...assocCreated, trainingSubject: subject.subject };
+                      this.associations.push(newAssocWithDetails);
+                      this.isLoading = false;
+                    }
+                  });
+                }
+              })
+            );
+
           }
         }
         this.associationTMCSignalService.createAssociationTMC(undefined);

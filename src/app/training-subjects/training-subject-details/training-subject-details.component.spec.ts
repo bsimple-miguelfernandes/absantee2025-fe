@@ -3,7 +3,6 @@ import { TrainingSubjectDetailsComponent } from './training-subject-details.comp
 import { TrainingSubject } from '../training-subject';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
-import { By } from '@angular/platform-browser';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('TrainingSubjectDetailsComponent', () => {
@@ -21,7 +20,7 @@ describe('TrainingSubjectDetailsComponent', () => {
     await TestBed.configureTestingModule({
       imports: [
         TrainingSubjectDetailsComponent,
-        HttpClientTestingModule  // <-- importante para resolver No provider for HttpClient!
+        HttpClientTestingModule  // Para evitar erro de HttpClient
       ],
       providers: [
         {
@@ -61,29 +60,35 @@ describe('TrainingSubjectDetailsComponent', () => {
   // ------------------- HTML Template -------------------
 
   it('should render the title "Training Subject Details"', () => {
-    const title = fixture.debugElement.nativeElement.querySelector('h2');
+    const title = fixture.nativeElement.querySelector('h2');
     expect(title.textContent).toContain('Training Subject Details');
   });
 
-  it('should render training subject ID, subject, and description', () => {
-    const compiled = fixture.debugElement.nativeElement;
-    const rows = compiled.querySelectorAll('.detail-row');
+  it('should render training subject subject and description', () => {
+    const compiled = fixture.nativeElement;
+    const detailRows = compiled.querySelectorAll('.detail-row');
 
-    expect(rows[0].textContent).toContain('ID:');
-    expect(rows[0].textContent).toContain(mockTrainingSubject.id);
+    // 1º detail-row é o Subject Name
+    expect(detailRows[0].textContent).toContain('Subject Name:');
+    expect(detailRows[0].textContent).toContain(mockTrainingSubject.subject);
 
-    expect(rows[1].textContent).toContain('Subject Name:');
-    expect(rows[1].textContent).toContain(mockTrainingSubject.subject);
-
-    expect(rows[2].textContent).toContain('Description:');
-    expect(rows[2].textContent).toContain(mockTrainingSubject.description);
+    // 2º detail-row é a Description
+    expect(detailRows[1].textContent).toContain('Description:');
+    expect(detailRows[1].textContent).toContain(mockTrainingSubject.description);
   });
 
   it('should have a "Close" button that triggers close()', () => {
-    spyOn(component, 'close');
-    const closeBtn = fixture.debugElement.nativeElement.querySelector('button');
-    closeBtn.click();
-    expect(component.close).toHaveBeenCalled();
+  spyOn(component, 'close');
+  const buttons = Array.from(fixture.nativeElement.querySelectorAll('button')) as HTMLElement[];
+  const closeBtn = buttons.find(btn => btn.textContent?.includes('Close'));
+  expect(closeBtn).toBeTruthy();
+  closeBtn!.click();
+  expect(component.close).toHaveBeenCalled();
+});
+
+  it('should have an "Edit" button with correct routerLink', () => {
+    const editBtn = fixture.nativeElement.querySelector('button:last-child');
+    expect(editBtn.getAttribute('ng-reflect-router-link')).toBe(`/training-subjects,${mockTrainingSubject.id},edit`);
   });
 
 });

@@ -8,10 +8,13 @@ import { Router } from '@angular/router';
 import { AssociationTrainingmoduleCollaboratorSignalService } from '../services/association-trainingmodule-collaborator-signal.service';
 import { TrainingModuleDataService } from '../../training-modules/training-modules-data.service';
 import { TrainingModule } from '../../training-modules/training-module';
+import { TrainingSubject } from '../../training-subjects/training-subject';
+import { TrainingSubjectDataService } from '../../training-subjects/training-subjects-data.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-create-association-trainingmodule-collaborator',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, DatePipe],
   templateUrl: './create-association-trainingmodule-collaborator.component.html',
   styleUrl: './create-association-trainingmodule-collaborator.component.css'
 })
@@ -25,10 +28,12 @@ export class CreateAssociationTrainingmoduleCollaboratorComponent {
   private assocTMCSignalService = inject(AssociationTrainingmoduleCollaboratorSignalService);
   private collaboratorService = inject(CollaboratorDataService);
   private trainingModuleService = inject(TrainingModuleDataService);
+  private trainingSubjectService = inject(TrainingSubjectDataService);
 
   form!: FormGroup;
   collaborators: Collaborator[] = [];
   trainingModules: TrainingModule[] = [];
+  trainingSubjects: TrainingSubject[] = [];
 
   ngOnInit() {
     this.initForm();
@@ -53,7 +58,12 @@ export class CreateAssociationTrainingmoduleCollaboratorComponent {
   fetchDropdownData() {
     if (this.collaboratorId()) {
       this.trainingModuleService.getTrainingModules().subscribe({
-        next: (tms) => this.trainingModules = tms,
+        next: (tms) => {
+          this.trainingModules = tms,
+            this.trainingSubjectService.getTrainingSubjects().subscribe((subjects) => {
+              this.trainingSubjects = subjects;
+            });
+        },
         error: (err) => {
           console.error('Error fetching training modules:', err);
           alert("Coulnd't fetch Collaborator!");
@@ -151,4 +161,12 @@ export class CreateAssociationTrainingmoduleCollaboratorComponent {
     };
   }
 
+  getSubjectForModule(subjectId: string): string {
+    let result = this.trainingSubjects.find(x => x.id);
+
+    if (result)
+      return result.subject;
+    else
+      return subjectId;
+  }
 }
